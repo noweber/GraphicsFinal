@@ -35,5 +35,27 @@ void main() {
    if (dot(-lightDir,normal) <= 0.0)spec = 0;
    vec3 specC = .8*vec3(1.0,1.0,1.0)*pow(spec,4);
    vec3 oColor = ambC+diffuseC+specC;
-   outColor = vec4(oColor,1);
+
+   // Cel Shading
+   float mag = 0.3*min(oColor.r,1) + 0.6*min(oColor.g, 1) + 0.1 * min(oColor.b, 1);
+   if(mag < 0.2) {
+      outColor = (0.2/mag)*outColor;
+   }
+   else if(mag < 0.4) {
+      outColor = (0.4/mag)*outColor;
+   }
+   else if(mag < 0.6) {
+      outColor = (0.6/mag)*outColor;
+   }
+   else if(mag < 0.8) {
+      outColor = (0.8/mag)*outColor;
+   }
+   else {
+      outColor = vec4(1, 1, 1, 1);
+   }
+
+   if(dot(normal,viewDir) < 0.3) outColor = vec4(0,0,0,1);
+
+
+   //outColor = vec4(oColor,1);   // commented out from original by NoW @ 11/22/14 @ 5:10 PM
 }

@@ -462,7 +462,7 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
             model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
     ///glDrawArrays(GL_TRIANGLES, 0, numVerts2); // draws cube
     ///glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); // draws sphere
-    glUniform1i(uniTexID, 1); //Set texture ID to use
+    glUniform1i(uniTexID, 0); //Set texture ID to use
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
 
