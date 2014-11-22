@@ -48,8 +48,8 @@ int mapHeight = 10;
 /// TODO - make multiple maps and allow a button to load new ones
 
 /// Camera and Position variables
-int playerX = 3;    // Stores the player's x coordinate on this map
-int playerZ = -1;    // Stores the player's y coordinate on this map
+int playerX = 0;    // Stores the player's x coordinate on this map
+int playerZ = 0;    // Stores the player's y coordinate on this map
 int playerY = 0;
 
 float viewX = -1.0f;
