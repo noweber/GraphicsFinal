@@ -24,28 +24,6 @@ float objx=0, objy=0, objz=0;
 float colR=1, colG=1, colB=1;
 /// Camera, object, and map variables
 // Corresponds to the game map's XZ-plane
-/*int map[5][5] =
-{
-    {0,0,0,0,'G'},
-    {'W','W',0,'W',0},
-    {'A','W',0,'W',0},
-    {0,'W',0,'W','W'},
-    {0,0,0,0,0}
-};*/
-/*int map[10][6] =
-{
-
-    {'G','W','W','W','W','W'},
-    {0,'W','W','W','W','W'},
-    {0,'W','W','W','W','W'},
-    {0,0,0,0,0,0},
-    {0,0,0,0,0,0},
-    {'W','W','E','W','W','W'},
-    {'W','W','A','W',0,'W'},
-    {'a','W',0,'W','e','W'},
-    {0,'W',0,'W',0,0},
-    {0,0,0,0,0,0},
-};*/
 int map[14][10] =
 {
 
@@ -70,8 +48,8 @@ int mapHeight = 10;
 /// TODO - make multiple maps and allow a button to load new ones
 
 /// Camera and Position variables
-int playerX = 13;    // Stores the player's x coordinate on this map
-int playerZ = 9;    // Stores the player's y coordinate on this map
+int playerX = 3;    // Stores the player's x coordinate on this map
+int playerZ = -1;    // Stores the player's y coordinate on this map
 int playerY = 0;
 
 float viewX = -1.0f;
@@ -180,7 +158,7 @@ int main(int argc, char *argv[]){
 	modelFile.close();
 
 	//Load Model 2
-	modelFile.open("models/sphere.txt");
+	modelFile.open("models/knot.txt");
 	numLines = 0;
 	modelFile >> numLines;
 	float* model2 = new float[numLines];
@@ -332,250 +310,23 @@ int main(int argc, char *argv[]){
                 case SDL_KEYDOWN:
                     switch(kbEvent.key.keysym.sym) {
                         case SDLK_d:
-                            // Check if won
-                            if(map[playerX][playerZ - 1] == 'G') {
-                                hasWon = true;
-                                printf("You win!\n");
-                                break;
-                            }
-                            // Check for jump multiplier
-                            if(map[playerX][playerZ - 1] == 'Z') {
-                                jumpMult *= 2;
-                                printf("Jump Boosters!!\n");
-                                map[playerX][playerZ - 1] = 0;
-                            }
-                            // Door blocking
-                            if(map[playerX][playerZ - 1] == 'A' && aKey == false ||
-                               map[playerX][playerZ - 1] == 'B' && bKey == false ||
-                               map[playerX][playerZ - 1] == 'C' && cKey == false ||
-                               map[playerX][playerZ - 1] == 'D' && dKey == false ||
-                               map[playerX][playerZ - 1] == 'E' && eKey == false ){
-                                printf("Door collision!\n");
-                                break;
-                            }else if (map[playerX][playerZ - 1] == 'A' && aKey){
-                                    openA = true;
-                            } else if (map[playerX][playerZ - 1] == 'B' && bKey){
-                                    openB = true;
-                            } else if (map[playerX][playerZ - 1] == 'C' && cKey){
-                                    openC = true;
-                            } else if (map[playerX][playerZ - 1] == 'D' && dKey){
-                                    openD = true;
-                            } else if (map[playerX][playerZ - 1] == 'E' && eKey){
-                                    openE = true;
-                            }
-                            // Check for keys
-                            if(map[playerX][playerZ - 1] == 'a') {
-                                aKey = true;
-                            }
-                            if(map[playerX][playerZ - 1] == 'b') {
-                                bKey = true;
-                            }
-                            if(map[playerX][playerZ - 1] == 'c') {
-                                cKey = true;
-                            }
-                            if(map[playerX][playerZ - 1] == 'd') {
-                                dKey = true;
-                            }
-                            if(map[playerX][playerZ - 1] == 'e') {
-                                eKey = true;
-                            }
 
-                            if(map[playerX][playerZ - 1] != 'W' &&
-                               playerZ > playerMinZ) {
-                                playerZ -= 1;
-                                lookZ -= 1;
-                            } else if (map[playerX][playerZ - 1] == 'W') {
-                                printf("Wall collision!\n");
-                            }
                             printf("playerZ %d\n", playerZ);
                             break;
                         case SDLK_a:
-                            // Check if won
-                            if(map[playerX][playerZ + 1] == 'G') {
-                                hasWon = true;
-                                printf("You win!\n");
-                                break;
-                            }
-                            // Check for jump multiplier
-                            if(map[playerX][playerZ + 1] == 'Z') {
-                                jumpMult *= 2;
-                                printf("Jump Boosters!!\n");
-                                map[playerX][playerZ + 1] = 0;
-                            }
-                            // Door blocking
-                            if(map[playerX][playerZ + 1] == 'A' && aKey == false ||
-                               map[playerX][playerZ + 1] == 'B' && bKey == false ||
-                               map[playerX][playerZ + 1] == 'C' && cKey == false ||
-                               map[playerX][playerZ + 1] == 'D' && dKey == false ||
-                               map[playerX][playerZ + 1] == 'E' && eKey == false ){
-                                printf("Door collision!\n");
-                                break;
-                            } else if (map[playerX][playerZ + 1] == 'A' && aKey){
-                                    openA = true;
-                            } else if (map[playerX][playerZ + 1] == 'B' && bKey){
-                                    openB = true;
-                            } else if (map[playerX][playerZ + 1] == 'C' && cKey){
-                                    openC = true;
-                            } else if (map[playerX][playerZ + 1] == 'D' && dKey){
-                                    openD = true;
-                            } else if (map[playerX][playerZ + 1] == 'E' && eKey){
-                                    openE = true;
-                            }
 
-                            // Check for keys
-                            if(map[playerX][playerZ + 1] == 'a') {
-                                aKey = true;
-                            }
-                            if(map[playerX][playerZ + 1] == 'b') {
-                                bKey = true;
-                            }
-                            if(map[playerX][playerZ + 1] == 'c') {
-                                cKey = true;
-                            }
-                            if(map[playerX][playerZ + 1] == 'd') {
-                                dKey = true;
-                            }
-                            if(map[playerX][playerZ + 1] == 'e') {
-                                eKey = true;
-                            }
-
-                            if(map[playerX][playerZ + 1] != 'W' &&
-                                playerZ < playerMaxZ) {
-                                playerZ += 1;
-                                lookZ += 1;
-                            } else if (map[playerX][playerZ + 1] == 'W') {
-                                printf("Wall collision!\n");
-                            }
                             printf("playerZ %d\n", playerZ);
                             break;
 
                         case SDLK_w:
-                            // Check if won
-                            if(map[playerX - 1][playerZ] == 'G') {
-                                hasWon = true;
-                                printf("You win!\n");
-                                break;
-                            }
-                            // Check for jump multiplier
-                            if(map[playerX - 1][playerZ] == 'Z') {
-                                jumpMult *= 2;
-                                printf("Jump Boosters!!\n");
-                                map[playerX - 1][playerZ] = 0;
-                            }
-                            // Door blocking
-                            if(map[playerX - 1][playerZ] == 'A' && aKey == false ||
-                               map[playerX - 1][playerZ] == 'B' && bKey == false ||
-                               map[playerX - 1][playerZ] == 'C' && cKey == false ||
-                               map[playerX - 1][playerZ] == 'D' && dKey == false ||
-                               map[playerX - 1][playerZ] == 'E' && eKey == false ){
-                                printf("Door collision!\n");
-                                break;
-                            } else if (map[playerX - 1][playerZ] == 'A' && aKey){
-                                    openA = true;
-                            } else if (map[playerX - 1][playerZ] == 'B' && bKey){
-                                    openB = true;
-                            } else if (map[playerX - 1][playerZ] == 'C' && cKey){
-                                    openC = true;
-                            } else if (map[playerX - 1][playerZ] == 'D' && dKey){
-                                    openD = true;
-                            } else if (map[playerX - 1][playerZ] == 'E' && eKey){
-                                    openE = true;
-                            }
 
-                            // Check for keys
-                            if(map[playerX - 1][playerZ] == 'a') {
-                                aKey = true;
-                            }
-                            if(map[playerX - 1][playerZ] == 'b') {
-                                bKey = true;
-                            }
-                            if(map[playerX - 1][playerZ] == 'c') {
-                                cKey = true;
-                            }
-                            if(map[playerX - 1][playerZ] == 'd') {
-                                dKey = true;
-                            }
-                            if(map[playerX - 1][playerZ] == 'e') {
-                                eKey = true;
-                            }
-
-                            if(map[playerX - 1][playerZ] != 'W' &&
-                                playerX > playerMinX) {
-                                playerX -= 1;
-                                lookX -= 1;
-                            } else if (map[playerX - 1][playerZ] == 'W') {
-                                printf("Wall collision!\n");
-                            }
-                            printf("playerX %d\n", playerX);
-                            break;
-                        case SDLK_s:
-                            // Check if won
-                            if(map[playerX + 1][playerZ] == 'G') {
-                                hasWon = true;
-                                printf("You win!\n");
-                                break;
-                            }
-                            // Check for jump multiplier
-                            if(map[playerX + 1][playerZ] == 'Z') {
-                                jumpMult *= 2;
-                                printf("Jump Boosters!!\n");
-                                map[playerX + 1][playerZ] = 0;
-                            }
-                            // Door blocking
-                            if(map[playerX + 1][playerZ] == 'A' && aKey == false ||
-                               map[playerX + 1][playerZ] == 'B' && bKey == false ||
-                               map[playerX + 1][playerZ] == 'C' && cKey == false ||
-                               map[playerX + 1][playerZ] == 'D' && dKey == false ||
-                               map[playerX + 1][playerZ] == 'E' && eKey == false ){
-                                printf("Door collision!\n");
-                                break;
-                            } else if (map[playerX + 1][playerZ] == 'A' && aKey){
-                                    openA = true;
-                            } else if (map[playerX + 1][playerZ] == 'B' && bKey){
-                                    openB = true;
-                            } else if (map[playerX + 1][playerZ] == 'C' && cKey){
-                                    openC = true;
-                            } else if (map[playerX + 1][playerZ] == 'D' && dKey){
-                                    openD = true;
-                            } else if (map[playerX + 1][playerZ] == 'E' && eKey){
-                                    openE = true;
-                            }
-
-                            // Check for keys
-                            if(map[playerX + 1][playerZ] == 'a') {
-                                aKey = true;
-                            }
-                            if(map[playerX + 1][playerZ] == 'b') {
-                                bKey = true;
-                            }
-                            if(map[playerX + 1][playerZ] == 'c') {
-                                cKey = true;
-                            }
-                            if(map[playerX + 1][playerZ] == 'd') {
-                                dKey = true;
-                            }
-                            if(map[playerX + 1][playerZ] == 'e') {
-                                eKey = true;
-                            }
-
-                            if(map[playerX + 1][playerZ] != 'W' &&
-                                playerX < playerMaxX) {
-                                playerX += 1;
-                                lookX += 1;
-                            } else if (map[playerX + 1][playerZ] == 'W') {
-                                printf("Wall collision!\n");
-                            }
                             printf("playerX %d\n", playerX);
                             break;
                         case SDLK_SPACE:
-                            if(isJumping == false && isFalling == false) {
-                                isJumping = true;
-                            }
+
                             break;
                         case SDLK_q:
-                            xzRotation -= 3.14159/2;
-                            viewX = sin(xzRotation);
-                            viewZ = -cos(xzRotation);
+
                             break;
                         /*case SDLK_e:
                             lookZ += 1;
@@ -602,71 +353,6 @@ int main(int argc, char *argv[]){
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       glUseProgram(texturedShader);
-
-    /// JUMP
-    if(isJumping && !isFalling && jumpHeight < 1) {
-        jumpHeight += 0.1;
-    } else if (jumpHeight >= 1) {
-        jumpHeight -= 0.1;
-        isFalling = true;
-    } else if (isFalling && jumpHeight > 0) {
-               jumpHeight -= 0.1;
-    } else if (jumpHeight <= 0) {
-        jumpHeight = 0;
-        isFalling = false;
-        isJumping = false;
-    }
-
-
-    /// Door animations
-    if(openA && !finA && offsetCt > 0) {
-        offsetA += 0.1;
-        offsetCt -= 1;
-    } else if (openA && !finA && offsetCt <= 0) {
-        finA = true;
-        offsetCt = 10;
-    }
-
-    if(openB && !finB && offsetCt > 0) {
-        offsetB += 0.1;
-        offsetCt -= 1;
-    } else if (openB && !finB && offsetCt <= 0) {
-        finB = true;
-        offsetCt = 10;
-    }
-
-    if(openC && !finC && offsetCt > 0) {
-        offsetC += 0.1;
-        offsetCt -= 1;
-    } else if (openC && !finC && offsetCt <= 0) {
-        finC = true;
-        offsetCt = 10;
-    }
-
-    if(openD && !finD && offsetCt > 0) {
-        offsetD += 0.1;
-        offsetCt -= 1;
-    } else if (openD && !finD && offsetCt <= 0) {
-        finD = true;
-        offsetCt = 10;
-    }
-
-    if(openE && !finE && offsetCt > 0) {
-        offsetE += 0.1;
-        offsetCt -= 1;
-    } else if (openE && !finE && offsetCt <= 0) {
-        finE = true;
-        offsetCt = 10;
-    }
-
-    /// Win animations
-    if(hasWon && !finWin && winCt > 0) {
-        jumpHeight += 0.1;
-        winCt -= 1;
-    } else if (hasWon && winCt <= 0){
-        finWin = true;
-        isRunning = false;
-    }
 
 
       if (!saveOutput) timePast = SDL_GetTicks()/1000.f;
@@ -723,6 +409,9 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
 
     GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
 
+
+
+
     // Draw the floor
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
@@ -732,7 +421,7 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
 
                 if(y == 0) {
                     /// Draw floor
-                    glm::mat4 model;
+                   /* glm::mat4 model;
                     model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y, 0.0f + z));
                     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
                     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -741,12 +430,12 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
                     ///glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); // draws sphere
                     glUniform1i(uniTexID, 0); //Set texture ID to use
                     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                    glDrawArrays(GL_TRIANGLES, 0, numVerts2);
+                    glDrawArrays(GL_TRIANGLES, 0, numVerts2);*/
                 }
 
                 if(y == 1) {
                     /// Draw walls
-                    if(map[x][z] == 'W' || x == -1 || x == mapWidth || z == -1 || z == mapHeight) {
+                    /*if(map[x][z] == 'W' || x == -1 || x == mapWidth || z == -1 || z == mapHeight) {
                     /// Draw Cubes for Walls
                     glm::mat4 model;
                     model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y, 0.0f + z));
@@ -757,188 +446,25 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
                     ///glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); // draws sphere
                     glUniform1i(uniTexID, 1); //Set texture ID to use
                     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                    glDrawArrays(GL_TRIANGLES, 0, numVerts2);
-                    }
+                    glDrawArrays(GL_TRIANGLES, 0, numVerts2);*/
+
                 }
-
-                if(y == 1) {
-                    /// Draw doors
-                    if( map[x][z] == 'A' && !finA){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y  + offsetA, 0.0f + z));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 1); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    } else if( map[x][z] == 'B' && !finB){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y + offsetB, 0.0f + z));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 1); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    } else if( map[x][z] == 'C' && !finC){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y + offsetC, 0.0f + z));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 1); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    } else if( map[x][z] == 'D' && !finD){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y + offsetD, 0.0f + z));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 1); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    } else if( map[x][z] == 'E' && !finE){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y + offsetE, 0.0f + z));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 1); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    }
-                }
-
-
-                if(y == 1) {
-                    /// Draw keys on floor
-                    if( map[x][z] == 'a' && !aKey ){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y, 0.0f + z));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 3); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    }
-                    if( map[x][z] == 'b' && !bKey ){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y, 0.0f + z));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 3); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    }
-                    if( map[x][z] == 'c' && !cKey ){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y, 0.0f + z));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 3); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    }
-                    if( map[x][z] == 'd' && !dKey ){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y, 0.0f + z));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 3); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    }
-                    if( map[x][z] == 'e' && !eKey ){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y, 0.0f + z));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        model = glm::scale(model,glm::vec3(0.64f,0.64f,0.64f));
-                        glUniform1i(uniTexID, 0); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    }
-                }
-
-                if(y == 1) {
-                    /// Draw held keys
-                    if( map[x][z] == 'a' && aKey && !finA){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + playerX, playerY + jumpHeight*jumpMult - 0.5, playerZ - .5));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 3); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    }
-                    if( map[x][z] == 'b' && bKey && !finB){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + playerX, playerY + jumpHeight*jumpMult - 0.5, playerZ - .5));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 3); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    }
-                    if( map[x][z] == 'c' && cKey && !finC){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + playerX, playerY + jumpHeight*jumpMult - 0.5, playerZ - .5));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 3); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    }
-                    if( map[x][z] == 'd' && dKey && !finD){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + playerX, playerY + jumpHeight*jumpMult - 0.5, playerZ - .5));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 3); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    }
-                    if( map[x][z] == 'e' && eKey && !finE){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + playerX, playerY + jumpHeight*jumpMult - 0.5, playerZ - .5));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 0); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    }
-                }
-
-                if(y == 1) {
-                    /// Draw jump boosters
-                    if( map[x][z] == 'Z'){
-                        /// Draw
-                        glm::mat4 model;
-                        model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y, 0.0f + z));
-                        GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glUniform1i(uniTexID, 3); //Set texture ID to use
-                        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                        glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-                    }
-                }
-
-
             }
         }
     }
+
+    // draw the knot
+    model = glm::translate(model,glm::vec3(0.0f, 0.0f, 0.0f));
+
+    uniModel = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
+            model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
+    ///glDrawArrays(GL_TRIANGLES, 0, numVerts2); // draws cube
+    ///glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); // draws sphere
+    glUniform1i(uniTexID, 1); //Set texture ID to use
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
 
 }
 
