@@ -1,0 +1,38 @@
+# This is our custom .gitignore for PiRaCy Pro-Am.
+# It has been tested to exclude uneccessary files while using the Code Blocks IDE.
+# If you experience trouble using any other IDE, contact noweber.
+
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Project Layouts
+*.layout
+
+# Unwanted Project Directories
+bin
+obj
