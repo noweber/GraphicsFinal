@@ -37,7 +37,7 @@ void main() {
    vec3 oColor = ambC+diffuseC+specC;
 
    // Cel Shading
-   float mag = 0.3*min(oColor.r,1) + 0.6*min(oColor.g, 1) + 0.1 * min(oColor.b, 1);
+   float mag = 0.3*min(color.r,1) + 0.6*min(color.g, 1) + 0.1 * min(color.b, 1);
    if(mag < 0.3) {
       outColor = (0.3/mag)*outColor;
    }
