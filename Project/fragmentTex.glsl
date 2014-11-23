@@ -7,6 +7,7 @@ in vec3 lightDir;
 in vec2 texcoord;
 
 out vec4 outColor;
+out vec4 purpleColor;
 
 uniform sampler2D tex0;
 uniform sampler2D tex1;

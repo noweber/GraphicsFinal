@@ -146,7 +146,7 @@ int main(int argc, char *argv[]){
 
 	//Load Model 1
 	ifstream modelFile;
-	modelFile.open("models/teapot.txt");
+	modelFile.open("models/knot.txt");
 	int numLines = 0;
 	modelFile >> numLines;
 	float* model1 = new float[numLines];
@@ -428,9 +428,9 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
                     /// Draw walls
                     /*if(map[x][z] == 'W' || x == -1 || x == mapWidth || z == -1 || z == mapHeight) {
                     /// Draw Cubes for Walls
-                    glm::mat4 model;
                     model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y, 0.0f + z));
-                    GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+                    GLint uniModel = glGetUniformLocation(s
+                    glm::mat4 model;haderProgram, "model");
                     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
 
                     ///glDrawArrays(GL_TRIANGLES, 0, numVerts2); // draws cube
@@ -452,6 +452,8 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
     glUniform1i(uniTexID, 0); //Set texture ID to use
+    //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
+    //glUniform3f(uniColor, 0.0f, 1.0f, 0.0f);
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     // Draw model 1
     glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
