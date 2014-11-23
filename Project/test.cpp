@@ -129,7 +129,7 @@ int main(int argc, char *argv[]){
 	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);//
 
 	//Create a window (offsetx, offsety, width, height, flags)
-	SDL_Window* window = SDL_CreateWindow("My OpenGL Program", 100, 100, 800, 600, SDL_WINDOW_OPENGL);
+	SDL_Window* window = SDL_CreateWindow("CSci 5607 Final Project", 100, 100, 800, 600, SDL_WINDOW_OPENGL);
 
 	//Create a context to draw in
 	SDL_GLContext context = SDL_GL_CreateContext(window);
@@ -382,7 +382,7 @@ int main(int argc, char *argv[]){
     glBindTexture(GL_TEXTURE_2D, tex1);
     glUniform1i(glGetUniformLocation(texturedShader, "tex1"), 1);
 
-      drawGeometry(texturedShader, numVerts1,numVerts2);
+    drawGeometry(texturedShader, numVerts1,numVerts2);
 
 
       if (saveOutput) Win2PPM(800,600);
@@ -459,9 +459,7 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
-            model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    ///glDrawArrays(GL_TRIANGLES, 0, numVerts2); // draws cube
-    ///glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); // draws sphere
+    model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
     glUniform1i(uniTexID, -1); //Set texture ID to use
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);

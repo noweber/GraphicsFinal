@@ -24,7 +24,7 @@ void main() {
    else if (texID == 1)
      color = texture(tex1, texcoord).rgb;  
    else{
-   	 outColor = vec4(1,0,0,1);
+   	 outColor = vec4(0,1,0,1);
    	 return; //This was an error, stop lighting!
    	}
    vec3 diffuseC = color*max(dot(-lightDir,normal),0.0);
