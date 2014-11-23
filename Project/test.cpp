@@ -146,7 +146,7 @@ int main(int argc, char *argv[]){
 
 	//Load Model 1
 	ifstream modelFile;
-	modelFile.open("models/cube.txt");
+	modelFile.open("models/teapot.txt");
 	int numLines = 0;
 	modelFile >> numLines;
 	float* model1 = new float[numLines];
@@ -158,7 +158,7 @@ int main(int argc, char *argv[]){
 	modelFile.close();
 
 	//Load Model 2
-	modelFile.open("models/knot.txt");
+	modelFile.open("models/sphere.txt");
 	numLines = 0;
 	modelFile >> numLines;
 	float* model2 = new float[numLines];
@@ -179,27 +179,22 @@ int main(int argc, char *argv[]){
 
 
 	//// Allocate Texture 0 (Wood) ///////
-	SDL_Surface* surface = SDL_LoadBMP("wood.bmp");
+	SDL_Surface* surface = SDL_LoadBMP("door.bmp");
 	if (surface==NULL){ //If it failed, print the error
         printf("Error: \"%s\"\n",SDL_GetError()); return 1;
     }
     GLuint tex0;
     glGenTextures(1, &tex0);
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex0);
-
     //What to do outside 0-1 range
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
     //Load the texture into memory
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w,surface->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface->pixels);
     glGenerateMipmap(GL_TEXTURE_2D);
-
-
     SDL_FreeSurface(surface);
     //// End Allocate Texture ///////
 
@@ -406,15 +401,11 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
 	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
       glm::vec3 colVec(colR,colG,colB);
       glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
-
     GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
-
-
-
-
-    // Draw the floor
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+
+    // Draw the floor
     for(int x = -1; x < mapWidth + 1; x++) {
         for( int z = -1; z < mapHeight + 1; z++) {
             for(int y = 0; y < 2; y++) {
@@ -460,9 +451,10 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniform1i(uniTexID, -1); //Set texture ID to use
+    glUniform1i(uniTexID, 0); //Set texture ID to use
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
+    // Draw model 1
+    glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
 
 }
 

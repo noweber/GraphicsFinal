@@ -24,7 +24,7 @@ void main() {
    else if (texID == 1)
      color = texture(tex1, texcoord).rgb;  
    else{
-   	 outColor = vec4(0,1,0,1);
+   	 outColor = vec4(1,0,0,1);
    	 return; //This was an error, stop lighting!
    	}
    vec3 diffuseC = color*max(dot(-lightDir,normal),0.0);
@@ -37,7 +37,8 @@ void main() {
    vec3 oColor = ambC+diffuseC+specC;
 
    // Cel Shading
-   float mag = 0.3*min(color.r,1) + 0.6*min(color.g, 1) + 0.1 * min(color.b, 1);
+   float mag = 0.3*min(oColor.r, 1) + 0.6*min(oColor.g, 1) + 0.1*min(oColor.b, 1);
+   //float mag = min(oColor.r, 1) + min(oColor.g, 1) + min(oColor.b, 1);
    if(mag < 0.3) {
       outColor = (0.3/mag)*outColor;
    }
@@ -54,7 +55,6 @@ void main() {
 
    if(dot(normal,viewDir) < 0.32) outColor = vec4(0,0,0,1);
    if(dot(normal,viewDir) > 0.94) outColor = vec4(1,1,1,1);
-
 
    //outColor = vec4(oColor,1);   // commented out from original by NoW @ 11/22/14 @ 5:10 PM
 }
