@@ -16,6 +16,7 @@
 
 //#include "Game.h"
 #include "include/Player.h"
+#include "src/Player.cpp"
 //#include "Player.cpp"
 
 
