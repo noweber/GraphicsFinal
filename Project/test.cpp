@@ -16,7 +16,8 @@
 
 //#include "Game.h"
 #include "include/Player.h"
-#include "src/Player.cpp"
+//#include "Player.cpp"
+
 
 
 using namespace std;
@@ -46,6 +47,7 @@ int screenWidth = 1024;
 int screenHeight = 768;
 
 float gLightAdjustment = 0;    // Allows the lights to move around
+//int gLightMovementCt = 1000;  // possible light progression as the day goes by.
 bool gLightReachedRightMax = false;
 /// Camera "view"
 float camPosX = 0.0f;// + player1->posX;
