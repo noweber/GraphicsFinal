@@ -12,8 +12,27 @@ class Player {
     float posY;
     float posZ;
 
+    void movePlayer();
+    void update();
+
+    float shellOffsetY;
+    float shellOffsetZ;
+
+
+    float headOffsetX;
+    float headOffsetY;
+
+    float leftFootOffsetY;
+    float rightFootOffsetY;
+
     protected:
+
     private:
+    bool isMoving;
+    int moveCt;
+
+
+
 };
 
 #endif // PLAYER_H

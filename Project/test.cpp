@@ -193,7 +193,7 @@ int main(int argc, char *argv[]){
 
 	int texturedShader = InitShader("vertexTex.glsl", "fragmentTex.glsl");
 
-	int phongShader = InitShader("vertex.glsl", "fragment.glsl");
+	//int phongShader = InitShader("vertex.glsl", "fragment.glsl");
 
 
 
@@ -236,22 +236,26 @@ int main(int argc, char *argv[]){
                     switch(kbEvent.key.keysym.sym) {
                         case SDLK_w:
                             player1->posZ -= 0.08;
+                            player1->movePlayer();
                             printf("W keypress: moving.\n");
                             break;
                         case SDLK_s:
                             player1->posZ += 0.08;
+                            player1->movePlayer();
                             printf("S keypress: moving.\n");
                             break;
 
                         case SDLK_a:
                             if(player1->posX > -4.0) {
                                 player1->posX -= 0.08;
+                                player1->movePlayer();
                                 printf("A keypress: moving.\n");
                             }
                             break;
                         case SDLK_d:
                             if(player1->posX < 4.0) {
                                 player1->posX += 0.08;
+                                player1->movePlayer();
                                 printf("D keypress: moving.\n");
                             }
                             break;
@@ -314,7 +318,15 @@ int main(int argc, char *argv[]){
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, tex2);
     glUniform1i(glGetUniformLocation(texturedShader, "tex2"), 2);
+
+
 */
+    /// Updater
+    player1->update();
+
+
+
+
     /// Call Rendering Functions
     drawGeometry(texturedShader, numVerts1,numVerts2);
     drawCubeFriend(texturedShader, numVerts1,numVerts2);
@@ -326,7 +338,7 @@ int main(int argc, char *argv[]){
       SDL_GL_SwapWindow(window); //Double buffering
 	}
 
-	glDeleteProgram(phongShader);
+	glDeleteProgram(texturedShader);
     glDeleteBuffers(1, vbo);
     glDeleteVertexArrays(1, &vao);
 
@@ -350,7 +362,7 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
-    model = glm::translate(model,glm::vec3(camPosX, camPosY - 4.0f, camPosZ - 4.5f));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(camPosX, camPosY - 4.0f + player1->shellOffsetY, camPosZ - 4.5f));   // Draws relative to the camera...
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -367,7 +379,7 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
 
     model = glm::scale(model,glm::vec3(0.4f, 0.4f, 0.4f));
     //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
-    model = glm::translate(model,glm::vec3(camPosX, camPosY - 3.5f, camPosZ - 9.0f));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(camPosX + player1->headOffsetX, camPosY - 3.5f + player1->headOffsetY - player1->shellOffsetY, camPosZ - 9.0f));   // Draws relative to the camera...
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -382,7 +394,7 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     // Drawing the left foot...
     model = glm::scale(model,glm::vec3(0.84f, 0.84f, 0.84f));
     //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
-    model = glm::translate(model,glm::vec3(camPosX -1.64f, camPosY - 5.0f, camPosZ - 7.1f));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(camPosX -1.64f - player1->headOffsetX, camPosY - 5.0f + player1->leftFootOffsetY - player1->headOffsetY, camPosZ - 7.1f));   // Draws relative to the camera...
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
