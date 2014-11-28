@@ -17,97 +17,6 @@ using namespace std;
 
 bool saveOutput = false;
 float timePast = 0;
-
-//SJG: Store the object coordinates
-//You should have a representation for the state of each object
-float objx=0, objy=0, objz=0;
-float colR=1, colG=1, colB=1;
-/// Camera, object, and map variables
-// Corresponds to the game map's XZ-plane
-int map[14][10] =
-{
-
-    {'W','W','W','W','W','W','W','W','W','W'},
-    {'W',0,0,'W','W','W','W',0,0,'W'},
-    {'W',0,0,'W','W','W','W',0,0,'W'},
-    {'W','W','W','W','W','W','W','W','W','W'},
-    {'W','W','W','W','W','W','W','W','W','W'},
-    {'W',0,0,'W','W','W','W',0,0,'W'},
-    {'W','W',0,0,0,0,0,0,'W','W'},
-    {'W','W','W',0,0,0,0,'W','W','W'},
-    {'W','W','W','W','W','W','W','W','W','W'},
-    {'W','W','W','W','W','W','W','W','W','W'},
-    {'W','W','W','W','W','W','W','W','W','W'},
-    {'W','W','W','W','Z','W','W','W','W','W'},
-    {'W','W','W','W','Z','W','W','W','W','W'},
-    {0,0,0,0,0,0,0,0,0,0},
-};
-
-int mapWidth = 14;
-int mapHeight = 10;
-/// TODO - make multiple maps and allow a button to load new ones
-
-/// Camera and Position variables
-int playerX = 0;    // Stores the player's x coordinate on this map
-int playerZ = 0;    // Stores the player's y coordinate on this map
-int playerY = 0;
-
-float viewX = -1.0f;
-float viewY = 0.0f;
-float viewZ = 0.0f;
-
-float xzRotation = 0;
-int rotateCt = 0;
-
-int playerMinX = 0; int playerMaxX = mapWidth - 1;
-int playerMinZ = 0; int playerMaxZ = mapHeight - 1;
-
-float lookX = 4.0f;
-float lookY = 0.0f;
-float lookZ = 4.0f;
-
-bool isJumping = false;
-bool isFalling = false;
-float jumpHeight = 0.0f;
-float jumpMult = 1.0f;
-
-/// Key and Door Variables
-bool openA = false;
-bool openB = false;
-bool openC = false;
-bool openD = false;
-bool openE = false;
-
-bool aKey = false;
-bool bKey = false;
-bool cKey = false;
-bool dKey = false;
-bool eKey = false;
-
-
-// For door animations
-float offsetA = 0.0f;
-float offsetB = 0.0f;
-float offsetC = 0.0f;
-float offsetD = 0.0f;
-float offsetE = 0.0f;
-int offsetCt = 10;
-
-bool finA = false;
-bool finB = false;
-bool finC = false;
-bool finD = false;
-bool finE = false;
-
-/// Goal Variables
-bool hasWon = false;
-bool finWin = false;
-int winCt = 100;
-float winOffset = 0.0f;
-
-
-
-
 bool DEBUG_ON = true;
 GLuint InitShader(const char* vShaderFileName, const char* fShaderFileName);
 bool fullscreen = false;
@@ -158,7 +67,7 @@ int main(int argc, char *argv[]){
 	modelFile.close();
 
 	//Load Model 2
-	modelFile.open("models/sphere.txt");
+	modelFile.open("models/cube.txt");
 	numLines = 0;
 	modelFile >> numLines;
 	float* model2 = new float[numLines];
@@ -178,9 +87,9 @@ int main(int argc, char *argv[]){
 	int totalNumVerts = numVerts1+numVerts2;
 
 
-	//// Allocate Texture 0 (Wood) ///////
-	SDL_Surface* surface = SDL_LoadBMP("door.bmp");
-	if (surface==NULL){ //If it failed, print the error
+	/// Allocate Texture 0 ///////
+	SDL_Surface* surface = SDL_LoadBMP("lightRed.bmp");
+	if (surface==NULL) { //If it failed, print the error
         printf("Error: \"%s\"\n",SDL_GetError()); return 1;
     }
     GLuint tex0;
@@ -190,8 +99,9 @@ int main(int argc, char *argv[]){
     //What to do outside 0-1 range
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //How to filter
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     //Load the texture into memory
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w,surface->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface->pixels);
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -199,56 +109,46 @@ int main(int argc, char *argv[]){
     //// End Allocate Texture ///////
 
 
-	//// Allocate Texture 1 (Brick) ///////
-	SDL_Surface* surface1 = SDL_LoadBMP("brick.bmp");
+	//// Allocate Texture 1 ///////
+	SDL_Surface* surface1 = SDL_LoadBMP("lightGreen.bmp");
 	if (surface1==NULL){ //If it failed, print the error
         printf("Error: \"%s\"\n",SDL_GetError()); return 1;
     }
     GLuint tex1;
     glGenTextures(1, &tex1);
-
     //Load the texture into memory
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, tex1);
-
     //What to do outside 0-1 range
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
     //How to filter
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //Load the texture into memory
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface1->w,surface1->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface1->pixels);
-
-
     glGenerateMipmap(GL_TEXTURE_2D);
-
     SDL_FreeSurface(surface1);
     //// End Allocate Texture ///////\
 
     //// Allocate Texture 2 (door) ///////
-	SDL_Surface* surface2 = SDL_LoadBMP("door.bmp");
+	SDL_Surface* surface2 = SDL_LoadBMP("lightBlue.bmp");
 	if (surface2==NULL){ //If it failed, print the error
         printf("Error: \"%s\"\n",SDL_GetError()); return 1;
     }
     GLuint tex2;
     glGenTextures(1, &tex2);
-
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, tex2);
-
     //What to do outside 0-1 range
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+    //How to filter
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     //Load the texture into memory
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface2->w,surface2->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface2->pixels);
     glGenerateMipmap(GL_TEXTURE_2D);
-
-
     SDL_FreeSurface(surface2);
     //// End Allocate Texture ///////
 
@@ -306,16 +206,13 @@ int main(int argc, char *argv[]){
                     switch(kbEvent.key.keysym.sym) {
                         case SDLK_d:
 
-                            printf("playerZ %d\n", playerZ);
                             break;
                         case SDLK_a:
 
-                            printf("playerZ %d\n", playerZ);
                             break;
 
                         case SDLK_w:
 
-                            printf("playerX %d\n", playerX);
                             break;
                         case SDLK_SPACE:
 
@@ -355,12 +252,9 @@ int main(int argc, char *argv[]){
 
 
       /// Camera "view"
-    lookX = playerX + viewX;
-    lookY = viewY;
-    lookZ = playerZ + viewZ;
     glm::mat4 view = glm::lookAt(
-    glm::vec3(4.0f + playerX, playerY + jumpHeight*jumpMult, playerZ),  //Cam Position
-    glm::vec3(lookX , (lookY + jumpHeight), (lookZ)),  //Look at point
+    glm::vec3(4.0f, 0, 0),  //Cam Position
+    glm::vec3(-1 , 0, 0),  //Look at point
     glm::vec3(0.0f, 1.0f, 0.0f)); //Up
     GLint uniView = glGetUniformLocation(texturedShader, "view");
     glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
@@ -399,50 +293,11 @@ int main(int argc, char *argv[]){
 void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
 
 	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
-      glm::vec3 colVec(colR,colG,colB);
-      glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
+    glm::vec3 colVec(0.5,0.5,0.5);
+    glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
     GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-
-    // Draw the floor
-    for(int x = -1; x < mapWidth + 1; x++) {
-        for( int z = -1; z < mapHeight + 1; z++) {
-            for(int y = 0; y < 2; y++) {
-
-                if(y == 0) {
-                    /// Draw floor
-                   /* glm::mat4 model;
-                    model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y, 0.0f + z));
-                    GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                    //glDrawArrays(GL_TRIANGLES, 0, numVerts2);
-                    ///glDrawArrays(GL_TRIANGLES, 0, numVerts2); // draws cube
-                    ///glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); // draws sphere
-                    glUniform1i(uniTexID, 0); //Set texture ID to use
-                    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                    glDrawArrays(GL_TRIANGLES, 0, numVerts2);*/
-                }
-
-                if(y == 1) {
-                    /// Draw walls
-                    /*if(map[x][z] == 'W' || x == -1 || x == mapWidth || z == -1 || z == mapHeight) {
-                    /// Draw Cubes for Walls
-                    model = glm::translate(model,glm::vec3(3.0f + x, 0.0f - 1.0 + y, 0.0f + z));
-                    GLint uniModel = glGetUniformLocation(s
-                    glm::mat4 model;haderProgram, "model");
-                    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-
-                    ///glDrawArrays(GL_TRIANGLES, 0, numVerts2); // draws cube
-                    ///glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); // draws sphere
-                    glUniform1i(uniTexID, 1); //Set texture ID to use
-                    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                    glDrawArrays(GL_TRIANGLES, 0, numVerts2);*/
-
-                }
-            }
-        }
-    }
 
     // draw the knot
     model = glm::translate(model,glm::vec3(0.0f, 0.0f, 0.0f));

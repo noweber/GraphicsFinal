@@ -1,5 +1,10 @@
 # depslib dependency file v1.0
-1416705192 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
+1417133848 source:e:\programming\csci5607\graphicsfinal\project\src\game.cpp
+	"Game.h"
+
+1417133875 e:\programming\csci5607\graphicsfinal\project\include\game.h
+
+1417134131 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
 	<GL/glew.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_opengl.h>
