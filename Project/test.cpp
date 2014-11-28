@@ -15,7 +15,8 @@
 #include<stdlib.h>
 
 //#include "Game.h"
-#include "Player.h"
+#include "include/Player.h"
+#include "src/Player.cpp"
 
 
 using namespace std;
