@@ -15,8 +15,8 @@
 #include<stdlib.h>
 
 //#include "Game.h"
-#include "include/Player.h"
-#include "src/Player.cpp"
+#include "Player.h"
+//#include "Player.cpp"
 //#include "Player.cpp"
 
 
@@ -500,7 +500,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); //(Primitive Type, Start Vertex, End Vertex)
-    
+
 }
 
 void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2){
