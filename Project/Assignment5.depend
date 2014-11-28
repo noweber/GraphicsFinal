@@ -4,12 +4,12 @@
 
 1417135367 e:\programming\csci5607\graphicsfinal\project\include\game.h
 
-1417199924 source:e:\programming\csci5607\graphicsfinal\project\src\player.cpp
+1417201137 source:e:\programming\csci5607\graphicsfinal\project\src\player.cpp
 	"Player.h"
 
-1417165836 e:\programming\csci5607\graphicsfinal\project\include\player.h
+1417200650 e:\programming\csci5607\graphicsfinal\project\include\player.h
 
-1417200427 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
+1417200890 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
 	<GL/glew.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_opengl.h>
