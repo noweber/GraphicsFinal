@@ -427,9 +427,9 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     //glm::mat4 model;
     //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
-    model = glm::scale(model,glm::vec3(0.4f, 0.4f, 0.4f));
+    model = glm::scale(model,glm::vec3(0.54f, 0.49f, 0.4f));
     //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
-    model = glm::translate(model,glm::vec3(camPosX + player1->headOffsetX, camPosY - 3.5f + player1->headOffsetY - player1->shellOffsetY, camPosZ - 9.0f));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(camPosX + player1->headOffsetX, camPosY - 3.5f + player1->headOffsetY - player1->shellOffsetY, camPosZ - 9.19f));   // Draws relative to the camera...
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -439,12 +439,17 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
+    // Undo head transformation
+    model = glm::translate(model,glm::vec3(-player1->headOffsetX, -player1->headOffsetY, 0));
 
 
     // Drawing the left foot...
-    model = glm::scale(model,glm::vec3(0.84f, 0.84f, 0.84f));
+    model = glm::scale(model,glm::vec3(1.64f, 0.64f, 0.84f));
     //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
-    model = glm::translate(model,glm::vec3(camPosX -1.64f - player1->headOffsetX, camPosY - 5.0f + player1->leftFootOffsetY - player1->headOffsetY, camPosZ - 7.1f));   // Draws relative to the camera...
+
+    //model = glm::translate(model,glm::vec3(camPosX -1.64f - player1->headOffsetX, camPosY - 5.0f + player1->leftFootOffsetY - player1->headOffsetY, camPosZ - 7.1f));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(camPosX -0.75f, camPosY - 5.0f + player1->leftFootOffsetY, camPosZ - 7.1f + 0.19f));   // Draws relative to the camera...
+
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
@@ -454,7 +459,10 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     // Drawing the right foot...
     //model = glm::scale(model,glm::vec3(0.84f, 0.84f, 0.84f));
     //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
-    model = glm::translate(model,glm::vec3(3.25f, 0, 0));   // Draws relative to the camera...
+
+    //model = glm::translate(model,glm::vec3(3.25f, 0, 0));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(1.49f, 0, 0));   // Draws relative to the camera...
+
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
