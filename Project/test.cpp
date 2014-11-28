@@ -489,7 +489,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     /// Draw Ground
     glm::mat4 model;
     GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
-    model = glm::scale(model,glm::vec3(100, 100, 100));
+    model = glm::scale(model,glm::vec3(100, 1, 100));
     model = glm::translate(model,glm::vec3(player1->posX, player1->posY - 1, player1->posZ));   // Draws relative to the camera...
     uniModel1 = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
