@@ -35,27 +35,34 @@ void Player::update() {
 
             if(this->moveCt > 45) {
                 this->headOffsetX -= 0.01;
+                this->leftFootOffsetY += 0.01;
             } else {
                 this->headOffsetX += 0.01;
+                this->leftFootOffsetY -= 0.01;
             }
 
             this->shellOffsetY += 0.0008;
             this->headOffsetY += 0.005;
-            this->leftFootOffsetY += 0.01;
-            this->rightFootOffsetY -= 0.01;
+
+
+            //this->leftFootOffsetY += 0.01;
+            //this->rightFootOffsetY -= 0.01;
 
         } else {
 
             if(this->moveCt > 15) {
                 this->headOffsetX += 0.01;
+                this->rightFootOffsetY += 0.01;
             } else {
                 this->headOffsetX -= 0.01;
+                this->rightFootOffsetY -= 0.01;
             }
 
             this->shellOffsetY -= 0.0008;
             this->headOffsetY -= 0.005;
-            this->leftFootOffsetY -= 0.01;
-            this->rightFootOffsetY += 0.01;
+
+            //this->leftFootOffsetY -= 0.01;
+            //this->rightFootOffsetY += 0.01;
         }
         this->moveCt -= 1;
     } else if (this->moveCt == 0) {

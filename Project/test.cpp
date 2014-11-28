@@ -439,11 +439,11 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
-    // Undo head transformation
+    // Undo transformation
     model = glm::translate(model,glm::vec3(-player1->headOffsetX, -player1->headOffsetY, 0));
 
 
-    // Drawing the left foot...
+    /// Left Flipper
     model = glm::scale(model,glm::vec3(1.64f, 0.64f, 0.84f));
     //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
 
@@ -455,13 +455,15 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     glUniform1i(uniTexID, 1); //Set texture ID to use
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
+    // Undo transformation
+    model = glm::translate(model,glm::vec3(0, -player1->leftFootOffsetY, 0));
 
-    // Drawing the right foot...
+    /// Right Flipper
     //model = glm::scale(model,glm::vec3(0.84f, 0.84f, 0.84f));
     //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
 
     //model = glm::translate(model,glm::vec3(3.25f, 0, 0));   // Draws relative to the camera...
-    model = glm::translate(model,glm::vec3(1.49f, 0, 0));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(1.49f, player1->rightFootOffsetY, 0));   // Draws relative to the camera...
 
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
