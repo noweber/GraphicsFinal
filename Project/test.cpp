@@ -14,6 +14,7 @@
 #include <time.h>
 #include<stdlib.h>
 
+//#include "Game.h"
 #include "Player.h"
 
 
@@ -33,8 +34,17 @@ float rand01(){
 
 GLuint InitShader(const char* vShaderFileName, const char* fShaderFileName);
 void drawGeometry(int shaderProgram, int numVerts1, int numVerts2);
+void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2);
 
 /// Global Game Stuff
+int screenWidth = 1024;
+int screenHeight = 768;
+
+/// Camera "view"
+float camPosX = 0.0f;// + player1->posX;
+float camPosY = 4.0f;// + player1->posY;
+float camPosZ = 8.0f;// + player1->posZ;
+
 Player *player1;
 
 
@@ -46,6 +56,8 @@ int main(int argc, char *argv[]){
     if(player1 == NULL) {
         printf("Error: Failed to create player1\n"); return 1;
     }
+    // Set starting position
+    player1->posZ = 0.0f;
 
     SDL_Init(SDL_INIT_VIDEO);  //Initialize Graphics (for OpenGL)
 
@@ -55,7 +67,7 @@ int main(int argc, char *argv[]){
 	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);//
 
 	//Create a window (offsetx, offsety, width, height, flags)
-	SDL_Window* window = SDL_CreateWindow("CSci 5607 Final Project", 100, 100, 800, 600, SDL_WINDOW_OPENGL);
+	SDL_Window* window = SDL_CreateWindow("CSci 5607 Final Project", 100, 100, screenWidth, screenHeight, SDL_WINDOW_OPENGL);
 
 	//Create a context to draw in
 	SDL_GLContext context = SDL_GL_CreateContext(window);
@@ -84,7 +96,7 @@ int main(int argc, char *argv[]){
 	modelFile.close();
 
 	//Load Model 2
-	modelFile.open("models/knot.txt");
+	modelFile.open("models/cube.txt");
 	numLines = 0;
 	modelFile >> numLines;
 	float* model2 = new float[numLines];
@@ -222,15 +234,26 @@ int main(int argc, char *argv[]){
                     break;
                 case SDL_KEYDOWN:
                     switch(kbEvent.key.keysym.sym) {
-                        case SDLK_d:
-
-                            break;
-                        case SDLK_a:
-
-                            break;
-
                         case SDLK_w:
+                            player1->posZ -= 0.08;
+                            printf("W keypress: moving.\n");
+                            break;
+                        case SDLK_s:
+                            player1->posZ += 0.08;
+                            printf("S keypress: moving.\n");
+                            break;
 
+                        case SDLK_a:
+                            if(player1->posX > -4.0) {
+                                player1->posX -= 0.08;
+                                printf("A keypress: moving.\n");
+                            }
+                            break;
+                        case SDLK_d:
+                            if(player1->posX < 4.0) {
+                                player1->posX += 0.08;
+                                printf("D keypress: moving.\n");
+                            }
                             break;
                         case SDLK_SPACE:
 
@@ -268,12 +291,6 @@ int main(int argc, char *argv[]){
       if (!saveOutput) timePast = SDL_GetTicks()/1000.f;
       if (saveOutput) timePast += .07; //Fix framerate at 14 FPS
 
-
-    /// Camera "view"
-    float camPosX = 0.0f;
-    float camPosY = 4.0f;
-    float camPosZ = 8.0f;
-
     glm::mat4 view = glm::lookAt(
     glm::vec3(camPosX, camPosY, camPosZ),  //Cam Position
     glm::vec3(0 , 0, -1.0),  //Look at point
@@ -281,7 +298,8 @@ int main(int argc, char *argv[]){
     GLint uniView = glGetUniformLocation(texturedShader, "view");
     glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 
-    glm::mat4 proj = glm::perspective(3.14f/4, 800.0f / 600.0f, 1.0f, 10.0f); //FOV, aspect, near, far
+    //glm::mat4 proj = glm::perspective(3.14f/4, 1024.0f / 768.0f, 1.0f, 10.0f); //FOV, aspect, near, far
+    glm::mat4 proj = glm::perspective(3.14f/4, 1024.0f / 768.0f, 1.0f, 100.0f); //FOV, aspect, near plane, far plane
     GLint uniProj = glGetUniformLocation(texturedShader, "proj");
     glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 
@@ -292,11 +310,17 @@ int main(int argc, char *argv[]){
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, tex1);
     glUniform1i(glGetUniformLocation(texturedShader, "tex1"), 1);
-
+/*
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, tex2);
+    glUniform1i(glGetUniformLocation(texturedShader, "tex2"), 2);
+*/
+    /// Call Rendering Functions
     drawGeometry(texturedShader, numVerts1,numVerts2);
+    drawCubeFriend(texturedShader, numVerts1,numVerts2);
 
 
-      if (saveOutput) Win2PPM(800,600);
+      if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
 
       SDL_GL_SwapWindow(window); //Double buffering
@@ -318,24 +342,92 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     glm::vec3 colVec(0.5,0.5,0.5);
     glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
     GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
+    //glm::mat4 model;
+    //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+
+    /// Draw Player
+    // Drawing the shell...
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-
-    // Draw the Character
-    model = glm::translate(model,glm::vec3(0.0f, 0.0f, 0.0f));
-
+    model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
+    model = glm::translate(model,glm::vec3(camPosX, camPosY - 4.0f, camPosZ - 4.5f));   // Draws relative to the camera...
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
-    model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
+    //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
+    //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
+    glUniform1i(uniTexID, 0); //Set texture ID to use
+    //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
+    //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
+
+    // Drawing the head...
+    //glm::mat4 model;
+    //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+
+    model = glm::scale(model,glm::vec3(0.4f, 0.4f, 0.4f));
+    //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
+    model = glm::translate(model,glm::vec3(camPosX, camPosY - 3.5f, camPosZ - 9.0f));   // Draws relative to the camera...
+    uniModel = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
+    //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
     glUniform1i(uniTexID, 1); //Set texture ID to use
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    // Draw model 1
     glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
 
+
+    // Drawing the left foot...
+    model = glm::scale(model,glm::vec3(0.84f, 0.84f, 0.84f));
+    //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
+    model = glm::translate(model,glm::vec3(camPosX -1.64f, camPosY - 5.0f, camPosZ - 7.1f));   // Draws relative to the camera...
+    uniModel = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(uniTexID, 1); //Set texture ID to use
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
+
+    // Drawing the right foot...
+    //model = glm::scale(model,glm::vec3(0.84f, 0.84f, 0.84f));
+    //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
+    model = glm::translate(model,glm::vec3(3.2f, 0, 0));   // Draws relative to the camera...
+    uniModel = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(uniTexID, 1); //Set texture ID to use
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
+
+
 }
+
+void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2){
+
+	/*GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
+    glm::vec3 colVec(0.5,0.5,0.5);
+    glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
+    GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
+    //glm::mat4 model;
+    //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+*/
+    /// Draw Cubie
+    //glm::mat4 model;
+    //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+    //model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
+    //model = glm::translate(model,glm::vec3(0.0f, 0.0f, 0.0f));   // Draws relative to the camera...
+    //uniModel = glGetUniformLocation(shaderProgram, "model");
+    //glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
+    //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
+    //glUniform1i(uniTexID, 0); //Set texture ID to use
+    //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
+    //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
+    //glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    //glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); //(Primitive Type, Start Vertex, End Vertex)
+
+}
+
 
 // Create a NULL-terminated string by reading the provided file
 static char* readShaderSource(const char* shaderFile)

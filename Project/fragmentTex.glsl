@@ -10,6 +10,7 @@ out vec4 outColor;
 
 uniform sampler2D tex0;
 uniform sampler2D tex1;
+uniform sampler2D tex2;
 
 uniform int texID;
 
