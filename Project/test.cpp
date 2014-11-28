@@ -13,23 +13,40 @@
 #include <string>
 #include <time.h>
 #include<stdlib.h>
+
+#include "Player.h"
+
+
 using namespace std;
 
 bool saveOutput = false;
 float timePast = 0;
 bool DEBUG_ON = true;
-GLuint InitShader(const char* vShaderFileName, const char* fShaderFileName);
 bool fullscreen = false;
 void Win2PPM(int width, int height);
+
 
 //srand(time(NULL));
 float rand01(){
 	return rand()/(float)RAND_MAX;
 }
 
+GLuint InitShader(const char* vShaderFileName, const char* fShaderFileName);
 void drawGeometry(int shaderProgram, int numVerts1, int numVerts2);
 
+/// Global Game Stuff
+Player *player1;
+
+
+
+
 int main(int argc, char *argv[]){
+
+    player1 = new Player();
+    if(player1 == NULL) {
+        printf("Error: Failed to create player1\n"); return 1;
+    }
+
     SDL_Init(SDL_INIT_VIDEO);  //Initialize Graphics (for OpenGL)
 
     //Ask SDL to get a recent version of OpenGL (3 or greater)
@@ -55,7 +72,7 @@ int main(int argc, char *argv[]){
 
 	//Load Model 1
 	ifstream modelFile;
-	modelFile.open("models/knot.txt");
+	modelFile.open("models/sphere.txt");
 	int numLines = 0;
 	modelFile >> numLines;
 	float* model1 = new float[numLines];
@@ -67,7 +84,7 @@ int main(int argc, char *argv[]){
 	modelFile.close();
 
 	//Load Model 2
-	modelFile.open("models/cube.txt");
+	modelFile.open("models/knot.txt");
 	numLines = 0;
 	modelFile >> numLines;
 	float* model2 = new float[numLines];
@@ -87,7 +104,7 @@ int main(int argc, char *argv[]){
 	int totalNumVerts = numVerts1+numVerts2;
 
 
-	/// Allocate Texture 0 ///////
+	/// Allocate Texture 0 ///
 	SDL_Surface* surface = SDL_LoadBMP("lightRed.bmp");
 	if (surface==NULL) { //If it failed, print the error
         printf("Error: \"%s\"\n",SDL_GetError()); return 1;
@@ -106,10 +123,10 @@ int main(int argc, char *argv[]){
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w,surface->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface->pixels);
     glGenerateMipmap(GL_TEXTURE_2D);
     SDL_FreeSurface(surface);
-    //// End Allocate Texture ///////
+    /// End Allocate Texture
 
 
-	//// Allocate Texture 1 ///////
+	/// Allocate Texture 1 ///
 	SDL_Surface* surface1 = SDL_LoadBMP("lightGreen.bmp");
 	if (surface1==NULL){ //If it failed, print the error
         printf("Error: \"%s\"\n",SDL_GetError()); return 1;
@@ -129,9 +146,10 @@ int main(int argc, char *argv[]){
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface1->w,surface1->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface1->pixels);
     glGenerateMipmap(GL_TEXTURE_2D);
     SDL_FreeSurface(surface1);
-    //// End Allocate Texture ///////\
+    /// End Allocate Texture
 
-    //// Allocate Texture 2 (door) ///////
+
+    /// Allocate Texture 2 ///
 	SDL_Surface* surface2 = SDL_LoadBMP("lightBlue.bmp");
 	if (surface2==NULL){ //If it failed, print the error
         printf("Error: \"%s\"\n",SDL_GetError()); return 1;
@@ -150,7 +168,7 @@ int main(int argc, char *argv[]){
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface2->w,surface2->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface2->pixels);
     glGenerateMipmap(GL_TEXTURE_2D);
     SDL_FreeSurface(surface2);
-    //// End Allocate Texture ///////
+    /// End Allocate Texture
 
 
 	//Allocate memory on the graphics card to store geometry (vertex buffer object)
@@ -251,10 +269,14 @@ int main(int argc, char *argv[]){
       if (saveOutput) timePast += .07; //Fix framerate at 14 FPS
 
 
-      /// Camera "view"
+    /// Camera "view"
+    float camPosX = 0.0f;
+    float camPosY = 4.0f;
+    float camPosZ = 8.0f;
+
     glm::mat4 view = glm::lookAt(
-    glm::vec3(4.0f, 0, 0),  //Cam Position
-    glm::vec3(-1 , 0, 0),  //Look at point
+    glm::vec3(camPosX, camPosY, camPosZ),  //Cam Position
+    glm::vec3(0 , 0, -1.0),  //Look at point
     glm::vec3(0.0f, 1.0f, 0.0f)); //Up
     GLint uniView = glGetUniformLocation(texturedShader, "view");
     glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
@@ -299,16 +321,16 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
-    // draw the knot
+    // Draw the Character
     model = glm::translate(model,glm::vec3(0.0f, 0.0f, 0.0f));
 
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniform1i(uniTexID, 0); //Set texture ID to use
+    glUniform1i(uniTexID, 1); //Set texture ID to use
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
-    //glUniform3f(uniColor, 0.0f, 1.0f, 0.0f);
+    //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     // Draw model 1
     glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)

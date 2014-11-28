@@ -8,6 +8,7 @@ class Game {
         ~Game();
 
 
+
     // Updates all active game objects based on the amount of time that has passed
     void update(int time);
 
