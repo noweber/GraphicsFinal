@@ -476,7 +476,7 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
 }
 
 void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
-    /*GLint uniColor1 = glGetUniformLocation(shaderProgram, "inColor");
+    GLint uniColor1 = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
     glUniform3fv(uniColor1, 1, glm::value_ptr(colVec));
     GLint uniTexID1 = glGetUniformLocation(shaderProgram, "texID");
@@ -484,20 +484,20 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
     /// Draw Ground
-    glm::mat4 ground;
-    GLint uniModel1 = glGetUniformLocation(shaderProgram, "ground");
-    ground = glm::scale(ground,glm::vec3(1.0f, 0.8f, 1.1f));
-    ground = glm::translate(ground,glm::vec3(camPosX, camPosY - 4.0f, camPosZ - 2.5f));   // Draws relative to the camera...
-    uniModel1 = glGetUniformLocation(shaderProgram, "ground");
-    glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(ground));
+    glm::mat4 model;
+    GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
+    model = glm::scale(model,glm::vec3(100, 100, 100));
+    model = glm::translate(model,glm::vec3(player1->posX, player1->posY - 1, player1->posZ));   // Draws relative to the camera...
+    uniModel1 = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
     glUniform1i(uniTexID1, 2); //Set texture ID to use
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
-    glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(ground));
+    glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); //(Primitive Type, Start Vertex, End Vertex)
-    */
+    
 }
 
 void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2){
