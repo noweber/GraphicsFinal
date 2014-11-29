@@ -41,8 +41,10 @@
 			<Add directory="C:/glew/glew-1.11.0/lib" />
 			<Add directory="C:/SDL/SDL2-2.0.3/i686-w64-mingw32/lib" />
 		</Linker>
-		<Unit filename="Player.cpp" />
-		<Unit filename="Player.h" />
+		<Unit filename="include/Game.h" />
+		<Unit filename="include/Player.h" />
+		<Unit filename="src/Game.cpp" />
+		<Unit filename="src/Player.cpp" />
 		<Unit filename="test.cpp" />
 		<Extensions>
 			<code_completion />
