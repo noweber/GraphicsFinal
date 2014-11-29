@@ -9,7 +9,7 @@
 
 1417200650 e:\programming\csci5607\graphicsfinal\project\include\player.h
 
-1417204998 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
+1417222974 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
 	<GL/glew.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_opengl.h>
@@ -23,7 +23,6 @@
 	<time.h>
 	<stdlib.h>
 	"Player.h"
-	"Player.cpp"
 
 1414811205 c:\glew\glew-1.11.0\include\gl\glew.h
 	<stddef.h>
