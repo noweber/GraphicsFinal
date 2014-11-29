@@ -103,6 +103,7 @@ int main(int argc, char *argv[]){
 	glBindVertexArray(vao); //Bind the above created VAO to the current context
 
 
+
 	//Load Model 1
 	ifstream modelFile;
 	modelFile.open("models/sphere.txt");
@@ -270,7 +271,8 @@ int main(int argc, char *argv[]){
     while (isRunning){
 
         //Set up variable for camera
-        if (!saveOutput) timePast = SDL_GetTicks()/1000.f; 
+        SDL_ShowCursor(SDL_DISABLE);    // hide the cursor
+        if (!saveOutput) timePast = SDL_GetTicks()/1000.f;
         if (saveOutput) timePast += .07; //Fix framerate at 14 FPS
         float deltaT = timePast - oldTime;
         SDL_GetMouseState(&mouseX, &mouseY);
