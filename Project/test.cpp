@@ -16,7 +16,7 @@
 
 //#include "Game.h"
 #include "Player.h"
-//#include "Player.cpp"
+#include "Camera.h"
 //#include "Player.cpp"
 
 
@@ -35,50 +35,48 @@ void Win2PPM(int width, int height);
 float rand01(){
 	return rand()/(float)RAND_MAX;
 }
-
+/// Initialization Function Declarations
 GLuint InitShader(const char* vShaderFileName, const char* fShaderFileName);
-// Update Functions
+/// Update Function Declarations
 void updateLighting(int shaderProgram);
-// Rendering Functions
+/// Rendering Function Declarations
 void drawGeometry(int shaderProgram, int numVerts1, int numVerts2);
 void drawGround(int shaderProgram, int numVerts1, int numVerts2);
 void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2);
 
 /// Global Game Stuff
+Player *player;
+Camera *camera;
 int screenWidth = 1024;
 int screenHeight = 768;
 
+// TODO: make time of day lighting and add in additional lights to the map
 float gLightAdjustment = 0;    // Allows the lights to move around
 //int gLightMovementCt = 1000;  // possible light progression as the day goes by.
 bool gLightReachedRightMax = false;
-/// Camera "view"
-float camPosX = 0.0f;// + player1->posX;
-float camPosY = 4.0f;// + player1->posY;
-float camPosZ = 8.0f;// + player1->posZ;
 
-//Free Camera variable
-float horiAngle = 3.14f;
-float vertAngle = 0.0f;
-float speed = 0.01f;
-float mouseSpeed = 0.005f;
-int mouseX, mouseY;
+
+// Timing variable
+float deltaT;
+
 glm::vec3 direction;
 glm::vec3 rightVector;
 glm::vec3 upVector;
-
-Player *player1;
 
 
 
 
 int main(int argc, char *argv[]){
 
-    player1 = new Player();
-    if(player1 == NULL) {
+    /// Instantiate game objects
+    player = new Player();
+    camera = new Camera();
+
+    if(player == NULL) {
         printf("Error: Failed to create player1\n"); return 1;
     }
     // Set starting position
-    player1->posZ = 0.0f;
+    player->posZ = 0.0f;
 
     SDL_Init(SDL_INIT_VIDEO);  //Initialize Graphics (for OpenGL)
 
@@ -263,58 +261,66 @@ int main(int argc, char *argv[]){
 
 	glEnable(GL_DEPTH_TEST);
 
+    /// TODO move to Game::init()
 	//Event Loop (Loop forever processing each event as fast as possible)
 	SDL_Event windowEvent;
+	SDL_WarpMouseInWindow(window, screenWidth/2, screenHeight/2);   // initial mouse warp to center camera
 	//Event Loop (Loop forever processing each event as fast as possible)
 	bool isRunning = true;
 	SDL_Event kbEvent;
     while (isRunning){
-
-        //Set up variable for camera
         SDL_ShowCursor(SDL_DISABLE);    // hide the cursor
+        camera->shouldRecenter = false;
+
+        /// TODO: change the calculation of deltaT
         if (!saveOutput) timePast = SDL_GetTicks()/1000.f;
         if (saveOutput) timePast += .07; //Fix framerate at 14 FPS
-        float deltaT = timePast - oldTime;
-        SDL_GetMouseState(&mouseX, &mouseY);
-        SDL_WarpMouseInWindow(window, screenWidth/2, screenHeight/2);
-        horiAngle += mouseSpeed * deltaT * float(screenWidth/2 - mouseX);
-        vertAngle += mouseSpeed * deltaT * float(screenHeight/2 - mouseY);
-        // direction = glm::vec3(sin(horiAngle), 0, cos(horiAngle)); //Hori only
-        direction = glm::vec3(cos(vertAngle)*sin(horiAngle), sin(vertAngle), cos(vertAngle)*cos(horiAngle)); //Hori and Vert
-        rightVector = glm::vec3(sin(horiAngle-3.14f/2.0f), 0, cos(horiAngle-3.14f/2.0f));
-        upVector = glm::cross(rightVector, direction);
-        //Set up finished
+        deltaT = timePast - oldTime;
 
         while(SDL_PollEvent(&kbEvent) != 0) {
             switch(kbEvent.type) {
                 case SDL_QUIT:
                     isRunning = false;
                     break;
+
+                case SDL_MOUSEMOTION:
+                    if(!camera->shouldRecenter) {
+                        camera->lastMouseX = camera->mouseX;
+                        camera->lastMouseY = camera->mouseY;
+                        SDL_GetMouseState(&camera->mouseX, &camera->mouseY);
+                        camera->mouseDX = camera->mouseX - camera->lastMouseX;
+                        camera->mouseDY = camera->mouseY - camera->lastMouseY;
+                        camera->shouldRecenter = true;
+                    }
+                break;
+
+                /// TODO: transition to time based movements by creating booleans and functions within Player class
+                /// TODO: make movements relative to the facing of the camera?  If you press forward while facing a direction, you should move that direction.  This may be hard.
                 case SDL_KEYDOWN:
                     switch(kbEvent.key.keysym.sym) {
                         case SDLK_w:
-                            player1->posZ -= 0.08;
-                            player1->movePlayer();
-                            printf("W keypress: direc.\n");
+                            player->posZ -= 0.08;
+                            player->movePlayer();
+                            //printf("W keypress: direc.\n");
                             break;
                         case SDLK_s:
-                            player1->posZ += 0.08;
-                            player1->movePlayer();
-                            printf("S keypress: moving.\n");
+                            player->posZ += 0.08;
+                            player->movePlayer();
+                            //printf("S keypress: moving.\n");
                             break;
 
                         case SDLK_a:
-                            if(player1->posX > -4.0) {
-                                player1->posX -= 0.08;
-                                player1->movePlayer();
-                                printf("A keypress: moving.\n");
+                            if(player->posX > -4.0) {
+                                player->posX -= 0.08;
+                                player->movePlayer();
+                                //printf("A keypress: moving.\n");
                             }
                             break;
                         case SDLK_d:
-                            if(player1->posX < 4.0) {
-                                player1->posX += 0.08;
-                                player1->movePlayer();
-                                printf("D keypress: moving.\n");
+                            if(player->posX < 4.0) {
+                                player->posX += 0.08;
+                                player->movePlayer();
+                                //printf("D keypress: moving.\n");
                             }
                             break;
                         case SDLK_SPACE:
@@ -323,10 +329,8 @@ int main(int argc, char *argv[]){
                         case SDLK_q:
 
                             break;
-                        /*case SDLK_e:
-                            lookZ += 1;
-                            printf("xRotation change\n");
-                            break;*/
+                        case SDLK_e:
+                            break;
                         case SDLK_f:
                             fullscreen = !fullscreen;
                             SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
@@ -343,16 +347,29 @@ int main(int argc, char *argv[]){
             }
         } // \while(SDL_PollEvent(&kbEvent) != 0)
 
-      // Clear the screen to default color
-      glClearColor(.2f, 0.4f, 0.8f, 1.0f);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    /// TODO: move these two blocks into Camera
+    /// Recenter the mouse if necessary
+    if(camera->shouldRecenter) {
+        SDL_WarpMouseInWindow(window, screenWidth/2, screenHeight/2);
+    }
 
-      glUseProgram(texturedShader);
+    /// Make mouse movements
+    camera->horiAngle += camera->mouseSpeed * deltaT * float(screenWidth/2 - camera->mouseX);
+    camera->vertAngle += camera->mouseSpeed * deltaT * float(screenHeight/2 - camera->mouseY);
+    direction = glm::vec3(cos(camera->vertAngle)*sin(camera->horiAngle), sin(camera->vertAngle), cos(camera->vertAngle)*cos(camera->horiAngle)); //Hori and Vert
+    rightVector = glm::vec3(sin(camera->horiAngle-3.14f/2.0f), 0, cos(camera->horiAngle-3.14f/2.0f));
+    upVector = glm::cross(rightVector, direction);
+
+
+    /// Clear the screen to default color
+    glClearColor(.2f, 0.4f, 0.8f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glUseProgram(texturedShader);
 
     glm::mat4 view = glm::lookAt(
-    glm::vec3(camPosX, camPosY, camPosZ),  //Cam Position
+    glm::vec3(camera->posX, camera->posY, camera->posZ),  //Cam Position
     // glm::vec3(0 , 0, -1.0),  //Look at point
-    glm::vec3(camPosX, camPosY, camPosZ) + direction,
+    glm::vec3(camera->posX, camera->posY, camera->posZ) + direction,
     // glm::vec3(0.0f, 1.0f, 0.0f)); //Up
     upVector);
 
@@ -364,6 +381,7 @@ int main(int argc, char *argv[]){
     GLint uniProj = glGetUniformLocation(texturedShader, "proj");
     glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 
+    /// TODO: create a texture manager if time permits
     // Activate the textures?
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex0);
@@ -383,13 +401,14 @@ int main(int argc, char *argv[]){
 
 
 
-    /// Updater
+    /// TODO: Updater to be moved to Game::update()
     updateLighting(texturedShader);
-    player1->update();
+    player->update();
 
 
 
 
+    /// TODO: possibly move this to Game::render()
     /// Call Rendering Functions
     drawGeometry(texturedShader, numVerts1,numVerts2);
     drawGround(texturedShader, numVerts1,numVerts2);
@@ -442,7 +461,7 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
-    model = glm::translate(model,glm::vec3(camPosX + direction.x, camPosY + direction.y - 4.0f + player1->shellOffsetY, camPosZ + direction.z - 4.5f));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(camera->posX + direction.x, camera->posY + direction.y - 4.0f + player->shellOffsetY + 1.0f, camera->posZ + direction.z - 4.5f));   // Draws relative to the camera...
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -452,14 +471,14 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
-
+/*
     // Drawing the head...
     //glm::mat4 model;
     //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
     model = glm::scale(model,glm::vec3(0.54f, 0.49f, 0.4f));
     //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
-    model = glm::translate(model,glm::vec3(camPosX + direction.x + player1->headOffsetX, camPosY + direction.y - 3.5f + player1->headOffsetY - player1->shellOffsetY, camPosZ + direction.z - 9.19f));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(camera->posX + direction.x + player1->headOffsetX, camera->posY + direction.y - 3.5f + player1->headOffsetY - player1->shellOffsetY, camera->posZ + direction.z - 9.19f));   // Draws relative to the camera...
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -500,7 +519,7 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     glUniform1i(uniTexID, 1); //Set texture ID to use
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
-
+*/
 
 }
 
@@ -516,12 +535,12 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     glm::mat4 model;
     GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
     model = glm::scale(model,glm::vec3(100, 1, 100));
-    model = glm::translate(model,glm::vec3(player1->posX, player1->posY - 1, player1->posZ));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(player->posX, player->posY - 1, player->posZ));   // Draws relative to the camera...
     uniModel1 = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniform1i(uniTexID1, 2); //Set texture ID to use
+    glUniform1i(uniTexID1, 3); //Set texture ID to use
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));

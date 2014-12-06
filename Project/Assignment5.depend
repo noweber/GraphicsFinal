@@ -1,15 +1,5 @@
 # depslib dependency file v1.0
-1417133848 source:e:\programming\csci5607\graphicsfinal\project\src\game.cpp
-	"Game.h"
-
-1417135367 e:\programming\csci5607\graphicsfinal\project\include\game.h
-
-1417204845 source:e:\programming\csci5607\graphicsfinal\project\src\player.cpp
-	"../include/Player.h"
-
-1417200650 e:\programming\csci5607\graphicsfinal\project\include\player.h
-
-1417222974 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
+1417834330 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
 	<GL/glew.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_opengl.h>
@@ -23,6 +13,7 @@
 	<time.h>
 	<stdlib.h>
 	"Player.h"
+	"Camera.h"
 
 1414811205 c:\glew\glew-1.11.0\include\gl\glew.h
 	<stddef.h>
@@ -785,14 +776,13 @@
 1416695342 e:\programming\csci5607\graphicsfinal\project\glm\gtc\type_ptr.inl
 	<cstring>
 
-1417204845 e:\programming\csci5607\graphicsfinal\project\src\player.cpp
-	"../include/Player.h"
-
 1417200650 e:\programming\csci5607\graphicsfinal\project\player.h
 
-1417205045 e:\programming\csci5607\graphicsfinal\project\player.cpp
+1417833946 source:e:\programming\csci5607\graphicsfinal\project\player.cpp
 	"Player.h"
 
-1417205045 source:e:\programming\csci5607\graphicsfinal\project\player.cpp
-	"Player.h"
+1417835158 e:\programming\csci5607\graphicsfinal\project\camera.h
+
+1417835095 source:e:\programming\csci5607\graphicsfinal\project\camera.cpp
+	"Camera.h"
 
