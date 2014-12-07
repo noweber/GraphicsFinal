@@ -14,14 +14,30 @@
 #include <time.h>
 #include<stdlib.h>
 
-//#include "Game.h"
 #include "Player.h"
 #include "Camera.h"
-//#include "Player.cpp"
-
-
 
 using namespace std;
+
+
+/// //// //// GENERAL TO-DO LIST //// //// ///
+
+//-- Get a new turtle model made and animated.
+//-- Allow the player's turtle to move
+//-- Bound the camera above the ground plane
+//-- Setup the button 'C' to switch between player movement and camera movement.  This means, I can move my camera freely, then press C to move the turtle... back and forth.
+        // This is a state we could store somewhere
+//-- Try to add more lights and/or make the the ground light up rather than just that odd circle underneath the camera
+//-- Make movements relative to the facing of the camera?  If you press forward while facing a direction, you should move that direction.  This may be hard.
+//-- Make event queue loop allow multiple key presses per cycle... currently you can not move forward-left, forward-right, etc.
+        // We can do this by storing the states of the keyboard.  Flag the 'holdingRight' state on key press to true... flag it as false on key up.
+//-- Add sounds to the game
+//-- Update functions should be moved to Game::update()
+//-- Change Player::update() to a function of time exactly as Camera::update() is.
+//-- Possibly move rendering functions to Game::render() - may not be necessary
+//-- Create a texture manager if time permits
+
+/// //// //// END OF TODO LIST //// //// ///
 
 bool saveOutput = false;
 float timePast = 0;
@@ -294,8 +310,6 @@ int main(int argc, char *argv[]){
                     }
                 break;
 
-                /// TODO: make movements relative to the facing of the camera?  If you press forward while facing a direction, you should move that direction.  This may be hard.
-                /// TODO: make this allow multiple key downs per cycle... probably by doing a series of conditionals rather than a switch statement
                 case SDL_KEYDOWN:
                     switch(kbEvent.key.keysym.sym) {
 
@@ -354,7 +368,6 @@ int main(int argc, char *argv[]){
             }
         } // \while(SDL_PollEvent(&kbEvent) != 0)
 
-    /// TODO: move these two blocks into Camera
     /// Recenter the mouse if necessary
     if(camera->shouldRecenter) {
         SDL_WarpMouseInWindow(window, screenWidth/2, screenHeight/2);
@@ -388,7 +401,6 @@ int main(int argc, char *argv[]){
     GLint uniProj = glGetUniformLocation(texturedShader, "proj");
     glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 
-    /// TODO: create a texture manager if time permits
     // Activate the textures?
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex0);
@@ -407,17 +419,12 @@ int main(int argc, char *argv[]){
     glUniform1i(glGetUniformLocation(texturedShader, "tex3"), 3);
 
 
-
-    /// TODO: Updater to be moved to Game::update()
-    /// TODO: change Player::update() to a function of time exactly as Camera::update() is
+    /// Call Updater Functions
     updateLighting(texturedShader);
     player->update();
     camera->update(deltaT);
 
 
-
-
-    /// TODO: possibly move this to Game::render()
     /// Call Rendering Functions
     drawTurtle(texturedShader, numVerts1,numVerts2);
     drawGround(texturedShader, numVerts1,numVerts2);
