@@ -41,6 +41,8 @@
 			<Add directory="C:/glew/glew-1.11.0/lib" />
 			<Add directory="C:/SDL/SDL2-2.0.3/i686-w64-mingw32/lib" />
 		</Linker>
+		<Unit filename="Camera.cpp" />
+		<Unit filename="Camera.h" />
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
 		<Unit filename="test.cpp" />
