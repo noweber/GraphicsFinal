@@ -5,11 +5,25 @@ class Camera {
 
 public:
     Camera();
-    void recenter();
+    void update(float dt);
 
     float posX;
     float posY;
     float posZ;
+
+    // Camera's responsiveness WASD
+    float velocityX;
+    float velocityY;
+    float velocityZ;
+
+    // Camera's movement states since last update (these reset to false every update
+    bool hasMoved;
+    bool movedLeft;
+    bool movedRight;
+    bool movedUp;
+    bool movedDown;
+    bool movedForward;
+    bool movedBackward;
 
     float horiAngle = 3.14f;
     float vertAngle = 0.0f;

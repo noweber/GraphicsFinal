@@ -40,7 +40,7 @@ GLuint InitShader(const char* vShaderFileName, const char* fShaderFileName);
 /// Update Function Declarations
 void updateLighting(int shaderProgram);
 /// Rendering Function Declarations
-void drawGeometry(int shaderProgram, int numVerts1, int numVerts2);
+void drawTurtle(int shaderProgram, int numVerts1, int numVerts2);
 void drawGround(int shaderProgram, int numVerts1, int numVerts2);
 void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2);
 
@@ -294,50 +294,57 @@ int main(int argc, char *argv[]){
                     }
                 break;
 
-                /// TODO: transition to time based movements by creating booleans and functions within Player class
                 /// TODO: make movements relative to the facing of the camera?  If you press forward while facing a direction, you should move that direction.  This may be hard.
+                /// TODO: make this allow multiple key downs per cycle... probably by doing a series of conditionals rather than a switch statement
                 case SDL_KEYDOWN:
                     switch(kbEvent.key.keysym.sym) {
+
                         case SDLK_w:
-                            player->posZ -= 0.08;
-                            player->movePlayer();
-                            //printf("W keypress: direc.\n");
+                            camera->hasMoved = true;
+                            camera->movedForward = true;
                             break;
+
                         case SDLK_s:
-                            player->posZ += 0.08;
-                            player->movePlayer();
-                            //printf("S keypress: moving.\n");
+                            camera->hasMoved = true;
+                            camera->movedBackward = true;
                             break;
 
                         case SDLK_a:
-                            if(player->posX > -4.0) {
-                                player->posX -= 0.08;
-                                player->movePlayer();
-                                //printf("A keypress: moving.\n");
-                            }
-                            break;
-                        case SDLK_d:
-                            if(player->posX < 4.0) {
-                                player->posX += 0.08;
-                                player->movePlayer();
-                                //printf("D keypress: moving.\n");
-                            }
-                            break;
-                        case SDLK_SPACE:
+                            camera->hasMoved = true;
+                            camera->movedLeft = true;
 
                             break;
+                        case SDLK_d:
+                            camera->hasMoved = true;
+                            camera->movedRight = true;
+                            break;
+
+                        case SDLK_SPACE:
+                            camera->hasMoved = true;
+                            camera->movedUp = true;
+                            break;
+
+                        case SDLK_x:
+                            camera->hasMoved = true;
+                            camera->movedDown = true;
+                            break;
+
                         case SDLK_q:
 
                             break;
+
                         case SDLK_e:
                             break;
+
                         case SDLK_f:
                             fullscreen = !fullscreen;
                             SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
                             break;
+
                         case SDLK_ESCAPE:
                             isRunning = false;
                             break;
+
                         default:
                             break;
                         }
@@ -353,7 +360,7 @@ int main(int argc, char *argv[]){
         SDL_WarpMouseInWindow(window, screenWidth/2, screenHeight/2);
     }
 
-    /// Make mouse movements
+    /// Make camera movements from the mouse input
     camera->horiAngle += camera->mouseSpeed * deltaT * float(screenWidth/2 - camera->mouseX);
     camera->vertAngle += camera->mouseSpeed * deltaT * float(screenHeight/2 - camera->mouseY);
     direction = glm::vec3(cos(camera->vertAngle)*sin(camera->horiAngle), sin(camera->vertAngle), cos(camera->vertAngle)*cos(camera->horiAngle)); //Hori and Vert
@@ -402,15 +409,17 @@ int main(int argc, char *argv[]){
 
 
     /// TODO: Updater to be moved to Game::update()
+    /// TODO: change Player::update() to a function of time exactly as Camera::update() is
     updateLighting(texturedShader);
     player->update();
+    camera->update(deltaT);
 
 
 
 
     /// TODO: possibly move this to Game::render()
     /// Call Rendering Functions
-    drawGeometry(texturedShader, numVerts1,numVerts2);
+    drawTurtle(texturedShader, numVerts1,numVerts2);
     drawGround(texturedShader, numVerts1,numVerts2);
     drawCubeFriend(texturedShader, numVerts1,numVerts2);
 
@@ -431,7 +440,7 @@ int main(int argc, char *argv[]){
 }
 
 void updateLighting(int shaderProgram) {
-    GLint uniLightOffset = glGetUniformLocation(shaderProgram, "lightOffset");
+    /*GLint uniLightOffset = glGetUniformLocation(shaderProgram, "lightOffset");
     if(gLightAdjustment < 0.16 && !gLightReachedRightMax) {
         gLightAdjustment += 0.01;
         glUniform1i(uniLightOffset, gLightAdjustment); //Set the new light offset
@@ -444,10 +453,10 @@ void updateLighting(int shaderProgram) {
         glUniform1i(uniLightOffset, gLightAdjustment); //Set the new light offset
     } else if(gLightAdjustment <= -0.16) {
         gLightReachedRightMax = false;
-    }
+    }*/
 }
 
-void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
+void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
 
 	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
@@ -461,7 +470,7 @@ void drawGeometry(int shaderProgram, int numVerts1, int numVerts2){
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
-    model = glm::translate(model,glm::vec3(camera->posX + direction.x, camera->posY + direction.y - 4.0f + player->shellOffsetY + 1.0f, camera->posZ + direction.z - 4.5f));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(0.0f, 1.0f, -4.5f));   // Draws relative to the camera...
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -534,8 +543,8 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     /// Draw Ground
     glm::mat4 model;
     GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
-    model = glm::scale(model,glm::vec3(100, 1, 100));
-    model = glm::translate(model,glm::vec3(player->posX, player->posY - 1, player->posZ));   // Draws relative to the camera...
+    model = glm::scale(model,glm::vec3(1000.0f, 0.25f, 1000.0f));
+    model = glm::translate(model,glm::vec3(0.0f, -1.0f, 0.0f));   // Draws relative to the camera...
     uniModel1 = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
