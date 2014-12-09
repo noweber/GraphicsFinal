@@ -21,7 +21,8 @@ using namespace std;
 
 
 /// //// //// GENERAL TO-DO LIST //// //// ///
-
+//-- Work on lighting and shader files
+//-- Generate content
 //-- Get a new turtle model made and animated.
 //-- Allow the player's turtle to move
 //-- Bound the camera above the ground plane
