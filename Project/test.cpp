@@ -13,10 +13,13 @@
 #include <string>
 #include <time.h>
 #include<stdlib.h>
+#include <map>
+#include <vector>
 
 #include "Player.h"
 #include "Camera.h"
 #include "Level.h"
+#include "modelIndex.h"
 
 using namespace std;
 
@@ -62,6 +65,17 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2);
 void drawLevel(int shaderProgram, int numVerts1, int numVerts2);
 void drawGround(int shaderProgram, int numVerts1, int numVerts2);
 void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2);
+
+//Model data management
+//See modelIndex class for returning the values
+
+//Map to lookup the indices for the model
+map<string, modelIndex> modelDict;
+vector<float> modelData;
+
+//Getter and setter
+void setModel(string fileName, string modelName);
+modelIndex getModel(string modelName);
 
 /// Global Game Stuff
 Player *player;
@@ -124,40 +138,42 @@ int main(int argc, char *argv[]){
 	glGenVertexArrays(1, &vao); //Create a VAO
 	glBindVertexArray(vao); //Bind the above created VAO to the current context
 
+    //Load models with new helper function
+    setModel("sphere.txt", "sphere");
+    setModel("knot.txt", "knot");
 
+	// //Load Model 1
+	// ifstream modelFile;
+	// modelFile.open("models/sphere.txt");
+	// int numLines = 0;
+	// modelFile >> numLines;
+	// float* model1 = new float[numLines];
+	// for (int i = 0; i < numLines; i++){
+	// 	modelFile >> model1[i];
+	// }	int numVerts1 = numLines/8;
+	// modelFile.close();
 
-	//Load Model 1
-	ifstream modelFile;
-	modelFile.open("models/sphere.txt");
-	int numLines = 0;
-	modelFile >> numLines;
-	float* model1 = new float[numLines];
-	for (int i = 0; i < numLines; i++){
-		modelFile >> model1[i];
-	}	int numVerts1 = numLines/8;
-	modelFile.close();
+	// printf("%d\n",numLines);
 
-	printf("%d\n",numLines);
+	// //Load Model 2
+	// modelFile.open("models/cube.txt");
+	// numLines = 0;
+	// modelFile >> numLines;
+	// float* model2 = new float[numLines];
+	// for (int i = 0; i < numLines; i++){
+	// 	modelFile >> model2[i];
+	// }
+	// printf("%d\n",numLines);
+	// int numVerts2 = numLines/8;
+	// modelFile.close();
 
-	//Load Model 2
-	modelFile.open("models/cube.txt");
-	numLines = 0;
-	modelFile >> numLines;
-	float* model2 = new float[numLines];
-	for (int i = 0; i < numLines; i++){
-		modelFile >> model2[i];
-	}
-	printf("%d\n",numLines);
-	int numVerts2 = numLines/8;
-	modelFile.close();
-
-	//SJG: I load each model in a different array, then concatenate everything in one big array
-	//     There are better options, but this works.
-	//Concatenate model arrays
-	float* modelData = new float[(numVerts1+numVerts2)*8];
-	copy(model1, model1+numVerts1*8, modelData);
-	copy(model2, model2+numVerts2*8, modelData+numVerts1*8);
-	int totalNumVerts = numVerts1+numVerts2;
+	// //SJG: I load each model in a different array, then concatenate everything in one big array
+	// //     There are better options, but this works.
+	// //Concatenate model arrays
+	// float* modelData = new float[(numVerts1+numVerts2)*8];
+	// copy(model1, model1+numVerts1*8, modelData);
+	// copy(model2, model2+numVerts2*8, modelData+numVerts1*8);
+	// int totalNumVerts = numVerts1+numVerts2;
 
 
 	/// Allocate Texture 0 ///
@@ -252,7 +268,8 @@ int main(int argc, char *argv[]){
 	GLuint vbo[1];
 	glGenBuffers(1, vbo);  //Create 1 buffer called vbo
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]); //Set the vbo as the active array buffer (Only one buffer can be active at a time)
-	glBufferData(GL_ARRAY_BUFFER, totalNumVerts*8*sizeof(float), modelData, GL_STATIC_DRAW); //upload vertices to vbo
+	// glBufferData(GL_ARRAY_BUFFER, totalNumVerts*8*sizeof(float), modelData, GL_STATIC_DRAW); //upload vertices to vbo
+    glBufferData(GL_ARRAY_BUFFER, modelData.size()*sizeof(float), &modelData[0], GL_STATIC_DRAW); //upload vertices to vbo
 	//GL_STATIC_DRAW means we won't change the geometry, GL_DYNAMIC_DRAW = geometry changes infrequently
 	//GL_STREAM_DRAW = geom. changes frequently.  This effects which types of GPU memory is used
 
@@ -443,12 +460,12 @@ int main(int argc, char *argv[]){
 
 
     /// Call Rendering Functions
-    drawGround(texturedShader, numVerts1,numVerts2);
+    drawGround(texturedShader, getModel("cube").start,getModel("cube").end);
     //drawLevel(texturedShader, numVerts1,numVerts2);
-    drawTurtle(texturedShader, numVerts1,numVerts2);
+    drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
     //drawCubeFriend(texturedShader, numVerts1,numVerts2);
 
-      if (saveOutput) Win2PPM(screenWidth,screenHeight);
+    if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
 
       SDL_GL_SwapWindow(window); //Double buffering
@@ -504,7 +521,8 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
+    modelIndex currentModel = getModel("sphere");
+    glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
 /*
     // Drawing the head...
     //glm::mat4 model;
@@ -647,6 +665,42 @@ void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2){
     //glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     //glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); //(Primitive Type, Start Vertex, End Vertex)
 
+}
+
+//Model access implementation
+void setModel(string fileName, string modelName) {
+    //Reading the model
+    fstream modelFile;
+    modelFile.open("models/" + fileName);
+    int numLines = 0;
+    modelFile >> numLines;
+    int numVerts = numLines/8;
+    int startIndex;
+    if (modelData.empty())
+    {
+        startIndex = 0;
+    }
+    else 
+    {
+        startIndex = modelData.size()/8;
+    }
+
+    for (int i = 0; i < numLines; i++){
+        float current;
+        modelFile >> current;
+        modelData.push_back(current);
+    }
+    modelFile.close();
+    int endIndex = numVerts;
+    assert(startIndex != endIndex);
+    
+    modelIndex temp(startIndex, endIndex);
+    modelDict[modelName] = temp;
+}
+
+modelIndex getModel(string modelName) {
+    modelIndex returnIndex = modelDict[modelName];
+    return returnIndex;
 }
 
 
