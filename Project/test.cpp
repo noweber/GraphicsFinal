@@ -16,6 +16,7 @@
 
 #include "Player.h"
 #include "Camera.h"
+#include "Level.h"
 
 using namespace std;
 
@@ -58,14 +59,19 @@ GLuint InitShader(const char* vShaderFileName, const char* fShaderFileName);
 void updateLighting(int shaderProgram);
 /// Rendering Function Declarations
 void drawTurtle(int shaderProgram, int numVerts1, int numVerts2);
+void drawLevel(int shaderProgram, int numVerts1, int numVerts2);
 void drawGround(int shaderProgram, int numVerts1, int numVerts2);
 void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2);
 
 /// Global Game Stuff
 Player *player;
 Camera *camera;
+Level *level;
+
 int screenWidth = 1024;
 int screenHeight = 768;
+float screenWidthF = 1024.0f;
+float screenHeightF = 768.0f;
 
 // TODO: make time of day lighting and add in additional lights to the map
 float gLightAdjustment = 0;    // Allows the lights to move around
@@ -88,6 +94,7 @@ int main(int argc, char *argv[]){
     /// Instantiate game objects
     player = new Player();
     camera = new Camera();
+    level = new Level(128, 128);
 
     if(player == NULL) {
         printf("Error: Failed to create player1\n"); return 1;
@@ -127,10 +134,10 @@ int main(int argc, char *argv[]){
 	float* model1 = new float[numLines];
 	for (int i = 0; i < numLines; i++){
 		modelFile >> model1[i];
-	}
-	printf("%d\n",numLines);
-	int numVerts1 = numLines/8;
+	}	int numVerts1 = numLines/8;
 	modelFile.close();
+
+	printf("%d\n",numLines);
 
 	//Load Model 2
 	modelFile.open("models/cube.txt");
@@ -317,9 +324,13 @@ int main(int argc, char *argv[]){
                         case SDLK_w:
                             camera->hasMoved = true;
                             camera->movedForward = true;
+                            player->hasMoved = true;
+                            player->movedForward = true;
                             break;
 
                         case SDLK_s:
+                            camera->hasMoved = true;
+                            camera->movedBackward = true;
                             camera->hasMoved = true;
                             camera->movedBackward = true;
                             break;
@@ -327,11 +338,15 @@ int main(int argc, char *argv[]){
                         case SDLK_a:
                             camera->hasMoved = true;
                             camera->movedLeft = true;
-
+                            player->hasMoved = true;
+                            player->movedLeft = true;
                             break;
+
                         case SDLK_d:
                             camera->hasMoved = true;
                             camera->movedRight = true;
+                            player->hasMoved = true;
+                            player->movedRight = true;
                             break;
 
                         case SDLK_SPACE:
@@ -377,13 +392,14 @@ int main(int argc, char *argv[]){
     /// Make camera movements from the mouse input
     camera->horiAngle += camera->mouseSpeed * deltaT * float(screenWidth/2 - camera->mouseX);
     camera->vertAngle += camera->mouseSpeed * deltaT * float(screenHeight/2 - camera->mouseY);
+    //direction = glm::vec3(sin(camera->horiAngle), 0, cos(camera->horiAngle)); //Hori only
     direction = glm::vec3(cos(camera->vertAngle)*sin(camera->horiAngle), sin(camera->vertAngle), cos(camera->vertAngle)*cos(camera->horiAngle)); //Hori and Vert
     rightVector = glm::vec3(sin(camera->horiAngle-3.14f/2.0f), 0, cos(camera->horiAngle-3.14f/2.0f));
     upVector = glm::cross(rightVector, direction);
 
 
     /// Clear the screen to default color
-    glClearColor(.2f, 0.4f, 0.8f, 1.0f);
+    glClearColor(0.2f, 0.4f, 0.8f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(texturedShader);
 
@@ -398,7 +414,7 @@ int main(int argc, char *argv[]){
     glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 
     //glm::mat4 proj = glm::perspective(3.14f/4, 1024.0f / 768.0f, 1.0f, 10.0f); //FOV, aspect, near, far
-    glm::mat4 proj = glm::perspective(3.14f/4, 1024.0f / 768.0f, 1.0f, 100.0f); //FOV, aspect, near plane, far plane
+    glm::mat4 proj = glm::perspective(3.14f/4, screenWidthF / screenHeightF, 1.0f, 100.0f); //FOV, aspect, near plane, far plane
     GLint uniProj = glGetUniformLocation(texturedShader, "proj");
     glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 
@@ -422,14 +438,15 @@ int main(int argc, char *argv[]){
 
     /// Call Updater Functions
     updateLighting(texturedShader);
-    player->update();
+    player->update(deltaT);
     camera->update(deltaT);
 
 
     /// Call Rendering Functions
-    drawTurtle(texturedShader, numVerts1,numVerts2);
     drawGround(texturedShader, numVerts1,numVerts2);
-    drawCubeFriend(texturedShader, numVerts1,numVerts2);
+    //drawLevel(texturedShader, numVerts1,numVerts2);
+    drawTurtle(texturedShader, numVerts1,numVerts2);
+    //drawCubeFriend(texturedShader, numVerts1,numVerts2);
 
       if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
@@ -478,7 +495,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
-    model = glm::translate(model,glm::vec3(0.0f, 1.0f, -4.5f));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(0.0f + player->posDX, 0.0f, 0.0f + player->posDZ));   // Draws relative to the camera...
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -551,7 +568,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     /// Draw Ground
     glm::mat4 model;
     GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
-    model = glm::scale(model,glm::vec3(1000.0f, 0.25f, 1000.0f));
+    model = glm::scale(model,glm::vec3(1.0f * level->xWidth, 1.0f, 1.0f * level->zWidth));
     model = glm::translate(model,glm::vec3(0.0f, -1.0f, 0.0f));   // Draws relative to the camera...
     uniModel1 = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
@@ -563,6 +580,47 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); //(Primitive Type, Start Vertex, End Vertex)
 
+}
+
+void drawLevel(int shaderProgram, int numVerts1, int numVerts2) {
+    /// Very slow FPS - Do not use this function
+
+    GLint uniColor1 = glGetUniformLocation(shaderProgram, "inColor");
+    glm::vec3 colVec(0.5,0.5,0.5);
+    glUniform3fv(uniColor1, 1, glm::value_ptr(colVec));
+    GLint uniTexID1 = glGetUniformLocation(shaderProgram, "texID");
+
+    glm::mat4 model;
+    GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
+    /// Draw Ground Portion
+    int x, z;
+    for(x = -(level->xWidth/2); x < (level->xWidth/2); x++) {
+        model = glm::translate(model,glm::vec3(0.0f + x, -1.0f, 0.0f));
+        for(z = -(level->zWidth/2); z < (level->zWidth/2); z++) {
+            //model = glm::scale(model,glm::vec3(1.0f, 1.0f, 1.0f));
+            model = glm::translate(model,glm::vec3(0.0f, 0.0f, 0.0f + z));
+            uniModel1 = glGetUniformLocation(shaderProgram, "model");
+            glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
+            glUniform1i(uniTexID1, 3); //Set texture ID to use
+            glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
+            glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); //(Primitive Type, Start Vertex, End Vertex)
+            model = glm::translate(model,glm::vec3(0.0f, 0.0f, 0.0f - z));
+        }
+        model = glm::translate(model,glm::vec3(0.0f - x, 1.0f, 0.0f));
+    }
+
+   /* model = glm::scale(model,glm::vec3(1000.0f, 0.25f, 1000.0f));
+    model = glm::translate(model,glm::vec3(0.0f, -1.0f, 0.0f));   // Draws relative to the camera...
+    uniModel1 = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
+    //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
+    //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
+    glUniform1i(uniTexID1, 3); //Set texture ID to use
+    //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
+    //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
+    glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
+    glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); //(Primitive Type, Start Vertex, End Vertex)
+*/
 }
 
 void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2){
