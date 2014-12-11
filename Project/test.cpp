@@ -520,7 +520,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
     glUniform1i(uniTexID, 0); //Set texture ID to use
-    glUniform1i(uniOutline, 0); //Set outline to on
+    glUniform1i(uniOutline, 1); //Set outline to on
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
