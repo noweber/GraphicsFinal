@@ -14,6 +14,7 @@ uniform sampler2D tex2;
 uniform sampler2D tex3;
 
 uniform int texID;
+uniform int drawOutline;
 
 
 const float ambient = .3;
@@ -61,9 +62,16 @@ void main() {
      //oColor = vec3(1,0,0);
   }
 
-  if(dot(normal,viewDir) < 0.32) outColor = vec4(0,0,0,1);
-  // else if(dot(normal,lightDir) > 0.9999) outColor = vec4(1,1,1,1);
-  else (outColor = vec4(oColor.r, oColor.g, oColor.b, 1));
+  //control flow to prevent drawing outline for some models
+  if  (drawOutline == 0) {
+      outColor = vec4(oColor.r, oColor.g, oColor.b, 1);
+  }
+  else {
+      if(dot(normal,viewDir) < 0.32) outColor = vec4(0,0,0,1);
+      // else if(dot(normal,lightDir) > 0.9999) outColor = vec4(1,1,1,1);
+      else (outColor = vec4(oColor.r, oColor.g, oColor.b, 1));
+  }
+  
 
   //outColor = vec4(oColor,1);   // commented out from original by NoW @ 11/22/14 @ 5:10 PM
 }

@@ -140,7 +140,8 @@ int main(int argc, char *argv[]){
 
     //Load models with new helper function
     setModel("sphere.txt", "sphere");
-    setModel("knot.txt", "knot");
+    setModel("cube.txt", "cube");
+    setModel("Rock42Verts.txt", "rock");
 
 	// //Load Model 1
 	// ifstream modelFile;
@@ -504,6 +505,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     glm::vec3 colVec(0.5,0.5,0.5);
     glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
     GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
+    GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
     //glm::mat4 model;
     //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
@@ -518,6 +520,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
     glUniform1i(uniTexID, 0); //Set texture ID to use
+    glUniform1i(uniOutline, 0); //Set outline to on
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -580,12 +583,13 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     glm::vec3 colVec(0.5,0.5,0.5);
     glUniform3fv(uniColor1, 1, glm::value_ptr(colVec));
     GLint uniTexID1 = glGetUniformLocation(shaderProgram, "texID");
+    GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline"); //Set it to not rendering outline
     //glm::mat4 model;
     //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
     /// Draw Ground
     glm::mat4 model;
-    GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
+    GLint uniModel1 = glGetUniformLocation(shaderProgram, "model"); 
     model = glm::scale(model,glm::vec3(1.0f * level->xWidth, 1.0f, 1.0f * level->zWidth));
     model = glm::translate(model,glm::vec3(0.0f, -1.0f, 0.0f));   // Draws relative to the camera...
     uniModel1 = glGetUniformLocation(shaderProgram, "model");
@@ -593,6 +597,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
     glUniform1i(uniTexID1, 3); //Set texture ID to use
+    glUniform1i(uniOutline, 0); //Set outline to off
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
