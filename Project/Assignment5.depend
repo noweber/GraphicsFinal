@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1418208748 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
+1418430159 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
 	<GL/glew.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_opengl.h>
@@ -12,9 +12,12 @@
 	<string>
 	<time.h>
 	<stdlib.h>
+	<map>
+	<vector>
 	"Player.h"
 	"Camera.h"
 	"Level.h"
+	"modelIndex.h"
 
 1414811205 c:\glew\glew-1.11.0\include\gl\glew.h
 	<stddef.h>
@@ -779,7 +782,7 @@
 
 1418208492 e:\programming\csci5607\graphicsfinal\project\player.h
 
-1418208601 source:e:\programming\csci5607\graphicsfinal\project\player.cpp
+1418208876 source:e:\programming\csci5607\graphicsfinal\project\player.cpp
 	"Player.h"
 
 1417923397 e:\programming\csci5607\graphicsfinal\project\camera.h
@@ -792,4 +795,9 @@
 	<stdlib.h>
 
 1418205245 e:\programming\csci5607\graphicsfinal\project\level.h
+
+1418429735 e:\programming\csci5607\graphicsfinal\project\modelindex.h
+
+1418429735 source:e:\programming\csci5607\graphicsfinal\project\modelindex.cpp
+	"modelIndex.h"
 

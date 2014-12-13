@@ -589,7 +589,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
 
     /// Draw Ground
     glm::mat4 model;
-    GLint uniModel1 = glGetUniformLocation(shaderProgram, "model"); 
+    GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
     model = glm::scale(model,glm::vec3(1.0f * level->xWidth, 1.0f, 1.0f * level->zWidth));
     model = glm::translate(model,glm::vec3(0.0f, -1.0f, 0.0f));   // Draws relative to the camera...
     uniModel1 = glGetUniformLocation(shaderProgram, "model");
@@ -676,7 +676,8 @@ void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2){
 void setModel(string fileName, string modelName) {
     //Reading the model
     fstream modelFile;
-    modelFile.open("models/" + fileName);
+    string path = "models/" + fileName;
+    modelFile.open(path.c_str());
     int numLines = 0;
     modelFile >> numLines;
     int numVerts = numLines/8;
@@ -685,7 +686,7 @@ void setModel(string fileName, string modelName) {
     {
         startIndex = 0;
     }
-    else 
+    else
     {
         startIndex = modelData.size()/8;
     }
@@ -698,7 +699,7 @@ void setModel(string fileName, string modelName) {
     modelFile.close();
     int endIndex = numVerts;
     assert(startIndex != endIndex);
-    
+
     modelIndex temp(startIndex, endIndex);
     modelDict[modelName] = temp;
 }
