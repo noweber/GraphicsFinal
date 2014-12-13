@@ -143,6 +143,7 @@ int main(int argc, char *argv[]){
     setModel("cube.txt", "cube");
     setModel("Rock42Verts.txt", "rock");
     setModel("sphere.txt", "sphere");
+    setModel("turtle.txt", "turtle");
 
 	// //Load Model 1
 	// ifstream modelFile;
@@ -265,6 +266,26 @@ int main(int argc, char *argv[]){
     SDL_FreeSurface(surface3);
     /// End Allocate Texture
 
+    /// Allocate Texture 2 ///
+    SDL_Surface* surface4 = SDL_LoadBMP("turtletexb.bmp");
+    if (surface4==NULL){ //If it failed, print the error
+        printf("Error: \"%s\"\n",SDL_GetError()); return 1;
+    }
+    GLuint tex4;
+    glGenTextures(1, &tex4);
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, tex4);
+    //What to do outside 0-1 range
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    //How to filter
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //Load the texture into memory
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface4->w,surface4->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface4->pixels);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SDL_FreeSurface(surface4);
+    /// End Allocate Texture
 
 	//Allocate memory on the graphics card to store geometry (vertex buffer object)
 	GLuint vbo[1];
@@ -453,6 +474,10 @@ int main(int argc, char *argv[]){
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, tex3);
     glUniform1i(glGetUniformLocation(texturedShader, "tex3"), 3);
+
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, tex4);
+    glUniform1i(glGetUniformLocation(texturedShader, "tex4"), 4);
 
 
     /// Call Updater Functions
