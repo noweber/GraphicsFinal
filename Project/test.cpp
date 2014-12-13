@@ -560,6 +560,8 @@ int main(int argc, char *argv[]){
 
 
     /// Call Rendering Functions
+    GLint uniTexID = glGetUniformLocation(texturedShader, "texID"); //Necessary for geometry to draw on my computer. Peter
+
     drawGround(texturedShader, getModel("cube").start,getModel("cube").end);
     //drawLevel(texturedShader, numVerts1,numVerts2);
     drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
