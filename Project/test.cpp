@@ -39,6 +39,8 @@ using namespace std;
 ///-- Get a new turtle model made and animated.
 ///-- Allow the player's turtle to move
 ///-- Bound the camera above the ground plane
+///-- TODO: Title screen
+///-- TODO: Reset button
 ///-- Finished: Setup the button 'C' to switch between player movement and camera movement.  This means, I can move my camera freely, then press C to move the turtle... back and forth.
 ///-- Try to add more lights and/or make the the ground light up rather than just that odd circle underneath the camera
 ///-- Make movements in free camera mode relative to the facing of the camera?  If you press forward while facing a direction, you should move that direction.  This may be hard.
