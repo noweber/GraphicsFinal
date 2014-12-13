@@ -675,6 +675,7 @@ void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2){
 //Model access implementation
 void setModel(string fileName, string modelName) {
     //Reading the model
+    cout << "in setModel" << endl;
     fstream modelFile;
     string path = "models/" + fileName;
     modelFile.open(path.c_str());
@@ -682,26 +683,32 @@ void setModel(string fileName, string modelName) {
     modelFile >> numLines;
     int numVerts = numLines/8;
     int startIndex;
+    cout << "before if" << endl;
     if (modelData.empty())
     {
+        cout << "in if" << endl;
         startIndex = 0;
     }
     else
     {
+        cout << "in else" << endl;
         startIndex = modelData.size()/8;
     }
 
+    cout << "before for loop " << endl;
     for (int i = 0; i < numLines; i++){
         float current;
         modelFile >> current;
         modelData.push_back(current);
     }
+    cout << "end of for loop" << endl;
     modelFile.close();
     int endIndex = numVerts;
     assert(startIndex != endIndex);
 
     modelIndex temp(startIndex, endIndex);
     modelDict[modelName] = temp;
+    cout << "model set" << endl;
 }
 
 modelIndex getModel(string modelName) {
