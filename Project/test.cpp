@@ -139,10 +139,10 @@ int main(int argc, char *argv[]){
 	glBindVertexArray(vao); //Bind the above created VAO to the current context
 
     //Load models with new helper function
-    setModel("sphere.txt", "sphere");
+    //setModel("sphere.txt", "sphere");
     setModel("cube.txt", "cube");
     setModel("Rock42Verts.txt", "rock");
-
+    setModel("sphere.txt", "sphere");
 	// //Load Model 1
 	// ifstream modelFile;
 	// modelFile.open("models/sphere.txt");
@@ -267,11 +267,11 @@ int main(int argc, char *argv[]){
 
 	//Allocate memory on the graphics card to store geometry (vertex buffer object)
 	GLuint vbo[1];
-	glGenBuffers(1, vbo);  //Create 1 buffer called vbo
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]); //Set the vbo as the active array buffer (Only one buffer can be active at a time)
 	// glBufferData(GL_ARRAY_BUFFER, totalNumVerts*8*sizeof(float), modelData, GL_STATIC_DRAW); //upload vertices to vbo
     glBufferData(GL_ARRAY_BUFFER, modelData.size()*sizeof(float), &modelData[0], GL_STATIC_DRAW); //upload vertices to vbo
 	//GL_STATIC_DRAW means we won't change the geometry, GL_DYNAMIC_DRAW = geometry changes infrequently
+	glGenBuffers(1, vbo);  //Create 1 buffer called vbo
 	//GL_STREAM_DRAW = geom. changes frequently.  This effects which types of GPU memory is used
 
 	int texturedShader = InitShader("vertexTex.glsl", "fragmentTex.glsl");
@@ -463,7 +463,7 @@ int main(int argc, char *argv[]){
     /// Call Rendering Functions
     drawGround(texturedShader, getModel("cube").start,getModel("cube").end);
     //drawLevel(texturedShader, numVerts1,numVerts2);
-    drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
+    drawTurtle(texturedShader, getModel("sphere").start,getModel("sphere").end);
     //drawCubeFriend(texturedShader, numVerts1,numVerts2);
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
@@ -524,6 +524,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    //glUniform1i(uniOutline, 0); //Set outline to off
     modelIndex currentModel = getModel("sphere");
     glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
 /*

@@ -43,8 +43,12 @@
 		</Linker>
 		<Unit filename="Camera.cpp" />
 		<Unit filename="Camera.h" />
+		<Unit filename="Level.cpp" />
+		<Unit filename="Level.h" />
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
+		<Unit filename="modelIndex.cpp" />
+		<Unit filename="modelIndex.h" />
 		<Unit filename="test.cpp" />
 		<Extensions>
 			<code_completion />
