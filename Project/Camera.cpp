@@ -1,9 +1,15 @@
 #include "Camera.h"
 
 Camera::Camera() {
+    cMode = 0;
+    cPlayer = NULL;
+
     posX = 0.0f;
     posY = 4.0f;
-    posZ = 8.0f;
+    posZ = 0.0f;
+
+    followDistance = 8.0f;
+    followHeight = 2.0f;
 
     velocityX = 0.04;
     velocityY = 0.004;
@@ -24,9 +30,24 @@ Camera::Camera() {
 
 }
 
+void Camera::adjustForFollowCam() {
+    if(cPlayer != NULL) {
+            this->posX = cPlayer->posX;
+            this->posY = cPlayer->posY + followHeight;
+            this->posZ = cPlayer->posZ + followDistance;
+    }
+}
+
 void Camera::update(float dt) {
     // Update the position of the camera
-    if(hasMoved) {
+    // cMode 0: Follow Cam
+    if(this->cMode == 0) {
+        // Update based on Player pointer's position
+        adjustForFollowCam();
+    }
+
+    // cMode 1: Free Cam
+    if(hasMoved && this->cMode == 1) {
         if(movedLeft){
             posX -= dt * velocityX;
         }
@@ -48,6 +69,10 @@ void Camera::update(float dt) {
             posZ += dt * velocityZ;
         }
     }
+
+
+
+
     // Reset the movement states
     hasMoved = false;
     movedLeft = false;
@@ -57,5 +82,26 @@ void Camera::update(float dt) {
     movedForward = false;
     movedBackward = false;
 
+}
+bool Camera::setPlayer(Player *cP) {
+    if(cP == NULL) {
+        std::cout << "Failed: Camera::setPlayer()... input parameter was NULL.\n";
+        return false;
+    }
+    cPlayer = cP;
+    adjustForFollowCam();
+    std::cout << "Success: Camera::setPlayer()... \n";
+    return true;
+}
+
+void Camera::changeMode() {
+    if(cMode == 0) {
+        cMode = 1;
+    } else if (cMode == 1) {
+        ///-- TODO: have this reset camera position relative to player
+        cMode = 0;
+    }
+    std::cout << "Success: Camera::changeMode()... \n";
+    return;
 }
 

@@ -1,15 +1,33 @@
 #ifndef CAMERA_H_INCLUDED
 #define CAMERA_H_INCLUDED
 
+#include "Player.h" // Added 12/12/2014 @ 11:14 PM
+#include <iostream> // Added 12/12/2014 @ 11:17 PM
+
 class Camera {
 
 public:
     Camera();
     void update(float dt);
+        void adjustForFollowCam();  // A helper function for update
+    bool setPlayer(Player *cP);
+    void changeMode();
+
+
+    // Camera's current mode
+    // 0: Follow Cam
+    // 1: Free Cam
+    int cMode;
+
+    // Pointer to current player
+    Player *cPlayer;
 
     float posX;
     float posY;
     float posZ;
+
+    float followDistance;
+    float followHeight;
 
     // Camera's responsiveness WASD
     float velocityX;

@@ -10,6 +10,9 @@ public:
     int xWidth;
     int zWidth;
 
+    int defaultStartX;
+    int defaultStartZ;
+
     int *gameTiles;
 
 

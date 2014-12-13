@@ -1,7 +1,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-
+#include "Level.h"  // Added 12/12/2014 @ 10:31 PM
+#include <iostream> // Added 12/12/2014 @ 10:34 PM
 
 class Player {
     public:
@@ -9,6 +10,10 @@ class Player {
         virtual ~Player();
 
     void update(float dt);
+    bool changeLevel(Level *cL);
+
+    // Can move is called to check whether the player's next move is valid within its current level, cLevel.
+    bool canMove();
 
     // Stores the position of the player within the game world
     float posX;
@@ -16,9 +21,9 @@ class Player {
     float posZ;
 
     // Stores the position change of the player since the last update
-    float posDX;
-    float posDY;
-    float posDZ;
+    //float posDX;
+    //float posDY;
+    //float posDZ;
 
     // Player's responsiveness WASD
     float velocityX;
@@ -50,6 +55,8 @@ class Player {
     protected:
 
     private:
+    Level *cLevel;
+
     bool isMoving;
     int moveCt;
 
