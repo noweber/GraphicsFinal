@@ -3,11 +3,7 @@
 Player::Player() {
     posX = 0.0f;
     posY = 4.0f;
-    posZ = 8.0f;
-
-    posDX = 0.0f;
-    posDY = 0.0f;
-    posDZ = 0.0f;
+    posZ = 0.0f;
 
     velocityX = 0.04;
     velocityY = 0.004;
@@ -32,6 +28,9 @@ Player::Player() {
 
     leftFootOffsetY = 0;
     rightFootOffsetY = 0;
+
+    // Assign the current level pointer to NULL
+    cLevel = NULL;
 }
 
 Player::~Player() {
@@ -45,58 +44,48 @@ void Player::movePlayer() {
     }
 }
 
+bool Player::canMove() {
+    if(this->cLevel == NULL) {
+        return false;
+    }
+
+    ///-- TODO: Player::canMove()... make this function check for valid moves.
+    // Checks all of the boolean move directions flagged from the event handler.
+    return true;
+
+}
+
 void Player::update(float dt) {
     // Update the position of the camera
     float newX = 0.0f;
     float newY = 0.0f;
     float newZ = 0.0f;
 
+    // Check if the player has moved...
     if(hasMoved) {
-        if(movedLeft){
-            newX = posX -  dt * velocityX;
-            posDX = newX - posX;
-            posX = newX;
+        // Now check if that move is valid...
+        if(this->canMove()) {
+            if(movedLeft){
+                posX -= dt * velocityX;
+            }
+            if(movedRight){
+                posX += dt * velocityX;
+            }
+
+            if(movedUp) {
+                posY += dt * velocityY;
+            }
+            if(movedDown) {
+                posY -= dt * velocityY;
+            }
+
+            if(movedForward) {
+                posZ -= dt * velocityZ;
+            }
+            if(movedBackward) {
+                posZ += dt * velocityZ;
+            }
         }
-        if(movedRight){
-            newX = posX + dt * velocityX;
-            posDX = newX - posX;
-            posX = newX;
-        }
-
-        if(movedUp) {
-            newY = posY + dt * velocityY;
-            posDY = newY - posY;
-            posY = newY;
-        }
-        if(movedDown) {
-            newY = posY - dt * velocityY;
-            posDY = newY - posY;
-            posY = newY;
-        }
-
-        if(movedForward) {
-            newZ = posZ - dt * velocityZ;
-            posDZ = newZ - posZ;
-            posZ = newZ;
-        }
-        if(movedBackward) {
-            newZ = posZ + dt * velocityZ;
-            posDZ = newZ - posZ;
-            posZ = newZ;
-        }
-
-        // move these inside the if statements to fix?
-       /* posDX = newX - posX;
-        posX = newX;
-
-        posDY = newY - posY;
-        posY = newY;
-
-        posDZ = newZ - posZ;
-        posZ = newZ;*/
-
-
-
     }
     // Reset the movement states
     hasMoved = false;
@@ -107,6 +96,20 @@ void Player::update(float dt) {
     movedForward = false;
     movedBackward = false;
 
+}
+
+bool Player::changeLevel(Level *cL) {
+    if(cL == NULL) {
+        std::cout << "Failed: Player::changeLevel()... input parameter was NULL.\n";
+        return false;
+    }
+
+    this->cLevel = cL;
+    this->posX = cL->defaultStartX;
+    this->posZ = cL->defaultStartZ;
+
+    std::cout << "Success: Player::changeLevel()... \n";
+    return true;
 }
 
 /*

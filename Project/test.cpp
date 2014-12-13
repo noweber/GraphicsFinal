@@ -24,25 +24,33 @@
 using namespace std;
 
 
-/// //// //// GENERAL TO-DO LIST //// //// ///
-//-- Work on lighting and shader files
-//-- Generate content
-//-- Get a new turtle model made and animated.
-//-- Allow the player's turtle to move
-//-- Bound the camera above the ground plane
-//-- Setup the button 'C' to switch between player movement and camera movement.  This means, I can move my camera freely, then press C to move the turtle... back and forth.
-        // This is a state we could store somewhere
-//-- Try to add more lights and/or make the the ground light up rather than just that odd circle underneath the camera
-//-- Make movements relative to the facing of the camera?  If you press forward while facing a direction, you should move that direction.  This may be hard.
-//-- Make event queue loop allow multiple key presses per cycle... currently you can not move forward-left, forward-right, etc.
+/// //// //// TO-DO LIST  //// //// ///
+///-- TODO: Work on a UI.  Draw cubes or quads relative to the camera and setup A-Z 0-9 Textures to be able to right different things to it.  Such as number of lanes cleared or points.
+///-- TODO: Make palm leaf model to draw at the top of trees.  Trees can will probably have a sphere or cube base with 4-5 leaves.
+///-- TODO: Player::canMove()... make this function check for valid moves once Level class is fully implemented.
+///-- Finished: Make Camera::adjustForFollowCam() somehow also orientate the camera's view direction to be in line with the player...
+                // Created a conditional that fixes the camera horizontal and vertical angles on camera mode 0
+///-- Finished: Camera::setPlayer(Player *cP... after cP is assigned as cPlayer, change the position of the camera to right behind the player...
+                // Created a helper function for update called adjustForFollowCam() which reset the camera position.  Called this in setPlayer().
+///-- TODO: Set correct starting positions for camera and player... should these be contained within each Level?
+///-- Finished: Allow some objects to have cel shaded outline and other to not...
+                // Used integer within the fragment shader to allow a switch between outlines or no outlines.
+///-- Generate content
+///-- Get a new turtle model made and animated.
+///-- Allow the player's turtle to move
+///-- Bound the camera above the ground plane
+///-- Finished: Setup the button 'C' to switch between player movement and camera movement.  This means, I can move my camera freely, then press C to move the turtle... back and forth.
+///-- Try to add more lights and/or make the the ground light up rather than just that odd circle underneath the camera
+///-- Make movements in free camera mode relative to the facing of the camera?  If you press forward while facing a direction, you should move that direction.  This may be hard.
+///-- Make event queue loop allow multiple key presses per cycle... currently you can not move forward-left, forward-right, etc.
         // We can do this by storing the states of the keyboard.  Flag the 'holdingRight' state on key press to true... flag it as false on key up.
-//-- Add sounds to the game
-//-- Update functions should be moved to Game::update()
-//-- Change Player::update() to a function of time exactly as Camera::update() is.
-//-- Possibly move rendering functions to Game::render() - may not be necessary
-//-- Create a texture manager if time permits
+///-- Add sounds to the game
+///-- Update functions should be moved to Game::update()
+///-- Change Player::update() to a function of time exactly as Camera::update() is.
+///-- Possibly move rendering functions to Game::render() - may not be necessary
+///-- Create a texture manager if time permits
 
-/// //// //// END OF TODO LIST //// //// ///
+/// //// //// END OF TO-DO LIST //// //// ///
 
 bool saveOutput = false;
 float timePast = 0;
@@ -107,14 +115,35 @@ int main(int argc, char *argv[]){
 
     /// Instantiate game objects
     player = new Player();
-    camera = new Camera();
-    level = new Level(128, 128);
-
     if(player == NULL) {
-        printf("Error: Failed to create player1\n"); return 1;
+        std::cout << "Failed: Player creation\n";
+        return -1;
     }
+    camera = new Camera();
+    if(camera == NULL) {
+        std::cout << "Failed:: Camera creation\n";
+        return -1;
+    }
+
+    level = new Level(128, 128);
+    if(camera == NULL) {
+        std::cout << "Failed:: Level creation\n";
+        return -1;
+    }
+
+    /// Setup game object pointers
+    // Place the player within the level
+    if(!player->changeLevel(level)) {
+        return -1;
+    }
+    // Assign the camera to the player
+    if(!camera->setPlayer(player)) {
+        return -1;
+    }
+
+
     // Set starting position
-    player->posZ = 0.0f;
+    //player->posZ = 0.0f;
 
     SDL_Init(SDL_INIT_VIDEO);  //Initialize Graphics (for OpenGL)
 
@@ -139,7 +168,7 @@ int main(int argc, char *argv[]){
 	glBindVertexArray(vao); //Bind the above created VAO to the current context
 
     //Load models with new helper function
-    
+
     setModel("cube.txt", "cube");
     setModel("Rock42Verts.txt", "rock");
     setModel("sphere.txt", "sphere");
@@ -362,41 +391,61 @@ int main(int argc, char *argv[]){
                     switch(kbEvent.key.keysym.sym) {
 
                         case SDLK_w:
-                            camera->hasMoved = true;
-                            camera->movedForward = true;
-                            player->hasMoved = true;
-                            player->movedForward = true;
+                            if(camera->cMode == 1) {
+                                camera->hasMoved = true;
+                                camera->movedForward = true;
+                            }
+                            if(camera->cMode != 1) {
+                                player->hasMoved = true;
+                                player->movedForward = true;
+                            }
                             break;
 
                         case SDLK_s:
-                            camera->hasMoved = true;
-                            camera->movedBackward = true;
-                            camera->hasMoved = true;
-                            camera->movedBackward = true;
+                            if(camera->cMode == 1) {
+                                camera->hasMoved = true;
+                                camera->movedBackward = true;
+                            }
+                            if(camera->cMode != 1) {
+                                player->hasMoved = true;
+                                player->movedBackward = true;
+                            }
                             break;
 
                         case SDLK_a:
-                            camera->hasMoved = true;
-                            camera->movedLeft = true;
-                            player->hasMoved = true;
-                            player->movedLeft = true;
+                            if(camera->cMode == 1) {
+                                camera->hasMoved = true;
+                                camera->movedLeft = true;
+                            }
+                            if(camera->cMode != 1) {
+                                player->hasMoved = true;
+                                player->movedLeft = true;
+                            }
                             break;
 
                         case SDLK_d:
-                            camera->hasMoved = true;
-                            camera->movedRight = true;
-                            player->hasMoved = true;
-                            player->movedRight = true;
+                            if(camera->cMode == 1) {
+                                camera->hasMoved = true;
+                                camera->movedRight = true;
+                            }
+                            if(camera->cMode != 1) {
+                                player->hasMoved = true;
+                                player->movedRight = true;
+                            }
                             break;
 
                         case SDLK_SPACE:
-                            camera->hasMoved = true;
-                            camera->movedUp = true;
+                            if(camera->cMode == 1) {
+                                camera->hasMoved = true;
+                                camera->movedUp = true;
+                            }
                             break;
 
                         case SDLK_x:
-                            camera->hasMoved = true;
-                            camera->movedDown = true;
+                            if(camera->cMode == 1) {
+                                camera->hasMoved = true;
+                                camera->movedDown = true;
+                            }
                             break;
 
                         case SDLK_q:
@@ -404,6 +453,12 @@ int main(int argc, char *argv[]){
                             break;
 
                         case SDLK_e:
+                            break;
+
+
+                        case SDLK_c:
+                            // Change camera mode
+                            camera->changeMode();
                             break;
 
                         case SDLK_f:
@@ -424,14 +479,29 @@ int main(int argc, char *argv[]){
             }
         } // \while(SDL_PollEvent(&kbEvent) != 0)
 
+    /// Call Remaining Updater Functions
+    updateLighting(texturedShader);
+    player->update(deltaT);
+    camera->update(deltaT);
+
     /// Recenter the mouse if necessary
     if(camera->shouldRecenter) {
         SDL_WarpMouseInWindow(window, screenWidth/2, screenHeight/2);
     }
 
     /// Make camera movements from the mouse input
-    camera->horiAngle += camera->mouseSpeed * deltaT * float(screenWidth/2 - camera->mouseX);
-    camera->vertAngle += camera->mouseSpeed * deltaT * float(screenHeight/2 - camera->mouseY);
+    if(camera->cMode == 1) { // If it is Free Cam
+        camera->horiAngle += camera->mouseSpeed * deltaT * float(screenWidth/2 - camera->mouseX);
+        camera->vertAngle += camera->mouseSpeed * deltaT * float(screenHeight/2 - camera->mouseY);
+        std::cout << "Last camera->horiAngle: " << camera->horiAngle << "\n";
+        std::cout << "Last camera->vertAngle: " << camera->vertAngle << "\n";
+    } else {
+        /// Fix the camera angle to "follow" the player
+        // Default values chosen using the couts from above.
+        camera->horiAngle = -3.16;
+        camera->vertAngle = -0.32;
+    }
+    /// Restrict look around during follow cam
     //direction = glm::vec3(sin(camera->horiAngle), 0, cos(camera->horiAngle)); //Hori only
     direction = glm::vec3(cos(camera->vertAngle)*sin(camera->horiAngle), sin(camera->vertAngle), cos(camera->vertAngle)*cos(camera->horiAngle)); //Hori and Vert
     rightVector = glm::vec3(sin(camera->horiAngle-3.14f/2.0f), 0, cos(camera->horiAngle-3.14f/2.0f));
@@ -443,6 +513,9 @@ int main(int argc, char *argv[]){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(texturedShader);
 
+
+
+    /// For Moveable Camera...
     glm::mat4 view = glm::lookAt(
     glm::vec3(camera->posX, camera->posY, camera->posZ),  //Cam Position
     // glm::vec3(0 , 0, -1.0),  //Look at point
@@ -480,10 +553,10 @@ int main(int argc, char *argv[]){
     glUniform1i(glGetUniformLocation(texturedShader, "tex4"), 4);
 
 
-    /// Call Updater Functions
-    updateLighting(texturedShader);
+    /// Call Remaining Updater Functions
+    /*updateLighting(texturedShader);
     player->update(deltaT);
-    camera->update(deltaT);
+    camera->update(deltaT);*/
 
 
     /// Call Rendering Functions
@@ -540,7 +613,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
-    model = glm::translate(model,glm::vec3(0.0f + player->posDX, 0.0f, 0.0f + player->posDZ));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(0.0f + player->posX, 0.0f, 0.0f + player->posZ));   // Draws relative to the camera...
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -615,7 +688,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
 
     /// Draw Ground
     glm::mat4 model;
-    GLint uniModel1 = glGetUniformLocation(shaderProgram, "model"); 
+    GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
     model = glm::scale(model,glm::vec3(1.0f * level->xWidth, 1.0f, 1.0f * level->zWidth));
     model = glm::translate(model,glm::vec3(0.0f, -1.0f, 0.0f));   // Draws relative to the camera...
     uniModel1 = glGetUniformLocation(shaderProgram, "model");
@@ -702,7 +775,8 @@ void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2){
 void setModel(string fileName, string modelName) {
     //Reading the model
     fstream modelFile;
-    modelFile.open("models/" + fileName);
+    string path = "models/" + fileName;
+    modelFile.open(path.c_str());
     int numLines = 0;
     modelFile >> numLines;
     int numVerts = numLines/8;
@@ -711,7 +785,7 @@ void setModel(string fileName, string modelName) {
     {
         startIndex = 0;
     }
-    else 
+    else
     {
         startIndex = modelData.size()/8;
     }
@@ -724,7 +798,7 @@ void setModel(string fileName, string modelName) {
     modelFile.close();
     int endIndex = numVerts;
     assert(startIndex != endIndex);
-    
+
     modelIndex temp(startIndex, endIndex);
     modelDict[modelName] = temp;
 }
