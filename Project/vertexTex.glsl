@@ -35,5 +35,5 @@ void main() {
   normal = normalize(norm4.xyz);
 
   //Invert V coordinate to support UV Map exported by Blender
-  texcoord = vec2(inTexcoord.x, 1-inTexcoord.y);
+  texcoord = inTexcoord;
 }
