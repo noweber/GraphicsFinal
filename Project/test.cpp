@@ -139,9 +139,9 @@ int main(int argc, char *argv[]){
         return -1;
     }
     // Assign the camera to the player
-    if(!camera->setPlayer(player)) {
+    /*if(!camera->setPlayer(player)) {
         return -1;
-    }
+    }*/
 
 
     // Set starting position
