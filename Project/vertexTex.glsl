@@ -33,5 +33,7 @@ void main() {
   lightDir = (view * vec4(inLightDir, 0.0)).xyz;
   vec4 norm4 = transpose(inverse(view*model)) * vec4(inNormal, 0.0);
   normal = normalize(norm4.xyz);
-  texcoord = inTexcoord;
+
+  //Invert V coordinate to support UV Map exported by Blender
+  texcoord = vec2(inTexcoord.x, 1-inTexcoord.y);
 }
