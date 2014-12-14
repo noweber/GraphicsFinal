@@ -6,13 +6,19 @@
 class Level {
 
 public:
-
+    // Level Methods
     Level(int laneWidth, int numberOfLanes);
     void update(float dt);
     bool checkCollisions();
+    void clearLane(int *cLane, int lNumber);        // Arguments: The lane to clear, the lane's number
+    void regenerateLane(int *cLane, int lNumber);   // Arguments: The lane to clear, the lane's number
+
 
     // Store the number of lanes that the player has passed
     int lanesPassed;
+
+    // The velocity of the lanes... determines how fast they are swapped
+    float laneVelocity;
 
     // A pointer to the current player
     //Player *cPlayer;
@@ -30,16 +36,22 @@ public:
 
     // All of the data for the lane arrays
     int *laneOne;
+        bool isClearOne;
         float lane1PosX;
         float lane1PosZ;
 
     int *laneTwo;
+        bool isClearTwo;
         float lane2PosX;
         float lane2PosZ;
+
     int *laneThree;
+        bool isClearThree;
         float lane3PosX;
         float lane3PosZ;
+
     int *laneFour;
+        bool isClearFour;
         float lane4PosX;
         float lane4PosZ;
 

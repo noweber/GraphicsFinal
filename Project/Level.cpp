@@ -12,7 +12,7 @@ Level::Level(int laneWidth, int numberOfLanes) {
 
     // Set default values for other members
     lanesPassed = 0;
-    //cPlayer = NULL;
+    laneVelocity = 0.1f;
 
     // Set the default start position for a player on this level
     this->defaultStartX = 0;
@@ -20,6 +20,26 @@ Level::Level(int laneWidth, int numberOfLanes) {
 
     //this->gameTiles = (int *) malloc((this->lWidth * this->nLanes) * sizeof(int));
 
-    // Allocate space for the first lane and set it's position.  Then generate its content.
+    // LANE ONE: Allocate space for the lane and set it's position.  Then generate its content.
     this->laneOne = (int *) malloc((this->lWidth) * sizeof(int));
+        isClearOne = false;
+        // Clear the lane
+
+        // Regenerate the lane
 }
+
+///-- TODO:
+void Level::regenerateLane(int *cLane, int lNumber) {
+    return;
+}
+
+///-- TODO:
+void Level::clearLane(int *cLane, int lNumber) {
+    return;
+}
+
+///-- TODO:
+bool Level::checkCollisions() {
+    return false;
+}
+
