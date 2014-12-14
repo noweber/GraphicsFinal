@@ -599,7 +599,7 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2) {
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     model = glm::translate(model,glm::vec3(camera->posX, camera->posY, camera->posZ+0.01)+direction); 
-    // model = glm::scale(model,glm::vec3(0.2f, 0.2f, 0.2f));
+    model = glm::scale(model,glm::vec3(0.2f, 0.2f, 0.2f));
     model = glm::rotate(model, camera->horiAngle, upVector);
     model = glm::rotate(model, camera->vertAngle, rightVector);
     
