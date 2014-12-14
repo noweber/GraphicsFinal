@@ -58,7 +58,7 @@ if __name__=="__main__":
                 modFile.write(str(v[1])+"\n")
                 modFile.write(str(v[2])+"\n")
                 modFile.write(str(t[0])+"\n")
-                modFile.write(str(t[1])+"\n")
+                modFile.write(str(1-t[1])+"\n")
                 modFile.write(str(n[0])+"\n")
                 modFile.write(str(n[1])+"\n")
                 modFile.write(str(n[2])+"\n")

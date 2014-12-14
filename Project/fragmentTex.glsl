@@ -13,9 +13,11 @@ uniform sampler2D tex1;
 uniform sampler2D tex2;
 uniform sampler2D tex3;
 uniform sampler2D tex4;
+uniform sampler2D tex5;
 
 uniform int texID;
 uniform int drawOutline;
+// uniform int UIRender;
 
 
 const float ambient = .3;
@@ -34,6 +36,8 @@ void main() {
     color = texture(tex3, texcoord).rgb;  
   else if (texID == 4)
     color = texture(tex4, texcoord).rgb;  
+  else if (texID == 5)
+    color = texture(tex5, texcoord).rgb; 
   else{
            outColor = vec4(1,0,0,1);
            return; //This was an error, stop lighting!

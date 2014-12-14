@@ -75,6 +75,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2);
 void drawLevel(int shaderProgram, int numVerts1, int numVerts2);
 void drawGround(int shaderProgram, int numVerts1, int numVerts2);
 void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2);
+void drawUI(int shaderProgram, int numVerts1, int numVerts2);
 
 //Model data management
 //See modelIndex class for returning the values
@@ -175,40 +176,7 @@ int main(int argc, char *argv[]){
     setModel("Rock42Verts.txt", "rock");
     setModel("sphere.txt", "sphere");
     setModel("turtle.txt", "turtle");
-
-	// //Load Model 1
-	// ifstream modelFile;
-	// modelFile.open("models/sphere.txt");
-	// int numLines = 0;
-	// modelFile >> numLines;
-	// float* model1 = new float[numLines];
-	// for (int i = 0; i < numLines; i++){
-	// 	modelFile >> model1[i];
-	// }	int numVerts1 = numLines/8;
-	// modelFile.close();
-
-	// printf("%d\n",numLines);
-
-	// //Load Model 2
-	// modelFile.open("models/cube.txt");
-	// numLines = 0;
-	// modelFile >> numLines;
-	// float* model2 = new float[numLines];
-	// for (int i = 0; i < numLines; i++){
-	// 	modelFile >> model2[i];
-	// }
-	// printf("%d\n",numLines);
-	// int numVerts2 = numLines/8;
-	// modelFile.close();
-
-	// //SJG: I load each model in a different array, then concatenate everything in one big array
-	// //     There are better options, but this works.
-	// //Concatenate model arrays
-	// float* modelData = new float[(numVerts1+numVerts2)*8];
-	// copy(model1, model1+numVerts1*8, modelData);
-	// copy(model2, model2+numVerts2*8, modelData+numVerts1*8);
-	// int totalNumVerts = numVerts1+numVerts2;
-
+    setModel("QuadY.txt", "quad");
 
 	/// Allocate Texture 0 ///
 	SDL_Surface* surface = SDL_LoadBMP("lightRed.bmp");
@@ -297,7 +265,7 @@ int main(int argc, char *argv[]){
     SDL_FreeSurface(surface3);
     /// End Allocate Texture
 
-    /// Allocate Texture 2 ///
+    /// Allocate Texture For turtle shell ///
     SDL_Surface* surface4 = SDL_LoadBMP("turtletexb.bmp");
     if (surface4==NULL){ //If it failed, print the error
         printf("Error: \"%s\"\n",SDL_GetError()); return 1;
@@ -318,20 +286,36 @@ int main(int argc, char *argv[]){
     SDL_FreeSurface(surface4);
     /// End Allocate Texture
 
+    /// Allocate Texture For Text///
+    SDL_Surface* surface5 = SDL_LoadBMP("textTest.bmp");
+    if (surface5==NULL){ //If it failed, print the error
+        printf("Error: \"%s\"\n",SDL_GetError()); return 1;
+    }
+    GLuint tex5;
+    glGenTextures(1, &tex5);
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, tex5);
+    //What to do outside 0-1 range
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    //How to filter
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //Load the texture into memory
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface5->w,surface5->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface5->pixels);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SDL_FreeSurface(surface5);
+    /// End Allocate Texture
+
 	//Allocate memory on the graphics card to store geometry (vertex buffer object)
 	GLuint vbo[1];
 	glGenBuffers(1, vbo);  //Create 1 buffer called vbo
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]); //Set the vbo as the active array buffer (Only one buffer can be active at a time)
-	// glBufferData(GL_ARRAY_BUFFER, totalNumVerts*8*sizeof(float), modelData, GL_STATIC_DRAW); //upload vertices to vbo
     glBufferData(GL_ARRAY_BUFFER, modelData.size()*sizeof(float), &modelData[0], GL_STATIC_DRAW); //upload vertices to vbo
 	//GL_STATIC_DRAW means we won't change the geometry, GL_DYNAMIC_DRAW = geometry changes infrequently
 	//GL_STREAM_DRAW = geom. changes frequently.  This effects which types of GPU memory is used
 
 	int texturedShader = InitShader("vertexTex.glsl", "fragmentTex.glsl");
-
-	//int phongShader = InitShader("vertex.glsl", "fragment.glsl");
-
-
 
 	//Tell OpenGL how to set fragment shader input
 	GLint posAttrib = glGetAttribLocation(texturedShader, "position");
@@ -554,19 +538,24 @@ int main(int argc, char *argv[]){
     glBindTexture(GL_TEXTURE_2D, tex4);
     glUniform1i(glGetUniformLocation(texturedShader, "tex4"), 4);
 
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, tex5);
+    glUniform1i(glGetUniformLocation(texturedShader, "tex5"), 5);
+
 
     /// Call Remaining Updater Functions
     /*updateLighting(texturedShader);
     player->update(deltaT);
     camera->update(deltaT);*/
 
+    //UI Rendering
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end);
 
     /// Call Rendering Functions
-    GLint uniTexID = glGetUniformLocation(texturedShader, "texID"); //Necessary for geometry to draw on my computer. Peter
 
     drawGround(texturedShader, getModel("cube").start,getModel("cube").end);
     //drawLevel(texturedShader, numVerts1,numVerts2);
-    drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
+    // drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
     //drawCubeFriend(texturedShader, numVerts1,numVerts2);
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
@@ -602,6 +591,28 @@ void updateLighting(int shaderProgram) {
     }*/
 }
 
+void drawUI(int shaderProgram, int numVerts1, int numVerts2) {
+    GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
+    GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
+    // GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
+
+    glm::mat4 model;
+    GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+    model = glm::translate(model,glm::vec3(camera->posX, camera->posY, camera->posZ+0.01)+direction); 
+    // model = glm::scale(model,glm::vec3(0.2f, 0.2f, 0.2f));
+    model = glm::rotate(model, camera->horiAngle, upVector);
+    model = glm::rotate(model, camera->vertAngle, rightVector);
+    
+    // model = glm::rotate(model,45.f,glm::vec3(0.0f, 1.0f, 0.0f));
+    // model = glm::rotate(model,45.f,glm::vec3(0.0f, 0.0f, 1.0f));
+    //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
+    //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
+    glUniform1i(uniTexID, 5); //Set texture ID to use
+    glUniform1i(uniOutline, 0); //Set outline to off
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
+}
+
 void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
 
 	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
@@ -617,7 +628,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
-    model = glm::translate(model,glm::vec3(0.0f + player->posX, 0.0f, 0.0f + player->posZ));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(0.0f/* + player->posX*/, 0.0f, 0.0f/* + player->posZ*/));   // Draws relative to the camera...
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
