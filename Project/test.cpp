@@ -36,9 +36,11 @@ using namespace std;
 ///-- Finished: Allow some objects to have cel shaded outline and other to not...
                 // Used integer within the fragment shader to allow a switch between outlines or no outlines.
 ///-- Generate content
+///-- TODO: Ensure that the number of lanes created is a multiple of 4 within Level::Level(int laneWidth, int numberOfLanes)...
 ///-- Get a new turtle model made and animated.
 ///-- Allow the player's turtle to move
-///-- Bound the camera above the ground plane
+///-- TODO: Make cloud objects out of 3-4 spheres and float them by in the background
+///-- Bound the camera above the ground plane during free cam
 ///-- TODO: Title screen
 ///-- TODO: Reset button
 ///-- Finished: Setup the button 'C' to switch between player movement and camera movement.  This means, I can move my camera freely, then press C to move the turtle... back and forth.
@@ -140,9 +142,9 @@ int main(int argc, char *argv[]){
         return -1;
     }
     // Assign the camera to the player
-    /*if(!camera->setPlayer(player)) {
+    if(!camera->setPlayer(player)) {
         return -1;
-    }*/
+    }
 
 
     // Set starting position
@@ -701,7 +703,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     //glm::mat4 model;
     //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
-    /// Draw Ground
+    /// Draw Ground Plane
     glm::mat4 model;
     GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
     model = glm::scale(model,glm::vec3(1.0f * level->xWidth, 1.0f, 1.0f * level->zWidth));

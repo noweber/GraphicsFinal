@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 Camera::Camera() {
-    cMode = 1;
+    cMode = 0;
     cPlayer = NULL;
 
     posX = 0.0f;
