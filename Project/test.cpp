@@ -173,12 +173,16 @@ int main(int argc, char *argv[]){
 	glBindVertexArray(vao); //Bind the above created VAO to the current context
 
     //Load models with new helper function
-
+    //setModel("QuadY.txt", "quad");    // about 40%
     setModel("cube.txt", "cube");
+    //setModel("QuadY.txt", "quad");    // About 20%
     setModel("Rock42Verts.txt", "rock");
-    setModel("sphere.txt", "sphere");
-    setModel("turtle.txt", "turtle");
     setModel("QuadY.txt", "quad");
+    //setModel("sphere.txt", "sphere");
+    setModel("turtle.txt", "turtle");
+    setModel("sphere.txt", "sphere");
+    //setModel("QuadY.txt", "quad");
+    //setModel("sphere.txt", "sphere");
 
 	/// Allocate Texture 0 ///
 	SDL_Surface* surface = SDL_LoadBMP("lightRed.bmp");
@@ -467,7 +471,9 @@ int main(int argc, char *argv[]){
             }
         } // \while(SDL_PollEvent(&kbEvent) != 0)
 
-    /// Call Remaining Updater Functions
+    /// //// UPDATE //// ///
+    /// //// ////// //// ///
+    /// Call Updater Functions
     updateLighting(texturedShader);
     player->update(deltaT);
     camera->update(deltaT);
@@ -553,11 +559,12 @@ int main(int argc, char *argv[]){
     //UI Rendering
     drawUI(texturedShader, getModel("quad").start, getModel("quad").end);
 
+    /// //// RENDER //// ///
+    /// //// ////// //// ///
     /// Call Rendering Functions
-
     drawGround(texturedShader, getModel("cube").start,getModel("cube").end);
     //drawLevel(texturedShader, numVerts1,numVerts2);
-    // drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
+    drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
     //drawCubeFriend(texturedShader, numVerts1,numVerts2);
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
@@ -600,11 +607,11 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2) {
 
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-    model = glm::translate(model,glm::vec3(camera->posX, camera->posY, camera->posZ+0.01)+direction); 
+    model = glm::translate(model,glm::vec3(camera->posX, camera->posY, camera->posZ+0.01)+direction);
     model = glm::scale(model,glm::vec3(0.2f, 0.2f, 0.2f));
     model = glm::rotate(model, camera->horiAngle, upVector);
     model = glm::rotate(model, camera->vertAngle, rightVector);
-    
+
     // model = glm::rotate(model,45.f,glm::vec3(0.0f, 1.0f, 0.0f));
     // model = glm::rotate(model,45.f,glm::vec3(0.0f, 0.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
