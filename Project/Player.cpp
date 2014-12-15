@@ -54,6 +54,7 @@ bool Player::canMove() {
 
     ///-- TODO: Player::canMove()... make this function check for valid moves.
     // Checks all of the boolean move directions flagged from the event handler.
+    //if(posX > -(cLevel->lWidth/2))
     return true;
 
 }
@@ -69,12 +70,16 @@ void Player::update(float dt) {
         // Now check if that move is valid...
         if(this->canMove()) {
             if(movedLeft){
-                posDX = -dt * velocityX;
-                posX += posDX;
+                if(posX > -(cLevel->lWidth/2)) {
+                    posDX = -dt * velocityX;
+                    posX += posDX;
+                }
             }
             if(movedRight){
-                posDX = dt * velocityX;
-                posX += posDX;
+                if(posX < (cLevel->lWidth/2)) {
+                    posDX = dt * velocityX;
+                    posX += posDX;
+                }
             }
 
             if(movedUp) {
