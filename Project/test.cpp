@@ -31,6 +31,7 @@ using namespace std;
 
 
 /// //// //// TO-DO LIST  //// //// ///
+///-- TODO: ensure that the game objects move the same speed in full screen vs windowed mode
 ///-- TODO: Work on a UI.  Draw cubes or quads relative to the camera and setup A-Z 0-9 Textures to be able to right different things to it.  Such as number of lanes cleared or points.
 ///-- TODO: Make palm leaf model to draw at the top of trees.  Trees can will probably have a sphere or cube base with 4-5 leaves.
 ///-- TODO: Player::canMove()... make this function check for valid moves once Level class is fully implemented.
@@ -41,6 +42,7 @@ using namespace std;
 ///-- TODO: Set correct starting positions for camera and player... should these be contained within each Level?
 ///-- Finished: Allow some objects to have cel shaded outline and other to not...
                 // Used integer within the fragment shader to allow a switch between outlines or no outlines.
+///-- TODO: show the FPS
 ///-- Generate content
 ///-- TODO: Ensure that the number of lanes created is a multiple of 4 within Level::Level(int laneWidth, int numberOfLanes)...
 ///-- Get a new turtle model made and animated.
@@ -123,6 +125,9 @@ glm::vec3 upVector;
 
 
 int main(int argc, char *argv[]){
+    // Seed the random number generation
+    srand (time(0));
+
     player = NULL;
     camera = NULL;
     level = NULL;
@@ -469,10 +474,12 @@ int main(int argc, char *argv[]){
                             }*/
 
                             std::cout << "==== LEVEL ====\n";
-                            for(int p = 0; p < level->lanes[0].nPaths; p++) {
-                                std::cout << level->lanes[0].paths[p];
+                            for(int l = 0; l < level->nLanes; l++) {
+                                for(int p = 0; p < level->lanes[0].nPaths; p++) {
+                                    std::cout << level->lanes[l].paths[p];
+                                }
+                                std::cout << "\n";
                             }
-                            std::cout << "\n";
                             std::cout << "==== ===== ====\n";
 
                             break;

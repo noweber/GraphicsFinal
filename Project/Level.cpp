@@ -24,7 +24,7 @@ Level::Level(int laneWidth, int numberOfLanes) {
     }
 
     // Seed the random number generation
-    srand (time(NULL));
+    //srand (time(NULL));
     // Randomly generate the content of the lanes
     for(int j = 0; j < nLanes; j++) {
         regenerateLane(&lanes[j]);
