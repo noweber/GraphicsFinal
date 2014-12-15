@@ -33,13 +33,16 @@ Level::Level(int laneWidth, int numberOfLanes) {
         regenerateLane(&lanes[j]);
     }
 
-    numberOfLanesDrawn = 8;
+    numberOfLanesDrawn = 10;
     laneDZ = 0.0f;
     dzSinceSwap = 0.0f;
     zOffset = 0.0f;
     mustCheckCollisions = false;
     laneSpacing = 10;
     xDrawingScale = 2.56f;
+
+    hasFailed = false;
+    hitPoints = 2;
 }
 
 void Level::update(float dt) {
@@ -52,6 +55,8 @@ void Level::update(float dt) {
         frontLane += 1;
         mustCheckCollisions = true;
         dzSinceSwap -= laneSpacing;
+        // Increase the lane velocity
+        zVelocity += 0.00001;
     }
 
 }
