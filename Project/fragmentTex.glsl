@@ -18,7 +18,7 @@ uniform sampler2D tex5;
 uniform int texID;
 uniform int drawOutline;
 uniform int UIRender;
-uniform vec2 texOffset;
+uniform ivec2 texOffset;
 
 
 const float ambient = .3;
@@ -72,10 +72,7 @@ void main() {
 
   //control flow to prevent drawing outline for some models
   
-  if (UIRender == 1) {
-      outColor += vec4(color,1);
-      // outColor += vec4(textureOffset(texID, texcoord, texOffset), 1);
-  }
+  
   if  (drawOutline == 0) {
       outColor += vec4(oColor.r, oColor.g, oColor.b, 1);
   }
@@ -86,6 +83,11 @@ void main() {
       // outColor = vec4(0, 0, 1, 1);
   }
   
+  if (UIRender == 1) {
+      // outColor += vec4(color,1);
+      outColor = vec4(textureOffset(tex5, vec2(texcoord.x+1.3, texcoord.y+1.3) * 0.1, ivec2(1,1)).rgb, 1);
+      // outColor = vec4(1,0,1,1);
+  }
 
   //outColor = vec4(oColor,1);   // commented out from original by NoW @ 11/22/14 @ 5:10 PM
 }

@@ -712,7 +712,6 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCo
     GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
     GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
     GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
-    // vec2 unitexOffset = glGetUniformLocation(shaderProgram, "texOffset");
 
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
@@ -728,7 +727,6 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCo
     glUniform1i(uniTexID, 5); //Set texture ID to use
     glUniform1i(uniOutline, 0); //Set outline to off
     glUniform1i(uniUIRender, 1); //Set UI Render on
-    // glUniform1i(unitexOffset, vec2(1,1));
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
 }
