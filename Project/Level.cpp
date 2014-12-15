@@ -10,7 +10,7 @@ Level::Level(int laneWidth, int numberOfLanes) {
 
     // Set default values for other members
     frontLane = 0;
-    zVelocity = 0.01f;
+    zVelocity = 0.004f;
 
     // Set the default start position for a player on this level
     this->defaultStartX = 0;
@@ -38,7 +38,8 @@ Level::Level(int laneWidth, int numberOfLanes) {
     dzSinceSwap = 0.0f;
     zOffset = 0.0f;
     mustCheckCollisions = false;
-    laneSpacing = 8;
+    laneSpacing = 10;
+    xDrawingScale = 2.56f;
 }
 
 void Level::update(float dt) {
