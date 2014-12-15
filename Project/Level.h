@@ -23,12 +23,6 @@ public:
 
     // The velocity of the lanes... determines how fast they are swapped
     float laneVelocity;
-    // The offset of the lanes as they approach the player
-    float zOffset;
-
-
-    // The index of the front most lane to the player
-    //int frontLane;
 
     // Number of textures available for lane creation
     //int cTextureCt;
