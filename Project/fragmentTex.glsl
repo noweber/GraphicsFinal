@@ -17,7 +17,7 @@ uniform sampler2D tex5;
 
 uniform int texID;
 uniform int drawOutline;
-// uniform int UIRender;
+uniform int UIRender;
 
 
 const float ambient = .3;
@@ -73,6 +73,9 @@ void main() {
   if  (drawOutline == 0) {
       outColor = vec4(oColor.r, oColor.g, oColor.b, 1);
       // outColor = vec4(1, 0, 0, 1);
+  }
+  else if (UIRender == 1) {
+      outColor = vec4(color, 1);
   }
   else {
       if(dot(normal,viewDir) < 0.32) outColor = vec4(0,0,0,1);

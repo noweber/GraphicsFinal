@@ -12,7 +12,7 @@
 #include <fstream>
 #include <string>
 #include <time.h>
-#include<stdlib.h>      // srand(), rand(), and more
+#include <stdlib.h>      // srand(), rand(), and more
 #include <time.h>
 #include <map>
 #include <vector>
@@ -91,7 +91,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2);
 void drawLevel(int shaderProgram, int numVerts1, int numVerts2);
 void drawLanes(int shaderProgram, int numVerts1, int numVerts2);
 void drawTurtle(int shaderProgram, int numVerts1, int numVerts2);
-void drawUI(int shaderProgram, int numVerts1, int numVerts2);
+void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCoord, float scale);
 
 //Model data management
 //See modelIndex class for returning the values
@@ -593,8 +593,7 @@ int main(int argc, char *argv[]){
     player->update(deltaT);
     camera->update(deltaT);*/
 
-    //UI Rendering
-    drawUI(texturedShader, getModel("quad").start, getModel("quad").end);
+    
 
     /// //// RENDER //// ///
     /// //// ////// //// ///
@@ -603,6 +602,12 @@ int main(int argc, char *argv[]){
     drawLevel(texturedShader, getModel("cube").start,getModel("cube").end);
     drawLanes(texturedShader, getModel("cube").start,getModel("cube").end);
     drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
+
+    //UI Rendering
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, 768, 0.2);
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, -768, 0.2);
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, 768, 0.2);
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, -768, 0.2);
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
@@ -637,17 +642,60 @@ void updateLighting(int shaderProgram) {
     }*/
 }
 
-void drawUI(int shaderProgram, int numVerts1, int numVerts2) {
+void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCoord, float scale) {
+    //Clamp xCoord and yCoord
+    if (xCoord > screenWidth)
+    {
+        xCoord = screenWidth;
+    }
+    else if (xCoord < -screenWidth)
+    {
+        xCoord = -screenWidth;
+    }
+
+    if (yCoord > screenHeight)
+    {
+        yCoord = screenHeight;
+    }
+    else if (yCoord < -screenHeight)
+    {
+        yCoord = -screenHeight;
+    }
+
+    //Convert x and y coord to actual float number
+    float xCoordReal;
+    float yCoordReal;
+
+    if (xCoord >= 0)
+    {
+       xCoordReal = 0.36 * (xCoord/screenWidth);
+    }
+    else if (xCoord < 0)
+    {
+        xCoordReal = 0.43 * (xCoord/screenWidth);
+    }
+    
+    if (yCoord >= 0)
+    {
+        yCoordReal = 0.2 * (yCoord/screenHeight);
+    }
+    else if (yCoord < 0)
+    {
+        yCoordReal = 0.32 * (yCoord/screenHeight);
+    }
+
     GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
     GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
-    // GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
+    GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
 
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-    model = glm::translate(model,glm::vec3(camera->posX, camera->posY, camera->posZ+0.01)+direction);
-    model = glm::scale(model,glm::vec3(0.2f, 0.2f, 0.2f));
+    model = glm::translate(model,glm::vec3(camera->posX, camera->posY, camera->posZ)+glm::vec3(direction.x+xCoordReal, direction.y+yCoordReal, direction.z-0.1));
+    model = glm::scale(model,glm::vec3(scale, scale, scale));
     model = glm::rotate(model, camera->horiAngle, upVector);
     model = glm::rotate(model, camera->vertAngle, rightVector);
+    model = glm::rotate(model, (float)3.14, glm::vec3(1,0,0));
+    model = glm::rotate(model, (float)1.57, glm::vec3(0,0,1));
 
     // model = glm::rotate(model,45.f,glm::vec3(0.0f, 1.0f, 0.0f));
     // model = glm::rotate(model,45.f,glm::vec3(0.0f, 0.0f, 1.0f));
@@ -655,8 +703,10 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2) {
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
     glUniform1i(uniTexID, 5); //Set texture ID to use
     glUniform1i(uniOutline, 0); //Set outline to off
+    glUniform1i(uniUIRender, 1); //Set UI Render on
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
+    glUniform1i(uniUIRender, 0); //Set UI Render off
 }
 
 void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
