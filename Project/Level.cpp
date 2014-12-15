@@ -1,9 +1,7 @@
 #include "Level.h"
-#include <stdlib.h> // For Malloc
 
 Level::Level(int laneWidth, int numberOfLanes) {
     ///--TODO: Ensure that the number of lanes created is a multiple of 4 within Level::Level(int laneWidth, int numberOfLanes)...
-
     // Set the dimensions of the Level
     this->lWidth = laneWidth;
         this->xWidth = 2 * laneWidth;
@@ -18,23 +16,64 @@ Level::Level(int laneWidth, int numberOfLanes) {
     this->defaultStartX = 0;
     this->defaultStartX = 0;
 
-    //this->gameTiles = (int *) malloc((this->lWidth * this->nLanes) * sizeof(int));
+    // Create the lanes
+    GameLane *tLane = NULL;
+    for(int i = 0; i < nLanes; i++) {
+        tLane = new GameLane(laneWidth);
+        lanes.push_back(*tLane);
+    }
 
-    // LANE ONE: Allocate space for the lane and set it's position.  Then generate its content.
-    this->laneOne = (int *) malloc((this->lWidth) * sizeof(int));
-        isClearOne = false;
-        // Clear the lane
+    // Seed the random number generation
+    srand (time(NULL));
+    // Randomly generate the content of the lanes
+    for(int j = 0; j < nLanes; j++) {
+        regenerateLane(&lanes[j]);
+    }
 
-        // Regenerate the lane
 }
 
 ///-- TODO:
-void Level::regenerateLane(int *cLane, int lNumber) {
+void Level::regenerateLane(GameLane *cLane) {
+    cLane->isPassed = false;
+
+    // Generate a random object within each path slot
+    int objType = 0;
+    for(int i = 0; i < cLane->nPaths; i++) {
+        objType = rand() % 4;   // Random number between 0 and 3
+        // objType 0 will be an open path
+        cLane->paths[i] = objType;
+        /*switch(objType) {
+        case 0:
+            break;
+        case 0:
+            break;
+        case 0:
+            break;
+        default:
+            cLane->paths
+            break;
+        }*/
+    }
+    // Ensure there is at least one empty slot
+    bool hasPath = false;
+
+    for(int j = 0; j < cLane->nPaths; j++) {
+        // objType 0 will be an open path
+        if(cLane->paths[j] == 0) {
+            // If we find an open path at least once, then is hasPath
+            hasPath = true;
+        }
+    }
+    if(!hasPath) {
+        ///-- TODO: Place a random open path
+        // Place a path on the far left
+        cLane->paths[0] = 0;
+    }
     return;
 }
 
 ///-- TODO:
-void Level::clearLane(int *cLane, int lNumber) {
+void Level::clearLane(GameLane *cLane) {
     return;
 }
 

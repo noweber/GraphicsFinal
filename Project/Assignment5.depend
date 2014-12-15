@@ -1,30 +1,40 @@
 # depslib dependency file v1.0
-1418529891 source:e:\programming\csci5607\graphicsfinal\project\camera.cpp
+1418603542 source:e:\programming\csci5607\graphicsfinal\project\camera.cpp
 	"Camera.h"
 
 1418448772 e:\programming\csci5607\graphicsfinal\project\camera.h
 	"Player.h"
 	<iostream>
 
-1418446495 e:\programming\csci5607\graphicsfinal\project\player.h
+1418602230 e:\programming\csci5607\graphicsfinal\project\player.h
 	"Level.h"
 	<iostream>
 
-1418531248 e:\programming\csci5607\graphicsfinal\project\level.h
-
-1418531276 source:e:\programming\csci5607\graphicsfinal\project\level.cpp
-	"Level.h"
+1418600092 e:\programming\csci5607\graphicsfinal\project\level.h
+	<vector>
+	<cstddef>
+	"GameLane.h"
 	<stdlib.h>
+	<time.h>
+
+1418594735 e:\programming\csci5607\graphicsfinal\project\gamelane.h
+
+1418594810 source:e:\programming\csci5607\graphicsfinal\project\gamelane.cpp
+	"GameLane.h"
+	<stdlib.h>
+
+1418601522 source:e:\programming\csci5607\graphicsfinal\project\level.cpp
+	"Level.h"
 
 1418429735 source:e:\programming\csci5607\graphicsfinal\project\modelindex.cpp
 	"modelIndex.h"
 
 1418429735 e:\programming\csci5607\graphicsfinal\project\modelindex.h
 
-1418455443 source:e:\programming\csci5607\graphicsfinal\project\player.cpp
+1418602572 source:e:\programming\csci5607\graphicsfinal\project\player.cpp
 	"Player.h"
 
-1418530334 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
+1418603423 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
 	<GL/glew.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_opengl.h>
@@ -37,11 +47,14 @@
 	<string>
 	<time.h>
 	<stdlib.h>
+	<time.h>
 	<map>
 	<vector>
+	<cstddef>
 	"Player.h"
 	"Camera.h"
 	"Level.h"
+	"GameLane.h"
 	"modelIndex.h"
 
 1414811205 c:\glew\glew-1.11.0\include\gl\glew.h

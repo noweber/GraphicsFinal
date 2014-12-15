@@ -12,14 +12,20 @@
 #include <fstream>
 #include <string>
 #include <time.h>
-#include<stdlib.h>
+#include<stdlib.h>      // srand(), rand(), and more
+#include <time.h>
 #include <map>
 #include <vector>
+#include <cstddef>  // For NULL identifier
+
 
 #include "Player.h"
 #include "Camera.h"
 #include "Level.h"
+#include "GameLane.h"
 #include "modelIndex.h"
+
+
 
 using namespace std;
 
@@ -117,6 +123,9 @@ glm::vec3 upVector;
 
 
 int main(int argc, char *argv[]){
+    player = NULL;
+    camera = NULL;
+    level = NULL;
 
     /// Instantiate game objects
     player = new Player();
@@ -130,7 +139,7 @@ int main(int argc, char *argv[]){
         return -1;
     }
 
-    level = new Level(128, 128);
+    level = new Level(8, 16);
     if(camera == NULL) {
         std::cout << "Failed:: Level creation\n";
         return -1;
@@ -139,16 +148,12 @@ int main(int argc, char *argv[]){
     /// Setup game object pointers
     // Place the player within the level
     if(!player->changeLevel(level)) {
-        return -1;
+        cout << "Failed: Player::changeLevel()...\n";
     }
     // Assign the camera to the player
     if(!camera->setPlayer(player)) {
         return -1;
     }
-
-
-    // Set starting position
-    //player->posZ = 0.0f;
 
     SDL_Init(SDL_INIT_VIDEO);  //Initialize Graphics (for OpenGL)
 
@@ -387,10 +392,12 @@ int main(int argc, char *argv[]){
                                 camera->hasMoved = true;
                                 camera->movedForward = true;
                             }
-                            if(camera->cMode != 1) {
+
+                            /*if(camera->cMode != 1) {
                                 player->hasMoved = true;
                                 player->movedForward = true;
-                            }
+                            }*/
+
                             break;
 
                         case SDLK_s:
@@ -398,10 +405,10 @@ int main(int argc, char *argv[]){
                                 camera->hasMoved = true;
                                 camera->movedBackward = true;
                             }
-                            if(camera->cMode != 1) {
+                            /*if(camera->cMode != 1) {
                                 player->hasMoved = true;
                                 player->movedBackward = true;
-                            }
+                            }*/
                             break;
 
                         case SDLK_a:
@@ -409,6 +416,7 @@ int main(int argc, char *argv[]){
                                 camera->hasMoved = true;
                                 camera->movedLeft = true;
                             }
+
                             if(camera->cMode != 1) {
                                 player->hasMoved = true;
                                 player->movedLeft = true;
@@ -420,6 +428,7 @@ int main(int argc, char *argv[]){
                                 camera->hasMoved = true;
                                 camera->movedRight = true;
                             }
+
                             if(camera->cMode != 1) {
                                 player->hasMoved = true;
                                 player->movedRight = true;
@@ -451,6 +460,21 @@ int main(int argc, char *argv[]){
                         case SDLK_c:
                             // Change camera mode
                             camera->changeMode();
+                            break;
+
+                        case SDLK_m:
+                            // Print out the current level
+                            /*for(int p = 0; p < level->nLanes; p ++) {
+
+                            }*/
+
+                            std::cout << "==== LEVEL ====\n";
+                            for(int p = 0; p < level->lanes[0].nPaths; p++) {
+                                std::cout << level->lanes[0].paths[p];
+                            }
+                            std::cout << "\n";
+                            std::cout << "==== ===== ====\n";
+
                             break;
 
                         case SDLK_f:
@@ -487,8 +511,8 @@ int main(int argc, char *argv[]){
     if(camera->cMode == 1) { // If it is Free Cam
         camera->horiAngle += camera->mouseSpeed * deltaT * float(screenWidth/2 - camera->mouseX);
         camera->vertAngle += camera->mouseSpeed * deltaT * float(screenHeight/2 - camera->mouseY);
-        std::cout << "Last camera->horiAngle: " << camera->horiAngle << "\n";
-        std::cout << "Last camera->vertAngle: " << camera->vertAngle << "\n";
+        //std::cout << "Last camera->horiAngle: " << camera->horiAngle << "\n";
+        //std::cout << "Last camera->vertAngle: " << camera->vertAngle << "\n";
     } else {
         /// Fix the camera angle to "follow" the player
         // Default values chosen using the couts from above.
@@ -623,6 +647,17 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2) {
 }
 
 void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
+    if(player == NULL) {
+        return;
+    }
+    /*float playerDX = 0;
+    float playerDZ = 0;
+    playerDX = player->posDX;
+    player->posDX = 0;
+    playerDZ = player->posDZ;
+    player->posDZ = 0;*/
+    float playerX = player->posX;
+    float playerZ = player->posZ;
 
 	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
@@ -637,7 +672,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
-    model = glm::translate(model,glm::vec3(0.0f/* + player->posX*/, 0.0f, 0.0f/* + player->posZ*/));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(playerX, 0.0f, playerZ));
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -702,6 +737,9 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
 }
 
 void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
+    if(level == NULL) {
+        return;
+    }
     GLint uniColor1 = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
     glUniform3fv(uniColor1, 1, glm::value_ptr(colVec));

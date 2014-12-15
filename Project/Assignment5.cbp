@@ -43,6 +43,8 @@
 		</Linker>
 		<Unit filename="Camera.cpp" />
 		<Unit filename="Camera.h" />
+		<Unit filename="GameLane.cpp" />
+		<Unit filename="GameLane.h" />
 		<Unit filename="Level.cpp" />
 		<Unit filename="Level.h" />
 		<Unit filename="Player.cpp" />

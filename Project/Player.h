@@ -20,6 +20,10 @@ class Player {
     float posY;
     float posZ;
 
+    // Changes in position since last update.  These are used for translated the model by the appropriate amount
+    float posDX;
+    float posDZ;
+
     // Stores the position change of the player since the last update
     //float posDX;
     //float posDY;

@@ -32,7 +32,7 @@ Camera::Camera() {
 
 void Camera::adjustForFollowCam() {
     if(cPlayer != NULL) {
-            this->posX = cPlayer->posX;
+            this->posX = cPlayer->posX * 1.32;
             this->posY = cPlayer->posY + followHeight;
             this->posZ = cPlayer->posZ + followDistance;
     }

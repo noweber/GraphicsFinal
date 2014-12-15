@@ -5,7 +5,10 @@ Player::Player() {
     posY = 4.0f;
     posZ = 0.0f;
 
-    velocityX = 0.04;
+    posDX = 0.0f;
+    posDZ = 0.0f;
+
+    velocityX = 0.02;
     velocityY = 0.004;
     velocityZ = 0.04;
 
@@ -66,10 +69,12 @@ void Player::update(float dt) {
         // Now check if that move is valid...
         if(this->canMove()) {
             if(movedLeft){
-                posX -= dt * velocityX;
+                posDX = -dt * velocityX;
+                posX += posDX;
             }
             if(movedRight){
-                posX += dt * velocityX;
+                posDX = dt * velocityX;
+                posX += posDX;
             }
 
             if(movedUp) {
@@ -80,10 +85,14 @@ void Player::update(float dt) {
             }
 
             if(movedForward) {
-                posZ -= dt * velocityZ;
+                //posZ -= dt * velocityZ;
+                posDZ = -dt * velocityZ;
+                posZ += posDZ;
             }
             if(movedBackward) {
-                posZ += dt * velocityZ;
+                //posZ += dt * velocityZ;
+                posDZ = dt * velocityZ;
+                posZ += posDZ;
             }
         }
     }
