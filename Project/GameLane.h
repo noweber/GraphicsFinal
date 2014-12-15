@@ -15,6 +15,7 @@ public:
 
     // The path slots containing obstacles or openings within each lane
     int *paths;
+    //int *pathTxt;
 
     // The Lane's position
     float posX;

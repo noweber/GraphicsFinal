@@ -24,6 +24,9 @@ public:
     // The velocity of the lanes... determines how fast they are swapped
     float laneVelocity;
 
+    // Number of textures available for lane creation
+    //int cTextureCt;
+
     // Sizes of the level
     int lWidth;         // This is how many paths will be in each lane
         float xWidth;   // The width of the "ground plane" -- This is relative to lWidth

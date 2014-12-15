@@ -31,7 +31,9 @@ using namespace std;
 
 
 /// //// //// TO-DO LIST  //// //// ///
-
+///-- TODO: adjust drawLanes() to only draw 4 lanes...
+///-- TODO: create helper functions for drawing an instance of each model at a certain location... example: drawRockAt(float x, float y, int texID)
+                        // These can be used within the drawLanes() for loop
 ///-- TODO: ensure that the game objects move the same speed in full screen vs windowed mode
 ///-- TODO: Work on a UI.  Draw cubes or quads relative to the camera and setup A-Z 0-9 Textures to be able to right different things to it.  Such as number of lanes cleared or points.
 ///-- TODO: Make palm leaf model to draw at the top of trees.  Trees can will probably have a sphere or cube base with 4-5 leaves.
@@ -45,6 +47,7 @@ using namespace std;
                 // Used integer within the fragment shader to allow a switch between outlines or no outlines.
 ///-- TODO: show the FPS
 ///-- Generate content
+///-- TODO: have the texture allocation store a global number of total textures to use here -- use it within Level::regenerateLane() to build with random textures...
 ///-- TODO: Ensure that the number of lanes created is a multiple of 4 within Level::Level(int laneWidth, int numberOfLanes)...
 ///-- Get a new turtle model made and animated.
 ///-- Allow the player's turtle to move
@@ -66,6 +69,7 @@ using namespace std;
 
 /// //// //// END OF TO-DO LIST //// //// ///
 
+int gTextureCt = 4; // The total number of textures in the game... this should be set elsewhere, but currently is not...
 bool saveOutput = false;
 float timePast = 0;
 float oldTime = SDL_GetTicks()/1000.f;
@@ -146,8 +150,9 @@ int main(int argc, char *argv[]){
         return -1;
     }
 
-    level = new Level(8, 16);
-    if(camera == NULL) {
+    level = new Level(7, 16);
+    //level->cTextureCt = gTextureCt; // Set the number of textures.  This is how the level generator chooses them.
+    if(level == NULL) {
         std::cout << "Failed:: Level creation\n";
         return -1;
     }
@@ -789,7 +794,7 @@ void drawLevel(int shaderProgram, int numVerts1, int numVerts2) {
     /// Draw Secondary Ground Plane
     glm::mat4 model;
     GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
-    model = glm::scale(model,glm::vec3(1.0f * level->xWidth, 1.0f, 4.0f * level->zWidth));
+    model = glm::scale(model,glm::vec3(0.5f * level->xWidth, 1.0f, 4.0f * level->zWidth));
     model = glm::translate(model,glm::vec3(0.0f, -1.0f, 0.0f));   // Draws relative to the camera...
     uniModel1 = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
@@ -806,29 +811,65 @@ void drawLevel(int shaderProgram, int numVerts1, int numVerts2) {
 }
 
 void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
+    if(player == NULL) {
+            return;
+    }
+    float playerX = player->posX;
+    float playerZ = player->posZ;
 
-	/*GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
+    GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
     glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
     GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
+    GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
     //glm::mat4 model;
     //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-*/
-    /// Draw Cubie
-    //glm::mat4 model;
-    //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-    //model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
-    //model = glm::translate(model,glm::vec3(0.0f, 0.0f, 0.0f));   // Draws relative to the camera...
-    //uniModel = glGetUniformLocation(shaderProgram, "model");
-    //glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
-    //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    //glUniform1i(uniTexID, 0); //Set texture ID to use
-    //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
-    //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
-    //glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    //glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); //(Primitive Type, Start Vertex, End Vertex)
 
+    ///-- TODO: create helper functions for drawing an instance of each model at a certain location... example: drawRockAt(float x, float y, int texID)
+                        // These can be used within the drawLanes() for loop
+
+    /// Draw Lane Objects
+    for(int L = 0; L < level->nLanes; L++) {    ///-- TODO: adjust drawLanes() to only draw 4 lanes...
+        for(int i = 0; i < level->lanes[L].nPaths; i++) {
+
+            if(level->lanes[L].paths[i] != 0) { // 0 would mean the path space within the lane is empty
+                glm::mat4 model;
+                GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+                //model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
+                model = glm::translate(model,glm::vec3( (-(level->lWidth/2)) + i, 0.0f, playerZ - 4*L - 2.0f));
+                uniModel = glGetUniformLocation(shaderProgram, "model");
+                glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+                //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
+                //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
+
+                ///-- TODO: use a random texture
+                //int texNum = rand() % 4;    ///-- TODO: have the texture allocation store a global number of total textures to use here
+                glUniform1i(uniTexID, 1); //Set texture ID to use
+                glUniform1i(uniOutline, 1); //Set outline to on
+                //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
+                //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
+                glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+                modelIndex currentModel;
+                if(level->lanes[L].paths[i] == 1) {
+                    glUniform1i(uniTexID, 1);
+                    currentModel = getModel("cube");
+                }
+                else if(level->lanes[L].paths[i] == 2) {
+                    glUniform1i(uniTexID, 2);
+                    currentModel = getModel("cube");
+                }
+                else if (level->lanes[L].paths[i] == 3) {
+                    /// Trees?
+                    glUniform1i(uniTexID, 3);
+                    currentModel = getModel("cube");
+                } else {
+                    //currentModel = getModel("sphere");
+                    // Actually should draw nothing here
+                }
+                glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
+            }
+        }
+    }
 }
 
 //Model access implementation

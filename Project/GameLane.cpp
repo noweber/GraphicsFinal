@@ -9,4 +9,5 @@ GameLane::GameLane(int width) {
 
     // paths: Allocate space for the lane...
     this->paths = (int *) malloc((this->nPaths) * sizeof(int));
+    //this->pathTxt = (int *) malloc((this->nPaths) * sizeof(int));
 }

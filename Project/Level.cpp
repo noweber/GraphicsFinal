@@ -16,6 +16,9 @@ Level::Level(int laneWidth, int numberOfLanes) {
     this->defaultStartX = 0;
     this->defaultStartX = 0;
 
+    // Number of textures available for lane creation
+    //cTextureCt = 0;;
+
     // Create the lanes
     GameLane *tLane = NULL;
     for(int i = 0; i < nLanes; i++) {
@@ -43,6 +46,17 @@ void Level::regenerateLane(GameLane *cLane) {
         // objType 0 will be an open path
         cLane->paths[i] = objType;
     }
+    // Assign a random texture number to it.
+    /*int texCt = this->cTextureCt;
+    if(texCt <= 0) {
+        texCt = 1;
+    }
+    int tTexID;// = rand() % texCt;
+    for(int k = 0; k < cLane->nPaths; k++) {
+        tTexID = rand() % texCt;
+        cLane->pathTxt[k] = tTexID;
+    }*/
+
     // Ensure there is at least one empty slot
     bool hasPath = false;
 
