@@ -71,13 +71,13 @@ void Player::update(float dt) {
         // Now check if that move is valid...
         if(this->canMove()) {
             if(movedLeft){
-                if(posX > -(cLevel->lWidth/2)) {
+                if(posX > -((cLevel->lWidth/2)*cLevel->xDrawingScale) ) {
                     posDX = -dt * velocityX;
                     posX += posDX;
                 }
             }
             if(movedRight){
-                if(posX < (cLevel->lWidth/2)) {
+                if(posX < ((cLevel->lWidth/2)*cLevel->xDrawingScale)  ) {
                     posDX = dt * velocityX;
                     posX += posDX;
                 }

@@ -71,8 +71,8 @@ using namespace std;
 
 int gTextureCt = 4; // The total number of textures in the game... this should be set elsewhere, but currently is not...
 bool saveOutput = false;
-float timePast = 0;
-float oldTime = SDL_GetTicks()/1000.f;
+float timePast = 0.0f;
+float oldTime = 0.0f; //= SDL_GetTicks()/1000.f;
 bool DEBUG_ON = true;
 bool fullscreen = false;
 void Win2PPM(int width, int height);
@@ -150,7 +150,7 @@ int main(int argc, char *argv[]){
         return -1;
     }
 
-    level = new Level(7, 16);
+    level = new Level(7, 128);
     //level->cTextureCt = gTextureCt; // Set the number of textures.  This is how the level generator chooses them.
     if(level == NULL) {
         std::cout << "Failed:: Level creation\n";
@@ -369,14 +369,24 @@ int main(int argc, char *argv[]){
 	//Event Loop (Loop forever processing each event as fast as possible)
 	bool isRunning = true;
 	SDL_Event kbEvent;
+
+	//oldTime = SDL_GetTicks()/1000.f;
+    float previousGameTime = SDL_GetTicks()/1.0f;
+
     while (isRunning){
         SDL_ShowCursor(SDL_DISABLE);    // hide the cursor
         camera->shouldRecenter = false;
 
+        float currenGameTime = SDL_GetTicks() / 1.0f;
+        float elapsedGameTime = currenGameTime - previousGameTime;
+        deltaT = deltaT + elapsedGameTime;
+        previousGameTime = currenGameTime;
+
         /// TODO: change the calculation of deltaT
-        if (!saveOutput) timePast = SDL_GetTicks()/1000.f;
-        if (saveOutput) timePast += .07; //Fix framerate at 14 FPS
-        deltaT = timePast - oldTime;
+        //if (!saveOutput) timePast = SDL_GetTicks()/1000.f;
+        //if (saveOutput) timePast += .07; //Fix framerate at 14 FPS
+
+        //deltaT = timePast - oldTime;
 
         while(SDL_PollEvent(&kbEvent) != 0) {
             switch(kbEvent.type) {
@@ -511,10 +521,13 @@ int main(int argc, char *argv[]){
     /// //// UPDATE //// ///
     /// //// ////// //// ///
     /// Call Updater Functions
-    updateLighting(texturedShader);
-    player->update(deltaT);
-    camera->update(deltaT);
-    level->update(deltaT);
+    while(deltaT > 16) {
+        updateLighting(texturedShader);
+        player->update(deltaT);
+        camera->update(deltaT);
+        level->update(deltaT);
+        deltaT -= 16;
+    }
 
     /// Recenter the mouse if necessary
     if(camera->shouldRecenter) {
@@ -817,7 +830,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     /// Draw Ground Plane
     glm::mat4 model;
     GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
-    model = glm::scale(model,glm::vec3(8.0f * level->xWidth, 1.0f, 4.0f * level->zWidth));
+    model = glm::scale(model,glm::vec3(8.0f * level->xWidth * level->xDrawingScale, 1.0f, 4.0f * level->zWidth));
     model = glm::translate(model,glm::vec3(0.0f, -1.4f, 0.0f));   // Draws relative to the camera...
     uniModel1 = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
@@ -848,7 +861,7 @@ void drawLevel(int shaderProgram, int numVerts1, int numVerts2) {
     /// Draw Secondary Ground Plane
     glm::mat4 model;
     GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
-    model = glm::scale(model,glm::vec3(0.5f * level->xWidth, 1.0f, 4.0f * level->zWidth));
+    model = glm::scale(model,glm::vec3( (level->xDrawingScale/1.8f) * level->xWidth, 1.0f, 4.0f * level->zWidth));
     model = glm::translate(model,glm::vec3(0.0f, -1.0f, 0.0f));   // Draws relative to the camera...
     uniModel1 = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
@@ -895,7 +908,10 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
             if(level->lanes[L].paths[i] != 0) { // 0 would mean the path space within the lane is empty
                 glm::mat4 model;
                 GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-                //model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
+
+                //float rockScale = 2.0f* level->xDrawingScale / 3.0f;
+                model = glm::scale(model,glm::vec3(level->xDrawingScale, 1.0f, 1.1f));
+                //model = glm::scale(model,glm::vec3(1.0f, 1.0f, 1.1f));
                 offsetZ = playerZ - level->laneSpacing*L - 2.0f + level->zOffset;
                 model = glm::translate(model,glm::vec3( (-(level->lWidth/2)) + i, 0.0f, offsetZ));
                 uniModel = glGetUniformLocation(shaderProgram, "model");
@@ -906,23 +922,23 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
                 ///-- TODO: use a random texture
                 //int texNum = rand() % 4;    ///-- TODO: have the texture allocation store a global number of total textures to use here
                 glUniform1i(uniTexID, 1); //Set texture ID to use
-                glUniform1i(uniOutline, 1); //Set outline to on
+                glUniform1i(uniOutline, 0); //Set outline to on
                 //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
                 //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
                 glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
                 modelIndex currentModel;
                 if(level->lanes[L].paths[i] == 1) {
                     glUniform1i(uniTexID, 1);
-                    currentModel = getModel("cube");
+                    currentModel = getModel("rock");
                 }
                 else if(level->lanes[L].paths[i] == 2) {
                     glUniform1i(uniTexID, 2);
-                    currentModel = getModel("cube");
+                    currentModel = getModel("rock");
                 }
                 else if (level->lanes[L].paths[i] == 3) {
                     /// Trees?
                     glUniform1i(uniTexID, 3);
-                    currentModel = getModel("cube");
+                    currentModel = getModel("rock");
                 } else {
                     //currentModel = getModel("sphere");
                     // Actually should draw nothing here

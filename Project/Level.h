@@ -54,6 +54,9 @@ public:
     // The factor affecting distance between lanes
     int laneSpacing;
 
+    // The scale that the level is scaled along the x-axis when drawn
+    float xDrawingScale;
+
 private:
 protected:
 
