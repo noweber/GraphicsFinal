@@ -626,10 +626,10 @@ int main(int argc, char *argv[]){
     drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
 
     //UI Rendering
-    //drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, 768, 0.4);
-    //drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, -768, 0.34);
-    //drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, 768, 0.34);
-    //drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, -768, 0.4);
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, 768, 0.4);
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, -768, 0.34);
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, 768, 0.34);
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, -768, 0.4);
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
