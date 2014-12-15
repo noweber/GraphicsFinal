@@ -34,6 +34,7 @@ Player::Player() {
 
     // Assign the current level pointer to NULL
     cLevel = NULL;
+
 }
 
 Player::~Player() {
@@ -109,6 +110,9 @@ void Player::update(float dt) {
     movedDown = false;
     movedForward = false;
     movedBackward = false;
+
+    // Tell  the level which lanes are cleared?
+
 
 }
 

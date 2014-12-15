@@ -9,8 +9,8 @@ Level::Level(int laneWidth, int numberOfLanes) {
         this->zWidth = 2 * numberOfLanes;
 
     // Set default values for other members
-    lanesPassed = 0;
-    laneVelocity = 0.1f;
+    frontLane = 0;
+    zVelocity = 0.01f;
 
     // Set the default start position for a player on this level
     this->defaultStartX = 0;
@@ -31,6 +31,26 @@ Level::Level(int laneWidth, int numberOfLanes) {
     // Randomly generate the content of the lanes
     for(int j = 0; j < nLanes; j++) {
         regenerateLane(&lanes[j]);
+    }
+
+    numberOfLanesDrawn = 8;
+    laneDZ = 0.0f;
+    dzSinceSwap = 0.0f;
+    zOffset = 0.0f;
+    mustCheckCollisions = false;
+    laneSpacing = 8;
+}
+
+void Level::update(float dt) {
+    laneDZ = dt * zVelocity;
+    dzSinceSwap += laneDZ;
+    zOffset += laneDZ;
+
+    // Check if the front lane needs to be swapped and a collision check needs to occur
+    if(dzSinceSwap > laneSpacing) {
+        frontLane += 1;
+        mustCheckCollisions = true;
+        dzSinceSwap -= laneSpacing;
     }
 
 }
