@@ -626,10 +626,10 @@ int main(int argc, char *argv[]){
     drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
 
     //UI Rendering
-    //drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, 768, 0.2);
-    //drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, -768, 0.2);
-    //drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, 768, 0.2);
-    //drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, -768, 0.2);
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, 768, 0.4);
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, -768, 0.34);
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, 768, 0.34);
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, -768, 0.4);
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
@@ -694,7 +694,7 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCo
     }
     else if (xCoord < 0)
     {
-        xCoordReal = 0.43 * (xCoord/screenWidth);
+        xCoordReal = 0.56 * (xCoord/screenWidth);
     }
 
     if (yCoord >= 0)
@@ -728,7 +728,6 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCo
     glUniform1i(uniUIRender, 1); //Set UI Render on
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
-    glUniform1i(uniUIRender, 0); //Set UI Render off
 }
 
 void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
@@ -749,6 +748,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
     GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
     GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
+    GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
     //glm::mat4 model;
     //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
@@ -764,6 +764,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
     glUniform1i(uniTexID, 0); //Set texture ID to use
     glUniform1i(uniOutline, 1); //Set outline to on
+    glUniform1i(uniUIRender, 0); //Set UI Render off
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -830,6 +831,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     glUniform3fv(uniColor1, 1, glm::value_ptr(colVec));
     GLint uniTexID1 = glGetUniformLocation(shaderProgram, "texID");
     GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline"); //Set it to not rendering outline
+    GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
     //glm::mat4 model;
     //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
@@ -844,6 +846,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
     glUniform1i(uniTexID1, 3); //Set texture ID to use
     glUniform1i(uniOutline, 0); //Set outline to off
+    glUniform1i(uniUIRender, 0); //Set UI Render off
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
