@@ -15,6 +15,8 @@ public:
 
     // The path slots containing obstacles or openings within each lane
     int *paths;
+    // The height of the obstacles used for animated them up and down.
+    //float *pathHeights;
     //int *pathTxt;
 
     // The Lane's position

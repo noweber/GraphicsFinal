@@ -19,10 +19,13 @@ public:
     void regenerateLane(GameLane *cLane);   // Arguments: The lane to clear, the lane's number
 
     // Store the number of lanes that the player has passed
-    int lanesPassed;
+    int frontLane;
+
+    // The amount of time passed since the last collision check.  Each time the
+    //float checkTimer;
 
     // The velocity of the lanes... determines how fast they are swapped
-    float laneVelocity;
+    float zVelocity;
 
     // Number of textures available for lane creation
     //int cTextureCt;
@@ -39,6 +42,17 @@ public:
     // Store the lanes within the level
     std::vector<GameLane> lanes;
 
+    int numberOfLanesDrawn;
+    // The offset for the lanes towards the player
+    float laneDZ;       // offset since last update
+    float dzSinceSwap;  // offset since last front lane change
+    float zOffset;
+
+    // Whether or not the player needs to check for collisions
+    bool mustCheckCollisions;
+
+    // The factor affecting distance between lanes
+    int laneSpacing;
 
 private:
 protected:

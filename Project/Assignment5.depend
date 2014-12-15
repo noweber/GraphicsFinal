@@ -6,24 +6,24 @@
 	"Player.h"
 	<iostream>
 
-1418602230 e:\programming\csci5607\graphicsfinal\project\player.h
+1418678550 e:\programming\csci5607\graphicsfinal\project\player.h
 	"Level.h"
 	<iostream>
 
-1418611345 e:\programming\csci5607\graphicsfinal\project\level.h
+1418678222 e:\programming\csci5607\graphicsfinal\project\level.h
 	<vector>
 	<cstddef>
 	"GameLane.h"
 	<stdlib.h>
 	<time.h>
 
-1418611353 e:\programming\csci5607\graphicsfinal\project\gamelane.h
+1418676801 e:\programming\csci5607\graphicsfinal\project\gamelane.h
 
 1418611352 source:e:\programming\csci5607\graphicsfinal\project\gamelane.cpp
 	"GameLane.h"
 	<stdlib.h>
 
-1418611558 source:e:\programming\csci5607\graphicsfinal\project\level.cpp
+1418678220 source:e:\programming\csci5607\graphicsfinal\project\level.cpp
 	"Level.h"
 
 1418429735 source:e:\programming\csci5607\graphicsfinal\project\modelindex.cpp
@@ -31,10 +31,7 @@
 
 1418429735 e:\programming\csci5607\graphicsfinal\project\modelindex.h
 
-1418617224 source:e:\programming\csci5607\graphicsfinal\project\player.cpp
-	"Player.h"
-
-1418612251 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
+1418678202 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
 	<GL/glew.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_opengl.h>
@@ -817,4 +814,7 @@
 
 1416695342 e:\programming\csci5607\graphicsfinal\project\glm\gtc\type_ptr.inl
 	<cstring>
+
+1418678531 source:e:\programming\csci5607\graphicsfinal\project\player.cpp
+	"Player.h"
 

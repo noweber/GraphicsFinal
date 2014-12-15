@@ -514,6 +514,7 @@ int main(int argc, char *argv[]){
     updateLighting(texturedShader);
     player->update(deltaT);
     camera->update(deltaT);
+    level->update(deltaT);
 
     /// Recenter the mouse if necessary
     if(camera->shouldRecenter) {
@@ -829,14 +830,21 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
                         // These can be used within the drawLanes() for loop
 
     /// Draw Lane Objects
-    for(int L = 0; L < level->nLanes; L++) {    ///-- TODO: adjust drawLanes() to only draw 4 lanes...
+    float offsetZ = 0.0f;
+    int lastDrawnLane = level->frontLane + level->numberOfLanesDrawn;
+    if(lastDrawnLane > level->nLanes) {
+        lastDrawnLane = level->nLanes;
+    }
+
+    for(int L = level->frontLane; L < lastDrawnLane; L++) {    ///-- TODO: adjust drawLanes() to only draw 4 lanes...
         for(int i = 0; i < level->lanes[L].nPaths; i++) {
 
             if(level->lanes[L].paths[i] != 0) { // 0 would mean the path space within the lane is empty
                 glm::mat4 model;
                 GLint uniModel = glGetUniformLocation(shaderProgram, "model");
                 //model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
-                model = glm::translate(model,glm::vec3( (-(level->lWidth/2)) + i, 0.0f, playerZ - 4*L - 2.0f));
+                offsetZ = playerZ - level->laneSpacing*L - 2.0f + level->zOffset;
+                model = glm::translate(model,glm::vec3( (-(level->lWidth/2)) + i, 0.0f, offsetZ));
                 uniModel = glGetUniformLocation(shaderProgram, "model");
                 glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
                 //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
