@@ -618,10 +618,9 @@ int main(int argc, char *argv[]){
     drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
 
     //UI Rendering
-    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, 768, 0.4);
-    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, -768, 0.34);
-    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, 768, 0.34);
-    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, -768, 0.4);
+    //Screencoord and scale between 0 to 1 is recommended
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.2);
+
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
@@ -680,31 +679,37 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCo
     float xCoordReal;
     float yCoordReal;
 
-    if (xCoord >= 0)
+    if (xCoord >= 0 && yCoord >= 0)
     {
-       xCoordReal = 0.36 * (xCoord/screenWidth);
+        xCoordReal = 0.565 * (xCoord/screenWidth);
+        yCoordReal = 0.385 * (yCoord/screenHeight);
     }
-    else if (xCoord < 0)
+    else if (xCoord < 0 && yCoord >= 0)
     {
-        xCoordReal = 0.56 * (xCoord/screenWidth);
+        xCoordReal = 0.548 * (xCoord/screenWidth);
+        yCoordReal = 0.385 * (yCoord/screenHeight);
     }
     
-    if (yCoord >= 0)
+    else if (yCoord < 0 && xCoord >= 0)
     {
-        yCoordReal = 0.2 * (yCoord/screenHeight);
+        xCoordReal = 0.745 * (xCoord/screenWidth);
+        yCoordReal = 0.64 * (yCoord/screenHeight);
     }
-    else if (yCoord < 0)
+        
+    else if (yCoord < 0 && xCoord < 0)
     {
-        yCoordReal = 0.32 * (yCoord/screenHeight);
+        xCoordReal = 0.72 * (xCoord/screenWidth);
+        yCoordReal = 0.625 * (yCoord/screenHeight);
     }
 
     GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
     GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
     GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
+    vec2 unitexOffset = glGetUniformLocation(shaderProgram, "texOffset");
 
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-    model = glm::translate(model,glm::vec3(camera->posX, camera->posY, camera->posZ)+glm::vec3(direction.x+xCoordReal, direction.y+yCoordReal, direction.z-0.1));
+    model = glm::translate(model,glm::vec3(camera->posX, camera->posY, camera->posZ)+glm::vec3(direction.x+xCoordReal, direction.y+yCoordReal, direction.z-0.14));
     model = glm::scale(model,glm::vec3(scale, scale, scale));
     model = glm::rotate(model, camera->horiAngle, upVector);
     model = glm::rotate(model, camera->vertAngle, rightVector);
@@ -713,11 +718,10 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCo
 
     // model = glm::rotate(model,45.f,glm::vec3(0.0f, 1.0f, 0.0f));
     // model = glm::rotate(model,45.f,glm::vec3(0.0f, 0.0f, 1.0f));
-    //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
-    //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
     glUniform1i(uniTexID, 5); //Set texture ID to use
     glUniform1i(uniOutline, 0); //Set outline to off
     glUniform1i(uniUIRender, 1); //Set UI Render on
+    glUniform1i(unitexOffset, vec2(1,1));
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
 }
