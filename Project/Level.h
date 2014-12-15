@@ -57,6 +57,11 @@ public:
     // The scale that the level is scaled along the x-axis when drawn
     float xDrawingScale;
 
+    // Has the level been failed by the player?
+    bool hasFailed;
+    // The number of collisions remaining before failure
+    int hitPoints;
+
 private:
 protected:
 

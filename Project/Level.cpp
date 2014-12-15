@@ -40,6 +40,9 @@ Level::Level(int laneWidth, int numberOfLanes) {
     mustCheckCollisions = false;
     laneSpacing = 10;
     xDrawingScale = 2.56f;
+
+    hasFailed = false;
+    hitPoints = 2;
 }
 
 void Level::update(float dt) {
