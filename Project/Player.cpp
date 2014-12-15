@@ -110,6 +110,9 @@ void Player::update(float dt) {
     movedForward = false;
     movedBackward = false;
 
+    // Check for collisions within the level
+
+
 }
 
 bool Player::changeLevel(Level *cL) {

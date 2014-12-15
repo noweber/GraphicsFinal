@@ -10,7 +10,9 @@ Level::Level(int laneWidth, int numberOfLanes) {
 
     // Set default values for other members
     lanesPassed = 0;
-    laneVelocity = 0.1f;
+    laneVelocity = 0.01f;
+    zOffset  = 0.0f;
+    //frontLane = 0;
 
     // Set the default start position for a player on this level
     this->defaultStartX = 0;
@@ -34,6 +36,12 @@ Level::Level(int laneWidth, int numberOfLanes) {
     }
 
 }
+/*
+void Level::update(float dt) {
+    //zOffset += dt * laneVelocity;
+
+}
+*/
 
 ///-- TODO:
 void Level::regenerateLane(GameLane *cLane) {
