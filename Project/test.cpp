@@ -31,6 +31,7 @@ using namespace std;
 
 
 /// //// //// TO-DO LIST  //// //// ///
+
 ///-- TODO: ensure that the game objects move the same speed in full screen vs windowed mode
 ///-- TODO: Work on a UI.  Draw cubes or quads relative to the camera and setup A-Z 0-9 Textures to be able to right different things to it.  Such as number of lanes cleared or points.
 ///-- TODO: Make palm leaf model to draw at the top of trees.  Trees can will probably have a sphere or cube base with 4-5 leaves.
@@ -51,6 +52,7 @@ using namespace std;
 ///-- Bound the camera above the ground plane during free cam
 ///-- TODO: Title screen
 ///-- TODO: Reset button
+///-- TODO: Add motion blur to the turtle
 ///-- Finished: Setup the button 'C' to switch between player movement and camera movement.  This means, I can move my camera freely, then press C to move the turtle... back and forth.
 ///-- Try to add more lights and/or make the the ground light up rather than just that odd circle underneath the camera
 ///-- Make movements in free camera mode relative to the facing of the camera?  If you press forward while facing a direction, you should move that direction.  This may be hard.
@@ -81,10 +83,10 @@ GLuint InitShader(const char* vShaderFileName, const char* fShaderFileName);
 /// Update Function Declarations
 void updateLighting(int shaderProgram);
 /// Rendering Function Declarations
-void drawTurtle(int shaderProgram, int numVerts1, int numVerts2);
-void drawLevel(int shaderProgram, int numVerts1, int numVerts2);
 void drawGround(int shaderProgram, int numVerts1, int numVerts2);
-void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2);
+void drawLevel(int shaderProgram, int numVerts1, int numVerts2);
+void drawLanes(int shaderProgram, int numVerts1, int numVerts2);
+void drawTurtle(int shaderProgram, int numVerts1, int numVerts2);
 void drawUI(int shaderProgram, int numVerts1, int numVerts2);
 
 //Model data management
@@ -356,7 +358,6 @@ int main(int argc, char *argv[]){
 
 	glEnable(GL_DEPTH_TEST);
 
-    /// TODO move to Game::init()
 	//Event Loop (Loop forever processing each event as fast as possible)
 	SDL_Event windowEvent;
 	SDL_WarpMouseInWindow(window, screenWidth/2, screenHeight/2);   // initial mouse warp to center camera
@@ -594,9 +595,9 @@ int main(int argc, char *argv[]){
     /// //// ////// //// ///
     /// Call Rendering Functions
     drawGround(texturedShader, getModel("cube").start,getModel("cube").end);
-    //drawLevel(texturedShader, numVerts1,numVerts2);
+    drawLevel(texturedShader, getModel("cube").start,getModel("cube").end);
+    drawLanes(texturedShader, getModel("cube").start,getModel("cube").end);
     drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
-    //drawCubeFriend(texturedShader, numVerts1,numVerts2);
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
@@ -758,8 +759,8 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     /// Draw Ground Plane
     glm::mat4 model;
     GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
-    model = glm::scale(model,glm::vec3(1.0f * level->xWidth, 1.0f, 1.0f * level->zWidth));
-    model = glm::translate(model,glm::vec3(0.0f, -1.0f, 0.0f));   // Draws relative to the camera...
+    model = glm::scale(model,glm::vec3(8.0f * level->xWidth, 1.0f, 4.0f * level->zWidth));
+    model = glm::translate(model,glm::vec3(0.0f, -1.4f, 0.0f));   // Draws relative to the camera...
     uniModel1 = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -774,47 +775,37 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
 }
 
 void drawLevel(int shaderProgram, int numVerts1, int numVerts2) {
-    /// Very slow FPS - Do not use this function
-
+    if(level == NULL) {
+        return;
+    }
     GLint uniColor1 = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
     glUniform3fv(uniColor1, 1, glm::value_ptr(colVec));
     GLint uniTexID1 = glGetUniformLocation(shaderProgram, "texID");
+    GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline"); //Set it to not rendering outline
+    //glm::mat4 model;
+    //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
+    /// Draw Secondary Ground Plane
     glm::mat4 model;
     GLint uniModel1 = glGetUniformLocation(shaderProgram, "model");
-    /// Draw Ground Portion
-    int x, z;
-    for(x = -(level->xWidth/2); x < (level->xWidth/2); x++) {
-        model = glm::translate(model,glm::vec3(0.0f + x, -1.0f, 0.0f));
-        for(z = -(level->zWidth/2); z < (level->zWidth/2); z++) {
-            //model = glm::scale(model,glm::vec3(1.0f, 1.0f, 1.0f));
-            model = glm::translate(model,glm::vec3(0.0f, 0.0f, 0.0f + z));
-            uniModel1 = glGetUniformLocation(shaderProgram, "model");
-            glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
-            glUniform1i(uniTexID1, 3); //Set texture ID to use
-            glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
-            glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); //(Primitive Type, Start Vertex, End Vertex)
-            model = glm::translate(model,glm::vec3(0.0f, 0.0f, 0.0f - z));
-        }
-        model = glm::translate(model,glm::vec3(0.0f - x, 1.0f, 0.0f));
-    }
-
-   /* model = glm::scale(model,glm::vec3(1000.0f, 0.25f, 1000.0f));
+    model = glm::scale(model,glm::vec3(1.0f * level->xWidth, 1.0f, 4.0f * level->zWidth));
     model = glm::translate(model,glm::vec3(0.0f, -1.0f, 0.0f));   // Draws relative to the camera...
     uniModel1 = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniform1i(uniTexID1, 3); //Set texture ID to use
+    glUniform1i(uniTexID1, 1); //Set texture ID to use
+    glUniform1i(uniOutline, 0); //Set outline on / off
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
-    glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); //(Primitive Type, Start Vertex, End Vertex)
-*/
+    glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); //(Primitive Type, Start Vertex, End Vertex
+
+
 }
 
-void drawCubeFriend(int shaderProgram, int numVerts1, int numVerts2){
+void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
 
 	/*GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);

@@ -42,17 +42,6 @@ void Level::regenerateLane(GameLane *cLane) {
         objType = rand() % 4;   // Random number between 0 and 3
         // objType 0 will be an open path
         cLane->paths[i] = objType;
-        /*switch(objType) {
-        case 0:
-            break;
-        case 0:
-            break;
-        case 0:
-            break;
-        default:
-            cLane->paths
-            break;
-        }*/
     }
     // Ensure there is at least one empty slot
     bool hasPath = false;
@@ -65,9 +54,10 @@ void Level::regenerateLane(GameLane *cLane) {
         }
     }
     if(!hasPath) {
-        ///-- TODO: Place a random open path
-        // Place a path on the far left
-        cLane->paths[0] = 0;
+        int pSlot;
+        pSlot = rand() % cLane->nPaths;
+        // Place a random open path
+        cLane->paths[pSlot] = 0;
     }
     return;
 }
