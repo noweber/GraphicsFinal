@@ -272,7 +272,7 @@ int main(int argc, char *argv[]){
     /// End Allocate Texture
 
     /// Allocate Texture 2 ///
-	SDL_Surface* surface3 = SDL_LoadBMP("lightBrown.bmp");
+	SDL_Surface* surface3 = SDL_LoadBMP("lightbrown.bmp");
 	if (surface3==NULL){ //If it failed, print the error
         printf("Error: \"%s\"\n",SDL_GetError()); return 1;
     }
@@ -332,6 +332,48 @@ int main(int argc, char *argv[]){
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface5->w,surface5->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface5->pixels);
     glGenerateMipmap(GL_TEXTURE_2D);
     SDL_FreeSurface(surface5);
+    /// End Allocate Texture
+
+    /// Allocate Texture For Beach///
+    SDL_Surface* surface6 = SDL_LoadBMP("beach.bmp");
+    if (surface6==NULL){ //If it failed, print the error
+        printf("Error: \"%s\"\n",SDL_GetError()); return 1;
+    }
+    GLuint tex6;
+    glGenTextures(1, &tex6);
+    glActiveTexture(GL_TEXTURE6);
+    glBindTexture(GL_TEXTURE_2D, tex6);
+    //What to do outside 0-1 range
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    //How to filter
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //Load the texture into memory
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface6->w,surface6->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface6->pixels);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SDL_FreeSurface(surface6);
+    /// End Allocate Texture
+
+    /// Allocate Texture For Water///
+    SDL_Surface* surface7 = SDL_LoadBMP("water.bmp");
+    if (surface7==NULL){ //If it failed, print the error
+        printf("Error: \"%s\"\n",SDL_GetError()); return 1;
+    }
+    GLuint tex7;
+    glGenTextures(1, &tex7);
+    glActiveTexture(GL_TEXTURE7);
+    glBindTexture(GL_TEXTURE_2D, tex7);
+    //What to do outside 0-1 range
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    //How to filter
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //Load the texture into memory
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface7->w,surface7->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface7->pixels);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SDL_FreeSurface(surface7);
     /// End Allocate Texture
 
 	//Allocate memory on the graphics card to store geometry (vertex buffer object)
@@ -605,6 +647,14 @@ int main(int argc, char *argv[]){
     glBindTexture(GL_TEXTURE_2D, tex5);
     glUniform1i(glGetUniformLocation(texturedShader, "tex5"), 5);
 
+    glActiveTexture(GL_TEXTURE6);
+    glBindTexture(GL_TEXTURE_2D, tex6);
+    glUniform1i(glGetUniformLocation(texturedShader, "tex6"), 6);
+
+    glActiveTexture(GL_TEXTURE7);
+    glBindTexture(GL_TEXTURE_2D, tex7);
+    glUniform1i(glGetUniformLocation(texturedShader, "tex7"), 7);
+
 
     /// Call Remaining Updater Functions
     /*updateLighting(texturedShader);
@@ -626,10 +676,10 @@ int main(int argc, char *argv[]){
     drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
 
     //UI Rendering
-    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, 768, 0.4);
-    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, -768, 0.34);
-    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, 768, 0.34);
-    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, -768, 0.4);
+    //drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, 768, 0.4);
+    //drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, -768, 0.34);
+    //drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 1024, 768, 0.34);
+    //drawUI(texturedShader, getModel("quad").start, getModel("quad").end, -1024, -768, 0.4);
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
@@ -826,6 +876,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     if(level == NULL) {
         return;
     }
+
     GLint uniColor1 = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
     glUniform3fv(uniColor1, 1, glm::value_ptr(colVec));
@@ -844,7 +895,7 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniform1i(uniTexID1, 3); //Set texture ID to use
+    glUniform1i(uniTexID1, 6); //Set texture ID to use
     glUniform1i(uniOutline, 0); //Set outline to off
     glUniform1i(uniUIRender, 0); //Set UI Render off
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");

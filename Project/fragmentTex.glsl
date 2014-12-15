@@ -14,6 +14,8 @@ uniform sampler2D tex2;
 uniform sampler2D tex3;
 uniform sampler2D tex4;
 uniform sampler2D tex5;
+uniform sampler2D tex6;
+uniform sampler2D tex7;
 
 uniform int texID;
 uniform int drawOutline;
@@ -37,7 +39,11 @@ void main() {
   else if (texID == 4)
     color = texture(tex4, texcoord).rgb;  
   else if (texID == 5)
-    color = texture(tex5, texcoord).rgb; 
+    color = texture(tex5, texcoord).rgb;
+  else if (texID == 6)
+    color = texture(tex6, texcoord).rgb;
+  else if (texID == 7)
+    color = texture(tex7, texcoord).rgb;
   else{
            outColor = vec4(1,0,0,1);
            return; //This was an error, stop lighting!
