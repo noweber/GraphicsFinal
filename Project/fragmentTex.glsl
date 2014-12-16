@@ -62,19 +62,14 @@ void main() {
 
   // Cel Shading
   float mag = 0.3*min(oColor.r, 1) + 0.6*min(oColor.g, 1) + 0.1*min(oColor.b, 1);
-  //float mag = min(oColor.r, 1) + min(oColor.g, 1) + min(oColor.b, 1);
   if(mag < 0.4) {
       oColor = (0.4/mag)*oColor;
-     //oColor = vec3(0,1,0);
   }
   else if(mag < 0.8) {
       oColor = (0.8/mag)*oColor;
-     //oColor = vec3(0,0,1);
   }
   else {
-     //outColor = vec4(1, 1, 1, 1);
       oColor = (0.8/mag)*oColor;
-     //oColor = vec3(1,0,0);
   }
 
   //control flow to prevent drawing outline for some models
@@ -82,27 +77,31 @@ void main() {
   
   if  (drawOutline == 0) {
       outColor += vec4(oColor.r, oColor.g, oColor.b, 1);
+      // outColor = vec4(0,1,0,1);
   }
   else {
-      if(dot(normal,viewDir) < 0.32) outColor += vec4(0,0,0,1);
-      // else if(dot(normal,lightDir) > 0.9999) outColor = vec4(1,1,1,1);
-      else (outColor += vec4(oColor.r, oColor.g, oColor.b, 1));
-      // outColor = vec4(0, 0, 1, 1);
+      if(dot(normal,viewDir) < 0.32) {
+        outColor += vec4(0,0,0,1);
+        // outColor = vec4(0,0,0,1);
+      }
+      else {
+        outColor += vec4(oColor.r, oColor.g, oColor.b, 1);
+        // outColor = vec4(0,0,1,1);
+      }
   }
   
   if (UIRender == 1) {
-      // outColor += vec4(color,1);
       if  (renderNumber != -1) {
-        outColor = vec4(textureOffset(tex5, vec2(texcoord.x+0.5+0.83*renderNumber, texcoord.y+1.3) * 0.1, ivec2(1,1)).rgb, 1);
+        // outColor = vec4(textureOffset(tex5, vec2(texcoord.x+0.5+0.83*renderNumber, texcoord.y+1.3) * 0.1, ivec2(1,1)).rgb, 1);
+        outColor = vec4(1,0,0,1);
       }
       else if (healthRender != -1) {
-        outColor = vec4(color*1.2, 1);
+        // outColor = vec4(color*1.2, 1);
+        outColor = vec4(0,1,0,1);
       }
       else {
-        outColor = vec4(color,1);
+        // outColor = vec4(color,1);
+        outColor = vec4(0,0,1,1);
       }
-      // outColor = vec4(1,0,1,1);
   }
-
-  //outColor = vec4(oColor,1);   // commented out from original by NoW @ 11/22/14 @ 5:10 PM
 }
