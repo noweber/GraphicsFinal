@@ -95,7 +95,8 @@ void drawLowRightWall(int shaderProgram, int numVerts1, int numVerts2);
 void drawRightWall(int shaderProgram, int numVerts1, int numVerts2);
 void drawLanes(int shaderProgram, int numVerts1, int numVerts2);
 void drawTurtle(int shaderProgram, int numVerts1, int numVerts2);
-void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCoord, float scale);
+void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCoord, float scale, int tID);
+void drawNumber(int shaderProgram, int xCoord, int yCoord, float scale, int number);
 
 //Model data management
 //See modelIndex class for returning the values
@@ -678,8 +679,8 @@ int main(int argc, char *argv[]){
     //UI Rendering
 
     //Screencoord and scale between 0 to 1 is recommended
-    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.2);
-
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.2, 1);
+    // drawNumber(texturedShader, 700, 768, 0.2, 4);
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
@@ -714,7 +715,13 @@ void updateLighting(int shaderProgram) {
     }*/
 }
 
-void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCoord, float scale) {
+void drawNumber(int shaderProgram, int xCoord, int yCoord, float scale, int number) {
+    // GLint unirenderNumber = glGetUniformLocation(shaderProgram, "renderNumber");
+    // glUniform1i(unirenderNumber, number); //Set UI Render on
+    // drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord, yCoord, scale, 5);
+}
+
+void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCoord, float scale, int tID) {
     //Clamp xCoord and yCoord
     if (xCoord > screenWidth)
     {
@@ -775,7 +782,7 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCo
 
     // model = glm::rotate(model,45.f,glm::vec3(0.0f, 1.0f, 0.0f));
     // model = glm::rotate(model,45.f,glm::vec3(0.0f, 0.0f, 1.0f));
-    glUniform1i(uniTexID, 5); //Set texture ID to use
+    glUniform1i(uniTexID, tID); //Set texture ID to use
     glUniform1i(uniOutline, 0); //Set outline to off
     glUniform1i(uniUIRender, 1); //Set UI Render on
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
