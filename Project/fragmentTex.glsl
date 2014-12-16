@@ -21,6 +21,7 @@ uniform int texID;
 uniform int drawOutline;
 uniform int UIRender;
 uniform int renderNumber = -1;
+uniform int healthRender = -1;
 
 
 const float ambient = .3;
@@ -93,6 +94,9 @@ void main() {
       // outColor += vec4(color,1);
       if  (renderNumber != -1) {
         outColor = vec4(textureOffset(tex5, vec2(texcoord.x+0.5+0.83*renderNumber, texcoord.y+1.3) * 0.1, ivec2(1,1)).rgb, 1);
+      }
+      else if (healthRender != -1) {
+        outColor = vec4(color*1.2, 1);
       }
       else {
         outColor += vec4(color,1);

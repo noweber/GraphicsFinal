@@ -97,9 +97,11 @@ void drawRightWall(int shaderProgram, int numVerts1, int numVerts2);
 void drawLanes(int shaderProgram, int numVerts1, int numVerts2);
 
 void drawTurtle(int shaderProgram, int numVerts1, int numVerts2);
+void drawTurtleHead(int shaderProgram, int numVerts1, int numVerts2);
+
 void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCoord, float scale, int tID);
 void drawNumber(int shaderProgram, int xCoord, int yCoord, float scale, int number);
-void drawTurtleHead(int shaderProgram, int numVerts1, int numVerts2);
+void drawHealthBar(int shaderProgram, int xCoord, int yCoord, int tID_lowH, int tID_norH);
 
 //Model data management
 //See modelIndex class for returning the values
@@ -689,6 +691,7 @@ int main(int argc, char *argv[]){
 
     //Screencoord and scale between 0 to 1 is recommended
     drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.05, 2);
+    drawHealthBar(texturedShader, -420, 368, 0, 1);
     drawNumber(texturedShader, 480, 368, 0.02, 4);
     drawNumber(texturedShader, 440, 368, 0.02, 3);
     drawNumber(texturedShader, 400, 368, 0.02, 2);
@@ -727,11 +730,26 @@ void updateLighting(int shaderProgram) {
     }*/
 }
 
+void drawHealthBar(int shaderProgram, int xCoord, int yCoord, int tID_lowH, int tID_norH) {
+    int offSet = 20;
+    //Add if statement for lowhealth
+
+    //Normal health
+    GLint unihealthRender = glGetUniformLocation(shaderProgram, "healthRender");
+    glUniform1i(unihealthRender, 1); //Set UI Render on
+    drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord-offSet*2 - 20, yCoord, 0.02, tID_norH);
+    drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord-offSet, yCoord, 0.02, tID_norH);
+    drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord+offSet, yCoord, 0.02, tID_norH);
+    drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord+offSet*2 + 20, yCoord, 0.02, tID_norH);
+    glUniform1i(unihealthRender, -1); //Set UI Render off
+}
+
+
 void drawNumber(int shaderProgram, int xCoord, int yCoord, float scale, int number) {
     GLint unirenderNumber = glGetUniformLocation(shaderProgram, "renderNumber");
     glUniform1i(unirenderNumber, number); //Set UI Render on
     drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord, yCoord, scale, 5);
-    glUniform1i(unirenderNumber, -1); //Set UI Render on
+    glUniform1i(unirenderNumber, -1); //Set UI Render off
 }
 
 void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCoord, float scale, int tID) {
@@ -762,9 +780,6 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCo
     {
         xCoordReal = 0.565 * ((float)xCoord/(screenWidth/2));
         yCoordReal = 0.385 * ((float)yCoord/(screenHeight/2));
-        cout << "in first if" << endl;
-        cout << "x is " << xCoordReal << endl;
-        cout << "y is " << yCoordReal << endl;
     }
     else if (xCoord < 0 && yCoord >= 0)
     {
