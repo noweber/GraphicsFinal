@@ -34,6 +34,7 @@ class Player {
     float velocityY;
     float velocityZ;
 
+
     // Player's movement states since last update (these reset to false every update
     bool hasMoved;
     bool movedLeft;

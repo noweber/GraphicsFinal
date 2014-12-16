@@ -8,7 +8,7 @@ Player::Player() {
     posDX = 0.0f;
     posDZ = 0.0f;
 
-    velocityX = 0.02;
+    velocityX = 0.01;
     velocityY = 0.004;
     velocityZ = 0.04;
 
@@ -65,22 +65,32 @@ void Player::update(float dt) {
     float newX = 0.0f;
     float newY = 0.0f;
     float newZ = 0.0f;
-
+    float edgeAdjust = 0.4f;
     // Check if the player has moved...
     if(hasMoved) {
         // Now check if that move is valid...
         if(this->canMove()) {
+            //movePlayer();
+
             if(movedLeft){
-                if(posX > -((cLevel->lWidth/2)*cLevel->xDrawingScale) ) {
+                if(posX > -((cLevel->lWidth/2)*cLevel->xDrawingScale) - edgeAdjust) {
                     posDX = -dt * velocityX;
                     posX += posDX;
                 }
+            } else if (movedLeft && posX < -((cLevel->lWidth/2)*cLevel->xDrawingScale) - edgeAdjust) {
+                posX = -((cLevel->lWidth/2)*cLevel->xDrawingScale) - edgeAdjust;
             }
+
+
+
+
             if(movedRight){
-                if(posX < ((cLevel->lWidth/2)*cLevel->xDrawingScale)  ) {
+                if(posX < ((cLevel->lWidth/2)*cLevel->xDrawingScale) + edgeAdjust) {
                     posDX = dt * velocityX;
                     posX += posDX;
                 }
+            } else if (movedRight && posX > -((cLevel->lWidth/2)*cLevel->xDrawingScale) + edgeAdjust) {
+                posX = ((cLevel->lWidth/2)*cLevel->xDrawingScale) + edgeAdjust;
             }
 
             if(movedUp) {
