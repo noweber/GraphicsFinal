@@ -126,6 +126,7 @@ modelIndex getModel(string modelName);
 Player *player;
 Camera *camera;
 Level *level;
+bool gIsPaused;
 
 int screenWidth = 1024;
 int screenHeight = 768;
@@ -151,6 +152,7 @@ glm::vec3 upVector;
 int main(int argc, char *argv[]){
     // Seed the random number generation
     srand (time(0));
+    gIsPaused = false;
 
     player = NULL;
     camera = NULL;
@@ -559,6 +561,15 @@ int main(int argc, char *argv[]){
                         case SDLK_e:
                             break;
 
+                        case SDLK_t:
+                            // Flip the pause bool
+                            if(gIsPaused) {
+                                gIsPaused = false;
+                            } else {
+                                gIsPaused = true;
+                            }
+                            break;
+
 
                         case SDLK_c:
                             // Change camera mode
@@ -604,7 +615,7 @@ int main(int argc, char *argv[]){
     /// //// ////// //// ///
     /// Call Updater Functions
     while(deltaT > 16) {
-        if(!level->hasFailed) {
+        if(!level->hasFailed && !gIsPaused) {
             updateLighting(texturedShader);
             player->update(deltaT);
             level->update(deltaT);
@@ -1054,7 +1065,7 @@ void drawTurtleBackLeft(int shaderProgram, int numVerts1, int numVerts2) {
     float xScale = 0.25f;
     float xAdjust = 1.0f / xScale;
     model = glm::scale(model,glm::vec3(xScale, 0.2f, 0.44f));
-    model = glm::translate(model,glm::vec3(playerX * xAdjust -1.25f - player->headOffsetX/2, player->leftFootOffsetY, playerZ + 1.32f));   //1.032f on the x is for effect
+    model = glm::translate(model,glm::vec3(playerX * xAdjust -1.25f + player->headOffsetX/2, player->leftFootOffsetY, playerZ + 1.32f));   //1.032f on the x is for effect
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
