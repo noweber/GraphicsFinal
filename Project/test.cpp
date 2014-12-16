@@ -901,10 +901,10 @@ void drawTurtleHead(int shaderProgram, int numVerts1, int numVerts2) {
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     model = glm::scale(model,glm::vec3(0.7f, 0.64f, 0.64f));
-    model = glm::translate(model,glm::vec3(playerX * 1.4285714f * 1.04f , 0.0f, playerZ - 0.64f));   //0.32f on the x is for effect
+    model = glm::translate(model,glm::vec3(playerX * 1.4285714f * 1.032f , 0.0f, playerZ - 0.64f));   //1.032f on the x is for effect
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(uniTexID, 0); //Set texture ID to use
+    glUniform1i(uniTexID, 1); //Set texture ID to use
     glUniform1i(uniOutline, 1); //Set outline to on
     //glUniform1i(uniUIRender, 0); //Set UI Render off
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
