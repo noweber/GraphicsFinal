@@ -76,32 +76,32 @@ void main() {
   
   
   if  (drawOutline == 0) {
-      outColor += vec4(oColor.r, oColor.g, oColor.b, 1);
-      // outColor = vec4(0,1,0,1);
+      // outColor += vec4(oColor.r, oColor.g, oColor.b, 1);
+      outColor = vec4(0,1,0,1);
   }
   else {
       if(dot(normal,viewDir) < 0.32) {
-        outColor += vec4(0,0,0,1);
-        // outColor = vec4(0,0,0,1);
+        // outColor += vec4(0,0,0,1);
+        outColor = vec4(0,0,0,1);
       }
       else {
-        outColor += vec4(oColor.r, oColor.g, oColor.b, 1);
-        // outColor = vec4(0,0,1,1);
+        // outColor += vec4(oColor.r, oColor.g, oColor.b, 1);
+        outColor = vec4(0,0,1,1);
       }
   }
   
   if (UIRender == 1) {
       if  (renderNumber != -1) {
-        // outColor = vec4(textureOffset(tex5, vec2(texcoord.x+0.5+0.83*renderNumber, texcoord.y+1.3) * 0.1, ivec2(1,1)).rgb, 1);
-        outColor = vec4(1,0,0,1);
+        outColor = vec4(textureOffset(tex5, vec2(texcoord.x+0.5+0.83*renderNumber, texcoord.y+1.3) * 0.1, ivec2(1,1)).rgb, 1);
+        // outColor = vec4(1,0,0,1);
       }
       else if (healthRender != -1) {
-        // outColor = vec4(color*1.2, 1);
-        outColor = vec4(0,1,0,1);
+        outColor = vec4(color*1.2, 1);
+        // outColor = vec4(0,1,0,1);
       }
       else {
-        // outColor = vec4(color,1);
-        outColor = vec4(0,0,1,1);
+        outColor = vec4(color,1);
+        // outColor = vec4(0,0,1,1);
       }
   }
 }
