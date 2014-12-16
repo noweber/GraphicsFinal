@@ -19,6 +19,7 @@ public:
     bool checkCollisions();
     void clearLane(GameLane *cLane);        // Arguments: The lane to clear, the lane's number
     void regenerateLane(GameLane *cLane);   // Arguments: The lane to clear, the lane's number
+    void movePowerUps();
 
     // Store the number of lanes that the player has passed
     int frontLane;
@@ -69,6 +70,11 @@ public:
 
     // Used to account for FrontLane starting at 0 instead of -1 within Level::update()
     bool passedLaneOne;
+
+    // Height of floating power ups
+    float powerUpY;
+    int moveCt;
+    bool pUpsGoUp;
 
 private:
 protected:

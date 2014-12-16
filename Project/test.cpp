@@ -414,6 +414,27 @@ int main(int argc, char *argv[]){
     SDL_FreeSurface(surface8);
     /// End Allocate Texture
 
+    /// Allocate Texture For Power Ups///
+    SDL_Surface* surface9 = SDL_LoadBMP("brightYellow.bmp");
+    if (surface9==NULL){ //If it failed, print the error
+        printf("Error: \"%s\"\n",SDL_GetError()); return 1;
+    }
+    GLuint tex9;
+    glGenTextures(1, &tex9);
+    glActiveTexture(GL_TEXTURE9);
+    glBindTexture(GL_TEXTURE_2D, tex9);
+    //What to do outside 0-1 range
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    //How to filter
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //Load the texture into memory
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface9->w,surface9->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface9->pixels);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SDL_FreeSurface(surface9);
+    /// End Allocate Texture
+
 	//Allocate memory on the graphics card to store geometry (vertex buffer object)
 	GLuint vbo[1];
 	glGenBuffers(1, vbo);  //Create 1 buffer called vbo
@@ -707,6 +728,10 @@ int main(int argc, char *argv[]){
     glActiveTexture(GL_TEXTURE8);
     glBindTexture(GL_TEXTURE_2D, tex8);
     glUniform1i(glGetUniformLocation(texturedShader, "tex8"), 8);
+
+    glActiveTexture(GL_TEXTURE9);
+    glBindTexture(GL_TEXTURE_2D, tex9);
+    glUniform1i(glGetUniformLocation(texturedShader, "tex9"), 9);
 
 
 
@@ -1463,6 +1488,8 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
 
             if(i > -1 && i < level->lanes[L].nPaths) {
                 if(level->lanes[L].paths[i] != 0) { // 0 would mean the path space within the lane is empty
+                    int texNum = level->lanes[L].paths[i];    //rand() % 4;    ///-- TODO: have the texture allocation store a global number of total textures to use here
+
                     glm::mat4 model;
                     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
@@ -1472,19 +1499,24 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
                     //model = glm::scale(model,glm::vec3(1.0f, 1.0f, 1.1f));
                     offsetZ = playerZ - level->laneSpacing*L - 2.0f + level->zOffset -(4*level->laneSpacing/5) ;
                     model = glm::translate(model,glm::vec3( (-(level->lWidth/2)) + i, 0.2f, offsetZ));
+                    if(texNum == 5) {
+                       model = glm::translate(model,glm::vec3( 0.0f, level->powerUpY, 0.0f));
+                    }
                     uniModel = glGetUniformLocation(shaderProgram, "model");
                     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+
                     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
                     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
 
                     ///-- TODO: use a random texture
-                    int texNum = level->lanes[L].paths[i];    //rand() % 4;    ///-- TODO: have the texture allocation store a global number of total textures to use here
-                    if(texNum == 3) {   // make brown to red
+
+                    /*if(texNum == 3) {   // make brown to red
+                        texNum = 0;
+                    }*/
+                    if(texNum == 4) {   // draw some red ones
                         texNum = 0;
                     }
-                   /* if(texNum == 1) {   // make green to blue
-                        texNum = 2;
-                    }*/
+
                     glUniform1i(uniTexID, texNum); //Set texture ID to use
                     glUniform1i(uniOutline, 1); //Set outline to on
                     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
@@ -1509,6 +1541,15 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
                         }
                     } else {
                         //currentModel = getModel("rock");
+                    }
+
+                    if(texNum == 5) {   // power up
+                        texNum = 9;
+                        glUniform1i(uniTexID, texNum); //Set texture ID to use
+                        //model = glm::translate(model,glm::vec3( 0.0f, level->powerUpY, 0.0f));
+                        currentModel = getModel("sphere");
+                        //model = glm::scale(model,glm::vec3(0.5f, 1.0f, 1.1f));
+
                     }
 
                     glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)

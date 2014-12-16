@@ -46,9 +46,22 @@ Level::Level(int laneWidth, int numberOfLanes) {
 
     playerPosXOnLevel = 0;
     passedLaneOne = false;
+
+    powerUpY = 0.0f;
+    moveCt = 0;
+    pUpsGoUp = false;
+}
+
+void Level::movePowerUps() {
+    if(!pUpsGoUp) {
+        pUpsGoUp = true;
+        moveCt = 60;
+    }
 }
 
 void Level::update(float dt) {
+    movePowerUps();
+
     laneDZ = dt * zVelocity;
     dzSinceSwap += laneDZ;
     zOffset += laneDZ;
@@ -79,7 +92,7 @@ void Level::update(float dt) {
         if(playerPosXOnLevel < 0 || playerPosXOnLevel >= lanes[frontLane].nPaths) {
             //hasFailed = true;
         } else {
-            if(lanes[frontLane].paths[playerPosXOnLevel] == 0) {
+            if(lanes[frontLane].paths[playerPosXOnLevel] == 0 || lanes[frontLane].paths[playerPosXOnLevel] == 5) {
                 didCollide = false;
             }
         }
@@ -92,18 +105,19 @@ void Level::update(float dt) {
         //std::cout << "Check 2: " << check2 << "\n";
 
         if(check1 >= 0 && check1 <= lWidth) {
-            if(lanes[frontLane].paths[check1] == 0) {
+            if(lanes[frontLane].paths[check1] == 0 || lanes[frontLane].paths[check1] == 5) {
                 //std::cout << "Didn't collide...\n";
                 didCollide = false;
             }
         }
 
         if(check2 >= 0 && check2 <= lWidth) {
-            if(lanes[frontLane].paths[check2] == 0) {
+            if(lanes[frontLane].paths[check2] == 0 || lanes[frontLane].paths[check2] == 5) {
                 //std::cout << "Didn't collide...\n";
                 didCollide = false;
             }
         }
+
 
         if(didCollide) {
                 std::cout << "Player Position On Level: " << playerPosXOnLevel << "\n";
@@ -122,6 +136,24 @@ void Level::update(float dt) {
         mustCheckCollisions = false;
     }
 
+    // Animate the power ups
+    if(this->moveCt > 0) {
+
+        if(this->moveCt > 30) {
+            this->powerUpY += 0.01;
+        } else {
+            this->powerUpY -= 0.01;
+        }
+        this->moveCt -= 1;
+        //std::cout << "P Height: " << powerUpY << "\n";;
+
+    } else if (this->moveCt <= 0) {
+        /// Reset all values
+        this->pUpsGoUp = false;
+        this->powerUpY = 0;
+        this->moveCt = 0;
+    }
+
 }
 
 ///-- TODO:
@@ -130,9 +162,18 @@ void Level::regenerateLane(GameLane *cLane) {
 
     // Generate a random object within each path slot
     int objType = 0;
+    int powerChance = 0;
     for(int i = 0; i < cLane->nPaths; i++) {
-        objType = rand() % 4;   // Random number between 0 and 3
+        objType = rand() % 6;   // Random number between 0 and 5
+        if(objType == 5) {
+            // Don't keep too many power ups
+            powerChance = rand() % 100;
+            if(powerChance > 15) {
+                objType = rand() % 5;
+            }
+        }
         // objType 0 will be an open path
+        // objType 4 is a power up
         cLane->paths[i] = objType;
     }
     // Assign a random texture number to it.

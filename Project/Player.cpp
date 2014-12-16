@@ -185,6 +185,13 @@ void Player::update(float dt) {
         //std::cout << "Player Position On Level: " << cLevel->playerPosXOnLevel << "\n";
     }
 
+    // Check for a power up
+    if(cLevel->lanes[cLevel->frontLane].paths[cLevel->playerPosXOnLevel] == 5) {
+        cLevel->lanes[cLevel->frontLane].paths[cLevel->playerPosXOnLevel] = 0;
+        std::cout << "Power Up!\n";
+        velocityX += 0.001f;
+    }
+
 }
 
 bool Player::changeLevel(Level *cL) {
