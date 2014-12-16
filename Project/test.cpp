@@ -586,11 +586,16 @@ int main(int argc, char *argv[]){
 
                         case SDLK_t:
                             // Flip the pause bool
-                            if(gIsPaused) {
+                            if (camera->cMode == 0)
+                            {
+                               if(gIsPaused) {
                                 gIsPaused = false;
-                            } else {
-                                gIsPaused = true;
+                                }
+                                else {
+                                    gIsPaused = true;
+                                }
                             }
+                            
                             break;
 
 
