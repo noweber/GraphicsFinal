@@ -73,6 +73,7 @@ void Level::update(float dt) {
     // Check for collisions
     if(mustCheckCollisions) {
         bool didCollide = true;
+        //bool didCollideF = true;
         // Trying to use integer
         //for(int i = 0; i < lanes[frontLane].nPaths; i++) {
         if(playerPosXOnLevel < 0 || playerPosXOnLevel >= lanes[frontLane].nPaths) {
@@ -84,34 +85,34 @@ void Level::update(float dt) {
         }
 
         // Using floats...
-        //int collisionForgiveness = 0.5f;
-        int check1 = ceil(playerFloatX);
-        int check2 = float(playerFloatX);
-        std::cout << "Check 1: " << check2 << "\n";
-        std::cout << "Check 2: " << check2 << "\n";
+        int collisionForgiveness = 0.0f;
+        int check1 = ceil(playerFloatX - collisionForgiveness);
+        int check2 = floor(playerFloatX - collisionForgiveness);
+        //std::cout << "Check 1: " << check2 << "\n";
+        //std::cout << "Check 2: " << check2 << "\n";
 
         if(check1 >= 0 && check1 <= lWidth) {
             if(lanes[frontLane].paths[check1] == 0) {
-                std::cout << "Didn't collide...\n";
+                //std::cout << "Didn't collide...\n";
                 didCollide = false;
             }
         }
 
         if(check2 >= 0 && check2 <= lWidth) {
             if(lanes[frontLane].paths[check2] == 0) {
-                std::cout << "Didn't collide...\n";
+                //std::cout << "Didn't collide...\n";
                 didCollide = false;
             }
         }
 
         if(didCollide) {
-                std::cout << "Player Position On Level: " << playerPosXOnLevel << "\n";
-                std::cout << "Object At Path Position: " << lanes[frontLane].paths[playerPosXOnLevel] << "\n";
-                std::cout << "Current Lane: ";
-                for(int j = 0; j < lanes[frontLane].nPaths; j++) {
-                    std::cout << lanes[frontLane].paths[j];
-                }
-                std::cout << "\n";
+                //std::cout << "Player Position On Level: " << playerPosXOnLevel << "\n";
+                //std::cout << "Object At Path Position: " << lanes[frontLane].paths[playerPosXOnLevel] << "\n";
+                //std::cout << "Current Lane: ";
+                //for(int j = 0; j < lanes[frontLane].nPaths; j++) {
+                //    std::cout << lanes[frontLane].paths[j];
+                //}
+                //std::cout << "\n";
                 hasFailed = true;
         }
 
