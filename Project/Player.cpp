@@ -31,7 +31,8 @@ Player::Player() {
 
     leftFootOffsetY = 0;
     rightFootOffsetY = 0;
-
+    isJumping = false;
+    jumpOffset = 0.0f;
     // Assign the current level pointer to NULL
     cLevel = NULL;
 
@@ -136,6 +137,10 @@ void Player::update(float dt) {
             this->shellOffsetY += 0.0008;
             this->headOffsetY += 0.005;
 
+            if(isJumping) {
+                jumpOffset += 0.02;
+            }
+
 
             //this->leftFootOffsetY += 0.01;
             //this->rightFootOffsetY -= 0.01;
@@ -153,6 +158,10 @@ void Player::update(float dt) {
             this->shellOffsetY -= 0.0008;
             this->headOffsetY -= 0.005;
 
+            if(isJumping) {
+                jumpOffset -= 0.02;
+            }
+
             //this->leftFootOffsetY -= 0.01;
             //this->rightFootOffsetY += 0.01;
         }
@@ -160,6 +169,8 @@ void Player::update(float dt) {
     } else if (this->moveCt == 0) {
         /// Reset all values
         this->isMoving = false;
+        this->isJumping = false;
+        jumpOffset = 0;
 
         this->shellOffsetY = 0;
         this->shellOffsetZ = 0;

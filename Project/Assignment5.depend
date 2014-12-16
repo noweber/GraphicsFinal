@@ -6,7 +6,7 @@
 	"Player.h"
 	<iostream>
 
-1418688624 e:\programming\csci5607\graphicsfinal\project\player.h
+1418749511 e:\programming\csci5607\graphicsfinal\project\player.h
 	"Level.h"
 	<iostream>
 
@@ -33,10 +33,10 @@
 
 1418429735 e:\programming\csci5607\graphicsfinal\project\modelindex.h
 
-1418744739 source:e:\programming\csci5607\graphicsfinal\project\player.cpp
+1418749156 source:e:\programming\csci5607\graphicsfinal\project\player.cpp
 	"Player.h"
 
-1418748054 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
+1418749773 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
 	<GL/glew.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_opengl.h>

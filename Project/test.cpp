@@ -170,7 +170,7 @@ int main(int argc, char *argv[]){
         return -1;
     }
 
-    level = new Level(7, 128);
+    level = new Level(7, 256);
     //level->cTextureCt = gTextureCt; // Set the number of textures.  This is how the level generator chooses them.
     if(level == NULL) {
         std::cout << "Failed:: Level creation\n";
@@ -568,6 +568,11 @@ int main(int argc, char *argv[]){
                                 camera->hasMoved = true;
                                 camera->movedUp = true;
                             }
+
+                            if(camera->cMode == 0 && !player->isMoving) {
+                                player->hasMoved = true;
+                                player->isJumping = true;
+                            }
                             break;
 
                         case SDLK_x:
@@ -595,7 +600,7 @@ int main(int argc, char *argv[]){
                                     gIsPaused = true;
                                 }
                             }
-                            
+
                             break;
 
 
@@ -768,9 +773,10 @@ int main(int argc, char *argv[]){
     //UI Rendering
 
     // drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.05, 2);
-    drawHealthBar(texturedShader, -420, 368, 0, 1, level->hitPoints, 2);
-    drawScore(texturedShader, level->frontLane);
-
+    if(camera->cMode == 0) {
+        drawHealthBar(texturedShader, -420, 368, 0, 1, level->hitPoints, 2);
+        drawScore(texturedShader, level->frontLane);
+    }
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
@@ -985,6 +991,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     player->posDZ = 0;*/
     float playerX = player->posX;
     float playerZ = player->posZ;
+    float playerY = player->jumpOffset;
 
 	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
@@ -999,8 +1006,10 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     // Drawing the shell...
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-    model = glm::scale(model,glm::vec3(1.0f, 0.8f, 1.1f));
-    model = glm::translate(model,glm::vec3(playerX, 0.0f, playerZ));
+    float yScale = 0.8f;
+    float yAdjust = 1.0f / yScale;
+    model = glm::scale(model,glm::vec3(1.0f, yScale, 1.1f));
+    model = glm::translate(model,glm::vec3(playerX, playerY * yAdjust, playerZ));
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 3); //Set texture ID to use
@@ -1020,6 +1029,7 @@ void drawTurtleHead(int shaderProgram, int numVerts1, int numVerts2) {
     }
     float playerX = player->posX;
     float playerZ = player->posZ;
+    float playerY = player->jumpOffset;
 
 	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
@@ -1032,8 +1042,10 @@ void drawTurtleHead(int shaderProgram, int numVerts1, int numVerts2) {
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     float xScale = 0.7f;
     float xAdjust = 1.0f / xScale;
-    model = glm::scale(model,glm::vec3(xScale, 0.64f, 0.64f));
-    model = glm::translate(model,glm::vec3(playerX * xAdjust * 1.032f + player->headOffsetX/2, 0.0f + player->headOffsetY, playerZ - 0.64f));   //1.032f on the x is for effect
+    float yScale = 0.64f;
+    float yAdjust = 1.0f / yScale;
+    model = glm::scale(model,glm::vec3(xScale, yScale, 0.64f));
+    model = glm::translate(model,glm::vec3(playerX * xAdjust * 1.032f + player->headOffsetX/2, playerY * yAdjust + player->headOffsetY, playerZ - 0.64f));   //1.032f on the x is for effect
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
@@ -1052,6 +1064,7 @@ void drawTurtleLeft(int shaderProgram, int numVerts1, int numVerts2) {
     }
     float playerX = player->posX;
     float playerZ = player->posZ;
+    float playerY = player->jumpOffset;
 
 	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
@@ -1064,8 +1077,10 @@ void drawTurtleLeft(int shaderProgram, int numVerts1, int numVerts2) {
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     float xScale = 0.75f;
     float xAdjust = 1.0f / xScale;
-    model = glm::scale(model,glm::vec3(xScale, 0.2f, 0.44f));
-    model = glm::translate(model,glm::vec3(playerX * xAdjust -1.0f - player->headOffsetX/2, player->leftFootOffsetY, playerZ));   //1.032f on the x is for effect
+    float yScale = 0.2f;
+    float yAdjust = 1.0f / yScale;
+    model = glm::scale(model,glm::vec3(xScale, yScale, 0.44f));
+    model = glm::translate(model,glm::vec3(playerX * xAdjust -1.0f - player->headOffsetX/2, player->leftFootOffsetY + playerY * yAdjust, playerZ));   //1.032f on the x is for effect
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
@@ -1084,6 +1099,7 @@ void drawTurtleBackLeft(int shaderProgram, int numVerts1, int numVerts2) {
     }
     float playerX = player->posX;
     float playerZ = player->posZ;
+    float playerY = player->jumpOffset;
 
 	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
@@ -1096,8 +1112,10 @@ void drawTurtleBackLeft(int shaderProgram, int numVerts1, int numVerts2) {
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     float xScale = 0.25f;
     float xAdjust = 1.0f / xScale;
-    model = glm::scale(model,glm::vec3(xScale, 0.2f, 0.44f));
-    model = glm::translate(model,glm::vec3(playerX * xAdjust -1.25f + player->headOffsetX/2, player->leftFootOffsetY, playerZ + 1.32f));   //1.032f on the x is for effect
+    float yScale = 0.2f;
+    float yAdjust = 1.0f / yScale;
+    model = glm::scale(model,glm::vec3(xScale, yScale, 0.44f));
+    model = glm::translate(model,glm::vec3(playerX * xAdjust -1.25f + player->headOffsetX/2, player->leftFootOffsetY + playerY * yAdjust, playerZ + 1.32f));   //1.032f on the x is for effect
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
@@ -1116,6 +1134,7 @@ void drawTurtleRight(int shaderProgram, int numVerts1, int numVerts2) {
     }
     float playerX = player->posX;
     float playerZ = player->posZ;
+    float playerY = player->jumpOffset;
 
 	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
@@ -1128,8 +1147,10 @@ void drawTurtleRight(int shaderProgram, int numVerts1, int numVerts2) {
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     float xScale = 0.75f;
     float xAdjust = 1.0f / xScale;
-    model = glm::scale(model,glm::vec3(xScale, 0.2f, 0.44f));
-    model = glm::translate(model,glm::vec3(playerX * xAdjust + 1.0f - player->headOffsetX/2, player->rightFootOffsetY, playerZ));   //1.032f on the x is for effect
+    float yScale = 0.2f;
+    float yAdjust = 1.0f / yScale;
+    model = glm::scale(model,glm::vec3(xScale, yScale, 0.44f));
+    model = glm::translate(model,glm::vec3(playerX * xAdjust + 1.0f - player->headOffsetX/2, player->rightFootOffsetY + playerY * yAdjust, playerZ));   //1.032f on the x is for effect
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
@@ -1148,6 +1169,7 @@ void drawTurtleBackRight(int shaderProgram, int numVerts1, int numVerts2) {
     }
     float playerX = player->posX;
     float playerZ = player->posZ;
+    float playerY = player->jumpOffset;
 
 	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
@@ -1160,8 +1182,10 @@ void drawTurtleBackRight(int shaderProgram, int numVerts1, int numVerts2) {
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     float xScale = 0.25f;
     float xAdjust = 1.0f / xScale;
-    model = glm::scale(model,glm::vec3(xScale, 0.2f, 0.44f));
-    model = glm::translate(model,glm::vec3(playerX * xAdjust + 1.25f + player->headOffsetX/2, player->rightFootOffsetY, playerZ + 1.32f));   //1.032f on the x is for effect
+    float yScale = 0.2f;
+    float yAdjust = 1.0f / yScale;
+    model = glm::scale(model,glm::vec3(xScale, yScale, 0.44f));
+    model = glm::translate(model,glm::vec3(playerX * xAdjust + 1.25f + player->headOffsetX/2, player->rightFootOffsetY + playerY * yAdjust, playerZ + 1.32f));   //1.032f on the x is for effect
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
@@ -1179,6 +1203,7 @@ void drawTurtleTail(int shaderProgram, int numVerts1, int numVerts2) {
     }
     float playerX = player->posX;
     float playerZ = player->posZ;
+    float playerY = player->jumpOffset;
 
 	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
@@ -1191,8 +1216,10 @@ void drawTurtleTail(int shaderProgram, int numVerts1, int numVerts2) {
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
     float xScale = 0.16f;
     float xAdjust = 1.0f / xScale;
+    float yScale = 0.04f;
+    float yAdjust = 1.0f / yScale;
     model = glm::scale(model,glm::vec3(xScale, 0.04f, 0.64f));
-    model = glm::translate(model,glm::vec3( -playerX * -xAdjust + player->headOffsetX/2, 0.0f + player->headOffsetY, playerZ + 0.64f));
+    model = glm::translate(model,glm::vec3( -playerX * -xAdjust + player->headOffsetX/2, playerY * yAdjust + player->headOffsetY, playerZ + 0.64f));
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use

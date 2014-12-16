@@ -14,6 +14,7 @@ class Player {
 
     // Can move is called to check whether the player's next move is valid within its current level, cLevel.
     bool canMove();
+    //void jump();
 
     // Stores the position of the player within the game world
     float posX;
@@ -57,13 +58,16 @@ class Player {
     float leftFootOffsetY;
     float rightFootOffsetY;
 
+    bool isJumping;
+    float jumpOffset;
+
+    bool isMoving;
+    int moveCt;
+
     protected:
 
     private:
     Level *cLevel;
-
-    bool isMoving;
-    int moveCt;
 
 
 
