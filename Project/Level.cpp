@@ -85,7 +85,7 @@ void Level::update(float dt) {
         }
 
         // Using floats...
-        /*int collisionForgiveness = 0.0f;
+        int collisionForgiveness = 0.0f;
         int check1 = ceil(playerFloatX - collisionForgiveness);
         int check2 = floor(playerFloatX - collisionForgiveness);
         //std::cout << "Check 1: " << check2 << "\n";
@@ -103,7 +103,7 @@ void Level::update(float dt) {
                 //std::cout << "Didn't collide...\n";
                 didCollide = false;
             }
-        }*/
+        }
 
         if(didCollide) {
                 std::cout << "Player Position On Level: " << playerPosXOnLevel << "\n";
