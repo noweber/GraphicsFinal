@@ -692,8 +692,12 @@ int main(int argc, char *argv[]){
     //UI Rendering
 
     //Screencoord and scale between 0 to 1 is recommended
-    ///drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.2, 1);
-    // drawNumber(texturedShader, 700, 768, 0.2, 4);
+
+    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.05, 2);
+    drawNumber(texturedShader, 480, 368, 0.02, 4);
+    drawNumber(texturedShader, 440, 368, 0.02, 3);
+    drawNumber(texturedShader, 400, 368, 0.02, 2);
+    drawNumber(texturedShader, 360, 368, 0.02, 1);
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
@@ -729,29 +733,30 @@ void updateLighting(int shaderProgram) {
 }
 
 void drawNumber(int shaderProgram, int xCoord, int yCoord, float scale, int number) {
-    // GLint unirenderNumber = glGetUniformLocation(shaderProgram, "renderNumber");
-    // glUniform1i(unirenderNumber, number); //Set UI Render on
-    // drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord, yCoord, scale, 5);
+    GLint unirenderNumber = glGetUniformLocation(shaderProgram, "renderNumber");
+    glUniform1i(unirenderNumber, number); //Set UI Render on
+    drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord, yCoord, scale, 5);
+    glUniform1i(unirenderNumber, -1); //Set UI Render on
 }
 
 void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCoord, float scale, int tID) {
     //Clamp xCoord and yCoord
-    if (xCoord > screenWidth)
+    if (xCoord > screenWidth/2)
     {
-        xCoord = screenWidth;
+        xCoord = screenWidth/2;
     }
-    else if (xCoord < -screenWidth)
+    else if (xCoord < -screenWidth/2)
     {
-        xCoord = -screenWidth;
+        xCoord = -screenWidth/2;
     }
 
-    if (yCoord > screenHeight)
+    if (yCoord > screenHeight/2)
     {
-        yCoord = screenHeight;
+        yCoord = screenHeight/2;
     }
-    else if (yCoord < -screenHeight)
+    else if (yCoord < -screenHeight/2)
     {
-        yCoord = -screenHeight;
+        yCoord = -screenHeight/2;
     }
 
     //Convert x and y coord to actual float number
@@ -760,24 +765,27 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCo
 
     if (xCoord >= 0 && yCoord >= 0)
     {
-        xCoordReal = 0.565 * (xCoord/screenWidth);
-        yCoordReal = 0.385 * (yCoord/screenHeight);
+        xCoordReal = 0.565 * ((float)xCoord/(screenWidth/2));
+        yCoordReal = 0.385 * ((float)yCoord/(screenHeight/2));
+        cout << "in first if" << endl;
+        cout << "x is " << xCoordReal << endl;
+        cout << "y is " << yCoordReal << endl;
     }
     else if (xCoord < 0 && yCoord >= 0)
     {
-        xCoordReal = 0.548 * (xCoord/screenWidth);
-        yCoordReal = 0.385 * (yCoord/screenHeight);
+        xCoordReal = 0.548 * ((float)xCoord/(screenWidth/2));
+        yCoordReal = 0.385 * ((float)yCoord/(screenHeight/2));
     }
     else if (yCoord < 0 && xCoord >= 0)
     {
-        xCoordReal = 0.745 * (xCoord/screenWidth);
-        yCoordReal = 0.64 * (yCoord/screenHeight);
+        xCoordReal = 0.745 * ((float)xCoord/(screenWidth/2));
+        yCoordReal = 0.64 * ((float)yCoord/(screenHeight/2));
     }
 
     else if (yCoord < 0 && xCoord < 0)
     {
-        xCoordReal = 0.72 * (xCoord/screenWidth);
-        yCoordReal = 0.625 * (yCoord/screenHeight);
+        xCoordReal = 0.72 * ((float)xCoord/(screenWidth/2));
+        yCoordReal = 0.625 * ((float)yCoord/(screenHeight/2));
     }
 
     GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
