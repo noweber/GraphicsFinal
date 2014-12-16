@@ -823,6 +823,7 @@ void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCo
     glUniform1i(uniUIRender, 1); //Set UI Render on
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2);
+    glUniform1i(uniUIRender, 0); //Set UI Render off
 }
 
 void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){

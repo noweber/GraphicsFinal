@@ -99,7 +99,7 @@ void main() {
         outColor = vec4(color*1.2, 1);
       }
       else {
-        outColor += vec4(color,1);
+        outColor = vec4(color,1);
       }
       // outColor = vec4(1,0,1,1);
   }
