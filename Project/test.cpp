@@ -170,7 +170,7 @@ int main(int argc, char *argv[]){
         return -1;
     }
 
-    level = new Level(7, 128);
+    level = new Level(7, 8);
     //level->cTextureCt = gTextureCt; // Set the number of textures.  This is how the level generator chooses them.
     if(level == NULL) {
         std::cout << "Failed:: Level creation\n";
@@ -1236,7 +1236,6 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     if(level == NULL) {
         return;
     }
-
     GLint uniColor1 = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
     glUniform3fv(uniColor1, 1, glm::value_ptr(colVec));
@@ -1255,7 +1254,11 @@ void drawGround(int shaderProgram, int numVerts1, int numVerts2) {
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniform1i(uniTexID1, 6); //Set texture ID to use
+    if(level->frontLane < level->nLanes) {
+        glUniform1i(uniTexID1, 6); //Set texture ID to use
+    } else {
+        glUniform1i(uniTexID1, 7); //Set texture ID to use
+    }
     glUniform1i(uniOutline, 0); //Set outline to off
     glUniform1i(uniUIRender, 0); //Set UI Render off
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
@@ -1286,7 +1289,11 @@ void drawLevel(int shaderProgram, int numVerts1, int numVerts2) {
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniform1i(uniTexID1, 6); //Set texture ID to use
+    if(level->frontLane < level->nLanes) {
+        glUniform1i(uniTexID1, 6); //Set texture ID to use
+    } else {
+        glUniform1i(uniTexID1, 7); //Set texture ID to use
+    }
     glUniform1i(uniOutline, 0); //Set outline on / off
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
@@ -1472,6 +1479,7 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
     float playerX = player->posX;
     float playerZ = player->posZ;
 
+    if(level->frontLane < level->nLanes) {
     GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
     glm::vec3 colVec(0.5,0.5,0.5);
     glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
@@ -1496,28 +1504,7 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
 
             // Draw edge cubes
             if(i == -1) {
-                    /*glm::mat4 model;
-                    GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
-                    //float rockScale = 2.0f* level->xDrawingScale / 3.0f;
-                    float spacingAdjust = level->xDrawingScale/1.16f;
-                    model = glm::scale(model,glm::vec3(spacingAdjust, 1.0f, 1.1f));
-                    //model = glm::scale(model,glm::vec3(1.0f, 1.0f, 1.1f));
-                    offsetZ = playerZ - level->laneSpacing*L - 2.0f + level->zOffset;
-                    model = glm::translate(model,glm::vec3( (-(level->lWidth/2)) - 1.0f, 0.2f, offsetZ));
-                    uniModel = glGetUniformLocation(shaderProgram, "model");
-                    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-
-                    ///-- TODO: use a random texture
-                    //int texNum = rand() % 4;    ///-- TODO: have the texture allocation store a global number of total textures to use here
-                    glUniform1i(uniTexID, 3); //Set texture ID to use
-                    glUniform1i(uniOutline, 0); //Set outline to on
-                    //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
-                    //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
-                    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                    modelIndex currentModel = getModel("sphere");
-                    glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
-                    */
             }
 
             if(i > -1 && i < level->lanes[L].nPaths) {
@@ -1590,6 +1577,7 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
                 }
             }
         }
+    }
     }
 }
 

@@ -197,10 +197,12 @@ void Player::update(float dt) {
     }
 
     // Check for a power up
-    if(cLevel->lanes[cLevel->frontLane].paths[cLevel->playerPosXOnLevel] == 5) {
-        cLevel->lanes[cLevel->frontLane].paths[cLevel->playerPosXOnLevel] = 0;
-        std::cout << "Power Up!\n";
-        velocityX += 0.001f;
+    if(cLevel->frontLane < cLevel->nLanes) {
+        if(cLevel->lanes[cLevel->frontLane].paths[cLevel->playerPosXOnLevel] == 5) {
+            cLevel->lanes[cLevel->frontLane].paths[cLevel->playerPosXOnLevel] = 0;
+            std::cout << "Power Up!\n";
+            velocityX += 0.001f;
+        }
     }
 
 }

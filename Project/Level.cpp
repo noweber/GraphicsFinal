@@ -84,7 +84,7 @@ void Level::update(float dt) {
     }
 
     // Check for collisions
-    if(mustCheckCollisions) {
+    if(mustCheckCollisions && frontLane < nLanes) {
         bool didCollide = true;
         //bool didCollideF = true;
         // Trying to use integer
