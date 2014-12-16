@@ -106,7 +106,8 @@ void drawTurtleTail(int shaderProgram, int numVerts1, int numVerts2);
 //UI Stuff
 void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCoord, float scale, int tID);
 void drawNumber(int shaderProgram, int xCoord, int yCoord, float scale, int number);
-void drawHealthBar(int shaderProgram, int xCoord, int yCoord, int tID_lowH, int tID_norH);
+void drawHealthBar(int shaderProgram, int xCoord, int yCoord, int tID_lowH, int tID_norH, int currentPoint, int fullPoint);
+void drawScore(int shaderProgram, int score);
 
 //Model data management
 //See modelIndex class for returning the values
@@ -693,14 +694,10 @@ int main(int argc, char *argv[]){
 
     //UI Rendering
 
-    //Screencoord and scale between 0 to 1 is recommended
-
     // drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.05, 2);
-    drawHealthBar(texturedShader, -420, 368, 0, 1);
-    drawNumber(texturedShader, 480, 368, 0.02, 4);
-    drawNumber(texturedShader, 440, 368, 0.02, 3);
-    drawNumber(texturedShader, 400, 368, 0.02, 2);
-    drawNumber(texturedShader, 360, 368, 0.02, 1);
+    drawHealthBar(texturedShader, -420, 368, 0, 1, level->hitPoints, 2);
+    drawScore(texturedShader, level->frontLane);
+    
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
@@ -735,20 +732,97 @@ void updateLighting(int shaderProgram) {
     }*/
 }
 
-void drawHealthBar(int shaderProgram, int xCoord, int yCoord, int tID_lowH, int tID_norH) {
-    int offSet = 20;
-    //Add if statement for lowhealth
-
-    //Normal health
-    GLint unihealthRender = glGetUniformLocation(shaderProgram, "healthRender");
-    glUniform1i(unihealthRender, 1); //Set UI Render on
-    drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord-offSet*2 - 20, yCoord, 0.02, tID_norH);
-    drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord-offSet, yCoord, 0.02, tID_norH);
-    drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord+offSet, yCoord, 0.02, tID_norH);
-    drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord+offSet*2 + 20, yCoord, 0.02, tID_norH);
-    glUniform1i(unihealthRender, -1); //Set UI Render off
+void drawScore(int shaderProgram, int score) {
+    if (score - 10000 > 0)
+    {
+        drawNumber(shaderProgram, 480, 368, 0.02, 9);
+        drawNumber(shaderProgram, 440, 368, 0.02, 9);
+        drawNumber(shaderProgram, 400, 368, 0.02, 9);
+        drawNumber(shaderProgram, 360, 368, 0.02, 9);
+    }
+    else if (score - 1000 > 0)
+    {
+        int thousand = score/1000;
+        int hundred = (score%1000)/100;
+        int ten = ((score%1000)%100)/10;
+        int one = (((score%1000)%100)%10);
+        drawNumber(shaderProgram, 480, 368, 0.02, one);
+        drawNumber(shaderProgram, 440, 368, 0.02, ten);
+        drawNumber(shaderProgram, 400, 368, 0.02, hundred);
+        drawNumber(shaderProgram, 360, 368, 0.02, thousand);
+    }
+    else if (score - 100 > 0)
+    {
+        int hundred = (score%1000)/100;
+        int ten = ((score%1000)%100)/10;
+        int one = (((score%1000)%100)%10);
+        drawNumber(shaderProgram, 480, 368, 0.02, one);
+        drawNumber(shaderProgram, 440, 368, 0.02, ten);
+        drawNumber(shaderProgram, 400, 368, 0.02, hundred);
+        drawNumber(shaderProgram, 360, 368, 0.02, 0);
+    }
+    else if (score - 10 > 0)
+    {
+        int ten = ((score%1000)%100)/10;
+        int one = (((score%1000)%100)%10);
+        drawNumber(shaderProgram, 480, 368, 0.02, one);
+        drawNumber(shaderProgram, 440, 368, 0.02, ten);
+        drawNumber(shaderProgram, 400, 368, 0.02, 0);
+        drawNumber(shaderProgram, 360, 368, 0.02, 0);
+    }
+    else if (score > 0)
+    {
+        drawNumber(shaderProgram, 480, 368, 0.02, score);
+        drawNumber(shaderProgram, 440, 368, 0.02, 0);
+        drawNumber(shaderProgram, 400, 368, 0.02, 0);
+        drawNumber(shaderProgram, 360, 368, 0.02, 0);
+    }
+    else
+    {
+        drawNumber(shaderProgram, 480, 368, 0.02, 0);
+        drawNumber(shaderProgram, 440, 368, 0.02, 0);
+        drawNumber(shaderProgram, 400, 368, 0.02, 0);
+        drawNumber(shaderProgram, 360, 368, 0.02, 0);
+    } 
 }
 
+void drawHealthBar(int shaderProgram, int xCoord, int yCoord, int tID_lowH, int tID_norH, int currentPoint, int fullPoint) {
+    int offSet = 20;
+    float ratio = (float)currentPoint/fullPoint;
+
+    GLint unihealthRender = glGetUniformLocation(shaderProgram, "healthRender");
+    glUniform1i(unihealthRender, 1); //Set UI Render on
+
+    //Add if statement for lowhealth
+    if (ratio > 0.75 && ratio <= 1)
+    {
+        drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord-offSet*2 - 20, yCoord, 0.02, tID_norH);
+        drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord-offSet, yCoord, 0.02, tID_norH);
+        drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord+offSet, yCoord, 0.02, tID_norH);
+        drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord+offSet*2 + 20, yCoord, 0.02, tID_norH);
+    }
+    else if (ratio > 0.5 && ratio <= 0.75)
+    {
+        drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord-offSet*2 - 20, yCoord, 0.02, tID_norH);
+        drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord-offSet, yCoord, 0.02, tID_norH);
+        drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord+offSet, yCoord, 0.02, tID_norH);
+    }
+    else if (ratio > 0.25 && ratio <= 0.5)
+    {
+        drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord-offSet*2 - 20, yCoord, 0.02, tID_lowH);
+        drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord-offSet, yCoord, 0.02, tID_lowH);
+    }
+    else if (ratio >0 && ratio <= 0.25)
+    {
+        drawUI(shaderProgram, getModel("quad").start, getModel("quad").end, xCoord-offSet*2 - 20, yCoord, 0.02, tID_lowH);
+    }
+    else if (ratio == 0)
+    {
+        //Draw fail screen
+    }
+
+    glUniform1i(unihealthRender, -1); //Set UI Render off
+}
 
 void drawNumber(int shaderProgram, int xCoord, int yCoord, float scale, int number) {
     GLint unirenderNumber = glGetUniformLocation(shaderProgram, "renderNumber");
