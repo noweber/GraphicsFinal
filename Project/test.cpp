@@ -695,7 +695,7 @@ int main(int argc, char *argv[]){
 
     //Screencoord and scale between 0 to 1 is recommended
 
-    drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.05, 2);
+    // drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.05, 2);
     drawHealthBar(texturedShader, -420, 368, 0, 1);
     drawNumber(texturedShader, 480, 368, 0.02, 4);
     drawNumber(texturedShader, 440, 368, 0.02, 3);
