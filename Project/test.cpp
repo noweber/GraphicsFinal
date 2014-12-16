@@ -98,7 +98,12 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2);
 
 void drawTurtle(int shaderProgram, int numVerts1, int numVerts2);
 void drawTurtleHead(int shaderProgram, int numVerts1, int numVerts2);
+void drawTurtleLeft(int shaderProgram, int numVerts1, int numVerts2);
+void drawTurtleRight(int shaderProgram, int numVerts1, int numVerts2);
+void drawTurtleTail(int shaderProgram, int numVerts1, int numVerts2);
 
+
+//UI Stuff
 void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCoord, float scale, int tID);
 void drawNumber(int shaderProgram, int xCoord, int yCoord, float scale, int number);
 void drawHealthBar(int shaderProgram, int xCoord, int yCoord, int tID_lowH, int tID_norH);
@@ -574,10 +579,12 @@ int main(int argc, char *argv[]){
     /// //// ////// //// ///
     /// Call Updater Functions
     while(deltaT > 16) {
-        updateLighting(texturedShader);
-        player->update(deltaT);
+        if(!level->hasFailed) {
+            updateLighting(texturedShader);
+            player->update(deltaT);
+            level->update(deltaT);
+        }
         camera->update(deltaT);
-        level->update(deltaT);
         deltaT -= 16;
     }
 
@@ -662,12 +669,6 @@ int main(int argc, char *argv[]){
     glUniform1i(glGetUniformLocation(texturedShader, "tex7"), 7);
 
 
-    /// Call Remaining Updater Functions
-    /*updateLighting(texturedShader);
-    player->update(deltaT);
-    camera->update(deltaT);*/
-
-
 
     /// //// RENDER //// ///
     /// //// ////// //// ///
@@ -686,10 +687,14 @@ int main(int argc, char *argv[]){
     // Turtle Rendering
     drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
     drawTurtleHead(texturedShader, getModel("cube").start,getModel("cube").end);
+    drawTurtleLeft(texturedShader, getModel("cube").start,getModel("cube").end);
+    drawTurtleRight(texturedShader, getModel("cube").start,getModel("cube").end);
+    drawTurtleTail(texturedShader, getModel("cube").start,getModel("cube").end);
 
     //UI Rendering
 
     //Screencoord and scale between 0 to 1 is recommended
+
     drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.05, 2);
     drawHealthBar(texturedShader, -420, 368, 0, 1);
     drawNumber(texturedShader, 480, 368, 0.02, 4);
@@ -850,9 +855,7 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     model = glm::translate(model,glm::vec3(playerX, 0.0f, playerZ));
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
-    //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniform1i(uniTexID, 0); //Set texture ID to use
+    glUniform1i(uniTexID, 3); //Set texture ID to use
     glUniform1i(uniOutline, 1); //Set outline to on
     glUniform1i(uniUIRender, 0); //Set UI Render off
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
@@ -860,55 +863,6 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     modelIndex currentModel = getModel("sphere");
     glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
-
-  /*  // Drawing the head...
-    //glm::mat4 model;
-    //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-
-    model = glm::scale(model,glm::vec3(0.54f, 0.49f, 0.4f));
-    //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
-    model = glm::translate(model,glm::vec3(player->posX + direction.x + player1->headOffsetX, camera->posY + direction.y - 3.5f + player1->headOffsetY - player1->shellOffsetY, camera->posZ + direction.z - 9.19f));   // Draws relative to the camera...
-    uniModel = glGetUniformLocation(shaderProgram, "model");
-    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
-    //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniform1i(uniTexID, 1); //Set texture ID to use
-    //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
-    //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
-    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
-    // Undo transformation
-    model = glm::translate(model,glm::vec3(-player1->headOffsetX, -player1->headOffsetY, 0));*/
-
-/*
-    /// Left Flipper
-    model = glm::scale(model,glm::vec3(1.64f, 0.64f, 0.84f));
-    //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
-
-    //model = glm::translate(model,glm::vec3(camPosX + direction.x -1.64f - player1->headOffsetX, camPosY + direction.y - 5.0f + player1->leftFootOffsetY - player1->headOffsetY, camPosZ + direction.z - 7.1f));   // Draws relative to the camera...
-    model = glm::translate(model,glm::vec3(camPosX + direction.x -0.75f, camPosY + direction.y - 5.0f + player1->leftFootOffsetY, camPosZ + direction.z - 7.1f + 0.19f));   // Draws relative to the camera...
-
-    uniModel = glGetUniformLocation(shaderProgram, "model");
-    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(uniTexID, 1); //Set texture ID to use
-    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
-    // Undo transformation
-    model = glm::translate(model,glm::vec3(0, -player1->leftFootOffsetY, 0));
-
-    /// Right Flipper
-    //model = glm::scale(model,glm::vec3(0.84f, 0.84f, 0.84f));
-    //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
-
-    //model = glm::translate(model,glm::vec3(3.25f, 0, 0));   // Draws relative to the camera...
-    model = glm::translate(model,glm::vec3(1.49f, player1->rightFootOffsetY, 0));   // Draws relative to the camera...
-
-    uniModel = glGetUniformLocation(shaderProgram, "model");
-    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(uniTexID, 1); //Set texture ID to use
-    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-    glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
-*/
 
 }
 
@@ -928,8 +882,106 @@ void drawTurtleHead(int shaderProgram, int numVerts1, int numVerts2) {
 
     glm::mat4 model;
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-    model = glm::scale(model,glm::vec3(0.7f, 0.64f, 0.64f));
-    model = glm::translate(model,glm::vec3(playerX * 1.4285714f * 1.032f , 0.0f, playerZ - 0.64f));   //1.032f on the x is for effect
+    float xScale = 0.7f;
+    float xAdjust = 1.0f / xScale;
+    model = glm::scale(model,glm::vec3(xScale, 0.64f, 0.64f));
+    model = glm::translate(model,glm::vec3(playerX * xAdjust * 1.032f , 0.0f, playerZ - 0.64f));   //1.032f on the x is for effect
+    uniModel = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(uniTexID, 1); //Set texture ID to use
+    glUniform1i(uniOutline, 1); //Set outline to on
+    glUniform1i(uniUIRender, 0); //Set UI Render off
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    modelIndex currentModel = getModel("sphere");
+    glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
+
+
+}
+
+void drawTurtleLeft(int shaderProgram, int numVerts1, int numVerts2) {
+    if(player == NULL) {
+        return;
+    }
+    float playerX = player->posX;
+    float playerZ = player->posZ;
+
+	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
+    glm::vec3 colVec(0.5,0.5,0.5);
+    glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
+    GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
+    GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
+    GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
+
+    glm::mat4 model;
+    GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+    float xScale = 0.75f;
+    float xAdjust = 1.0f / xScale;
+    model = glm::scale(model,glm::vec3(xScale, 0.2f, 0.44f));
+    model = glm::translate(model,glm::vec3(playerX * xAdjust -1.0f, player->leftFootOffsetY, playerZ));   //1.032f on the x is for effect
+    uniModel = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(uniTexID, 1); //Set texture ID to use
+    glUniform1i(uniOutline, 1); //Set outline to on
+    glUniform1i(uniUIRender, 0); //Set UI Render off
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    modelIndex currentModel = getModel("sphere");
+    glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
+
+
+}
+
+void drawTurtleRight(int shaderProgram, int numVerts1, int numVerts2) {
+    if(player == NULL) {
+        return;
+    }
+    float playerX = player->posX;
+    float playerZ = player->posZ;
+
+	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
+    glm::vec3 colVec(0.5,0.5,0.5);
+    glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
+    GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
+    GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
+    GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
+
+    glm::mat4 model;
+    GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+    float xScale = 0.75f;
+    float xAdjust = 1.0f / xScale;
+    model = glm::scale(model,glm::vec3(xScale, 0.2f, 0.44f));
+    model = glm::translate(model,glm::vec3(playerX * xAdjust + 1.0f, player->rightFootOffsetY, playerZ));   //1.032f on the x is for effect
+    uniModel = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(uniTexID, 1); //Set texture ID to use
+    glUniform1i(uniOutline, 1); //Set outline to on
+    glUniform1i(uniUIRender, 0); //Set UI Render off
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    modelIndex currentModel = getModel("sphere");
+    glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
+
+
+}
+
+void drawTurtleTail(int shaderProgram, int numVerts1, int numVerts2) {
+    if(player == NULL) {
+        return;
+    }
+    float playerX = player->posX;
+    float playerZ = player->posZ;
+
+	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
+    glm::vec3 colVec(0.5,0.5,0.5);
+    glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
+    GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
+    GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
+    GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
+
+    glm::mat4 model;
+    GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+    float xScale = 0.16f;
+    float xAdjust = 1.0f / xScale;
+    model = glm::scale(model,glm::vec3(xScale, 0.04f, 0.64f));
+    model = glm::translate(model,glm::vec3( -playerX * -(xAdjust * 1.032f) , 0.0f, playerZ + 0.64f));   //1.032f on the x is for effect
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
@@ -996,7 +1048,7 @@ void drawLevel(int shaderProgram, int numVerts1, int numVerts2) {
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniform1i(uniTexID1, 1); //Set texture ID to use
+    glUniform1i(uniTexID1, 6); //Set texture ID to use
     glUniform1i(uniOutline, 0); //Set outline on / off
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
@@ -1199,48 +1251,87 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
     }
 
     for(int L = level->frontLane; L < lastDrawnLane; L++) {    ///-- TODO: adjust drawLanes() to only draw 4 lanes...
-        for(int i = 0; i < level->lanes[L].nPaths; i++) {
+        for(int i = -1; i < level->lanes[L].nPaths + 1; i++) {
 
-            if(level->lanes[L].paths[i] != 0) { // 0 would mean the path space within the lane is empty
-                glm::mat4 model;
-                GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
-                //float rockScale = 2.0f* level->xDrawingScale / 3.0f;
-                float spacingAdjust = level->xDrawingScale/1.16f;
-                model = glm::scale(model,glm::vec3(spacingAdjust, 1.0f, 1.1f));
-                //model = glm::scale(model,glm::vec3(1.0f, 1.0f, 1.1f));
-                offsetZ = playerZ - level->laneSpacing*L - 2.0f + level->zOffset;
-                model = glm::translate(model,glm::vec3( (-(level->lWidth/2)) + i, 0.2f, offsetZ));
-                uniModel = glGetUniformLocation(shaderProgram, "model");
-                glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
-                //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
+            // Draw edge cubes
+            if(i == -1) {
+                    /*glm::mat4 model;
+                    GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
-                ///-- TODO: use a random texture
-                //int texNum = rand() % 4;    ///-- TODO: have the texture allocation store a global number of total textures to use here
-                glUniform1i(uniTexID, level->lanes[L].paths[i]); //Set texture ID to use
-                glUniform1i(uniOutline, 0); //Set outline to on
-                //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
-                //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
-                glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-                modelIndex currentModel = getModel("rock");
-                /*if(level->lanes[L].paths[i] == 1) {
-                    glUniform1i(uniTexID, 1);
-                    currentModel = getModel("rock");
+                    //float rockScale = 2.0f* level->xDrawingScale / 3.0f;
+                    float spacingAdjust = level->xDrawingScale/1.16f;
+                    model = glm::scale(model,glm::vec3(spacingAdjust, 1.0f, 1.1f));
+                    //model = glm::scale(model,glm::vec3(1.0f, 1.0f, 1.1f));
+                    offsetZ = playerZ - level->laneSpacing*L - 2.0f + level->zOffset;
+                    model = glm::translate(model,glm::vec3( (-(level->lWidth/2)) - 1.0f, 0.2f, offsetZ));
+                    uniModel = glGetUniformLocation(shaderProgram, "model");
+                    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+
+                    ///-- TODO: use a random texture
+                    //int texNum = rand() % 4;    ///-- TODO: have the texture allocation store a global number of total textures to use here
+                    glUniform1i(uniTexID, 3); //Set texture ID to use
+                    glUniform1i(uniOutline, 0); //Set outline to on
+                    //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
+                    //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
+                    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+                    modelIndex currentModel = getModel("sphere");
+                    glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
+                    */
+            }
+
+            if(i > -1 && i < level->lanes[L].nPaths) {
+                if(level->lanes[L].paths[i] != 0) { // 0 would mean the path space within the lane is empty
+                    glm::mat4 model;
+                    GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+
+                    //float rockScale = 2.0f* level->xDrawingScale / 3.0f;
+                    float spacingAdjust = level->xDrawingScale/1.16f;
+                    model = glm::scale(model,glm::vec3(spacingAdjust, 1.0f, 1.1f));
+                    //model = glm::scale(model,glm::vec3(1.0f, 1.0f, 1.1f));
+                    offsetZ = playerZ - level->laneSpacing*L - 2.0f + level->zOffset -(4*level->laneSpacing/5) ;
+                    model = glm::translate(model,glm::vec3( (-(level->lWidth/2)) + i, 0.2f, offsetZ));
+                    uniModel = glGetUniformLocation(shaderProgram, "model");
+                    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+                    //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
+                    //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
+
+                    ///-- TODO: use a random texture
+                    int texNum = level->lanes[L].paths[i];    //rand() % 4;    ///-- TODO: have the texture allocation store a global number of total textures to use here
+                    if(texNum == 3) {   // make brown to red
+                        texNum = 0;
+                    }
+                   /* if(texNum == 1) {   // make green to blue
+                        texNum = 2;
+                    }*/
+                    glUniform1i(uniTexID, texNum); //Set texture ID to use
+                    glUniform1i(uniOutline, 0); //Set outline to on
+                    //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
+                    //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
+                    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+                    modelIndex currentModel = getModel("rock");
+
+
+                    if(i > 0 && i != 1) {
+                        if(level->lanes[L].paths[i-1] == 0) {
+                            currentModel = getModel("cube");
+                            //model = glm::scale(model,glm::vec3(0.64f, 1.0f, 1.0f));
+                        }
+                    } else {
+                        //currentModel = getModel("rock");
+                    }
+
+                    if(i < level->lanes[L].nPaths && i != level->lanes[L].nPaths - 1) {
+                        if(level->lanes[L].paths[i+1] == 0) {
+                            currentModel = getModel("cube");
+                            //model = glm::scale(model,glm::vec3(0.64f, 1.0f, 1.0f));
+                        }
+                    } else {
+                        //currentModel = getModel("rock");
+                    }
+
+                    glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
                 }
-                else if(level->lanes[L].paths[i] == 2) {
-                    glUniform1i(uniTexID, 2);
-                    currentModel = getModel("rock");
-                }
-                else if (level->lanes[L].paths[i] == 3) {
-                    /// Trees?
-                    glUniform1i(uniTexID, 3);
-                    currentModel = getModel("rock");
-                } else {
-                    //currentModel = getModel("sphere");
-                    // Actually should draw nothing here
-                }*/
-                glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
             }
         }
     }

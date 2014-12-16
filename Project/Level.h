@@ -7,6 +7,8 @@
 //#include "Player.h"   // Added 12/13/2014 @ 8:32 PM -- DO NOT USE... causes circular inclusions.
 #include<stdlib.h>      // srand(), rand(), and more
 #include <time.h>
+#include <iostream> // Added 12/15/2014 @ 7:38 PM
+#include <math.h>   // Added 12/15/2014 @ 8:11 PM
 
 class Level {
 
@@ -61,6 +63,12 @@ public:
     bool hasFailed;
     // The number of collisions remaining before failure
     int hitPoints;
+
+    int playerPosXOnLevel;
+    float playerFloatX;
+
+    // Used to account for FrontLane starting at 0 instead of -1 within Level::update()
+    bool passedLaneOne;
 
 private:
 protected:

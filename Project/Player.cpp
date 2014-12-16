@@ -8,7 +8,7 @@ Player::Player() {
     posDX = 0.0f;
     posDZ = 0.0f;
 
-    velocityX = 0.01;
+    velocityX = 0.015;
     velocityY = 0.004;
     velocityZ = 0.04;
 
@@ -70,7 +70,7 @@ void Player::update(float dt) {
     if(hasMoved) {
         // Now check if that move is valid...
         if(this->canMove()) {
-            //movePlayer();
+            movePlayer();
 
             if(movedLeft){
                 if(posX > -((cLevel->lWidth/2)*cLevel->xDrawingScale) - edgeAdjust) {
@@ -121,8 +121,69 @@ void Player::update(float dt) {
     movedForward = false;
     movedBackward = false;
 
-    // Tell  the level which lanes are cleared?
+    // Animate the turtle
+    if(this->moveCt > 0) {
+        if(this->moveCt > 30) {
 
+            if(this->moveCt > 45) {
+                this->headOffsetX -= 0.01;
+                this->leftFootOffsetY += 0.02;
+            } else {
+                this->headOffsetX += 0.01;
+                this->leftFootOffsetY -= 0.02;
+            }
+
+            this->shellOffsetY += 0.0008;
+            this->headOffsetY += 0.005;
+
+
+            //this->leftFootOffsetY += 0.01;
+            //this->rightFootOffsetY -= 0.01;
+
+        } else {
+
+            if(this->moveCt > 15) {
+                this->headOffsetX += 0.01;
+                this->rightFootOffsetY += 0.02;
+            } else {
+                this->headOffsetX -= 0.01;
+                this->rightFootOffsetY -= 0.02;
+            }
+
+            this->shellOffsetY -= 0.0008;
+            this->headOffsetY -= 0.005;
+
+            //this->leftFootOffsetY -= 0.01;
+            //this->rightFootOffsetY += 0.01;
+        }
+        this->moveCt -= 1;
+    } else if (this->moveCt == 0) {
+        /// Reset all values
+        this->isMoving = false;
+
+        this->shellOffsetY = 0;
+        this->shellOffsetZ = 0;
+
+        this->headOffsetX = 0;
+        this->headOffsetY = 0;
+
+        this->leftFootOffsetY = 0;
+        this->rightFootOffsetY = 0;
+    }
+
+    // Update player's position on the level
+    if(cLevel != NULL) {
+        cLevel->playerPosXOnLevel = (int) (posX/cLevel->xDrawingScale) + (cLevel->lWidth/2);
+        cLevel->playerFloatX = (posX/cLevel->xDrawingScale) + (cLevel->lWidth/2);
+        // Now reverse the positioning for collision corrections
+        //int temp = cLevel->playerPosXOnLevel;
+        //cLevel->playerPosXOnLevel = cLevel->lWidth - temp;
+
+
+
+
+        //std::cout << "Player Position On Level: " << cLevel->playerPosXOnLevel << "\n";
+    }
 
 }
 
