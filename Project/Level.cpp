@@ -113,7 +113,10 @@ void Level::update(float dt) {
                 //    std::cout << lanes[frontLane].paths[j];
                 //}
                 //std::cout << "\n";
-                hasFailed = true;
+                hitPoints -= 1;
+                if(hitPoints <= 0) {
+                    hasFailed = true;
+                }
         }
 
         mustCheckCollisions = false;
