@@ -99,7 +99,9 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2);
 void drawTurtle(int shaderProgram, int numVerts1, int numVerts2);
 void drawTurtleHead(int shaderProgram, int numVerts1, int numVerts2);
 void drawTurtleLeft(int shaderProgram, int numVerts1, int numVerts2);
+void drawTurtleBackLeft(int shaderProgram, int numVerts1, int numVerts2);
 void drawTurtleRight(int shaderProgram, int numVerts1, int numVerts2);
+void drawTurtleBackRight(int shaderProgram, int numVerts1, int numVerts2);
 void drawTurtleTail(int shaderProgram, int numVerts1, int numVerts2);
 
 
@@ -191,7 +193,7 @@ int main(int argc, char *argv[]){
 	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);//
 
 	//Create a window (offsetx, offsety, width, height, flags)
-	SDL_Window* window = SDL_CreateWindow("CSci 5607 Final Project", 100, 100, screenWidth, screenHeight, SDL_WINDOW_OPENGL);
+	SDL_Window* window = SDL_CreateWindow("Turtle Run", 100, 100, screenWidth, screenHeight, SDL_WINDOW_OPENGL);
 
 	//Create a context to draw in
 	SDL_GLContext context = SDL_GL_CreateContext(window);
@@ -715,7 +717,9 @@ int main(int argc, char *argv[]){
     drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
     drawTurtleHead(texturedShader, getModel("cube").start,getModel("cube").end);
     drawTurtleLeft(texturedShader, getModel("cube").start,getModel("cube").end);
+    drawTurtleBackLeft(texturedShader, getModel("cube").start,getModel("cube").end);
     drawTurtleRight(texturedShader, getModel("cube").start,getModel("cube").end);
+    drawTurtleBackRight(texturedShader, getModel("cube").start,getModel("cube").end);
     drawTurtleTail(texturedShader, getModel("cube").start,getModel("cube").end);
 
     //UI Rendering
@@ -986,7 +990,7 @@ void drawTurtleHead(int shaderProgram, int numVerts1, int numVerts2) {
     float xScale = 0.7f;
     float xAdjust = 1.0f / xScale;
     model = glm::scale(model,glm::vec3(xScale, 0.64f, 0.64f));
-    model = glm::translate(model,glm::vec3(playerX * xAdjust * 1.032f , 0.0f, playerZ - 0.64f));   //1.032f on the x is for effect
+    model = glm::translate(model,glm::vec3(playerX * xAdjust * 1.032f + player->headOffsetX/2, 0.0f + player->headOffsetY, playerZ - 0.64f));   //1.032f on the x is for effect
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
@@ -1018,7 +1022,39 @@ void drawTurtleLeft(int shaderProgram, int numVerts1, int numVerts2) {
     float xScale = 0.75f;
     float xAdjust = 1.0f / xScale;
     model = glm::scale(model,glm::vec3(xScale, 0.2f, 0.44f));
-    model = glm::translate(model,glm::vec3(playerX * xAdjust -1.0f, player->leftFootOffsetY, playerZ));   //1.032f on the x is for effect
+    model = glm::translate(model,glm::vec3(playerX * xAdjust -1.0f - player->headOffsetX/2, player->leftFootOffsetY, playerZ));   //1.032f on the x is for effect
+    uniModel = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(uniTexID, 1); //Set texture ID to use
+    glUniform1i(uniOutline, 1); //Set outline to on
+    glUniform1i(uniUIRender, 0); //Set UI Render off
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    modelIndex currentModel = getModel("sphere");
+    glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
+
+
+}
+
+void drawTurtleBackLeft(int shaderProgram, int numVerts1, int numVerts2) {
+    if(player == NULL) {
+        return;
+    }
+    float playerX = player->posX;
+    float playerZ = player->posZ;
+
+	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
+    glm::vec3 colVec(0.5,0.5,0.5);
+    glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
+    GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
+    GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
+    GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
+
+    glm::mat4 model;
+    GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+    float xScale = 0.25f;
+    float xAdjust = 1.0f / xScale;
+    model = glm::scale(model,glm::vec3(xScale, 0.2f, 0.44f));
+    model = glm::translate(model,glm::vec3(playerX * xAdjust -1.25f - player->headOffsetX/2, player->leftFootOffsetY, playerZ + 1.32f));   //1.032f on the x is for effect
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
@@ -1050,7 +1086,7 @@ void drawTurtleRight(int shaderProgram, int numVerts1, int numVerts2) {
     float xScale = 0.75f;
     float xAdjust = 1.0f / xScale;
     model = glm::scale(model,glm::vec3(xScale, 0.2f, 0.44f));
-    model = glm::translate(model,glm::vec3(playerX * xAdjust + 1.0f, player->rightFootOffsetY, playerZ));   //1.032f on the x is for effect
+    model = glm::translate(model,glm::vec3(playerX * xAdjust + 1.0f - player->headOffsetX/2, player->rightFootOffsetY, playerZ));   //1.032f on the x is for effect
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
@@ -1060,6 +1096,37 @@ void drawTurtleRight(int shaderProgram, int numVerts1, int numVerts2) {
     modelIndex currentModel = getModel("sphere");
     glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
 
+
+}
+
+void drawTurtleBackRight(int shaderProgram, int numVerts1, int numVerts2) {
+    if(player == NULL) {
+        return;
+    }
+    float playerX = player->posX;
+    float playerZ = player->posZ;
+
+	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
+    glm::vec3 colVec(0.5,0.5,0.5);
+    glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
+    GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
+    GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
+    GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
+
+    glm::mat4 model;
+    GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+    float xScale = 0.25f;
+    float xAdjust = 1.0f / xScale;
+    model = glm::scale(model,glm::vec3(xScale, 0.2f, 0.44f));
+    model = glm::translate(model,glm::vec3(playerX * xAdjust + 1.25f + player->headOffsetX/2, player->rightFootOffsetY, playerZ + 1.32f));   //1.032f on the x is for effect
+    uniModel = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(uniTexID, 1); //Set texture ID to use
+    glUniform1i(uniOutline, 1); //Set outline to on
+    glUniform1i(uniUIRender, 0); //Set UI Render off
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    modelIndex currentModel = getModel("sphere");
+    glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
 
 }
 
@@ -1082,7 +1149,7 @@ void drawTurtleTail(int shaderProgram, int numVerts1, int numVerts2) {
     float xScale = 0.16f;
     float xAdjust = 1.0f / xScale;
     model = glm::scale(model,glm::vec3(xScale, 0.04f, 0.64f));
-    model = glm::translate(model,glm::vec3( -playerX * -(xAdjust * 1.032f) , 0.0f, playerZ + 0.64f));   //1.032f on the x is for effect
+    model = glm::translate(model,glm::vec3( -playerX * -xAdjust + player->headOffsetX/2, 0.0f + player->headOffsetY, playerZ + 0.64f));
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
