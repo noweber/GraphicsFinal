@@ -217,6 +217,8 @@ int main(int argc, char *argv[]){
     setModel("QuadY.txt", "quad");
     //setModel("sphere.txt", "sphere");
     setModel("tree.txt", "tree");
+    setModel("arrow.txt", "arrow");
+    // setModel("fence.txt", "fence");
     setModel("turtle.txt", "turtle");
     setModel("sphere.txt", "sphere");
     //setModel("QuadY.txt", "quad");
@@ -1547,7 +1549,7 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
                         texNum = 9;
                         glUniform1i(uniTexID, texNum); //Set texture ID to use
                         //model = glm::translate(model,glm::vec3( 0.0f, level->powerUpY, 0.0f));
-                        currentModel = getModel("sphere");
+                        currentModel = getModel("arrow");
                         //model = glm::scale(model,glm::vec3(0.5f, 1.0f, 1.1f));
 
                     }
