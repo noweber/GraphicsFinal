@@ -723,7 +723,7 @@ int main(int argc, char *argv[]){
     // drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.05, 2);
     drawHealthBar(texturedShader, -420, 368, 0, 1, level->hitPoints, 2);
     drawScore(texturedShader, level->frontLane);
-    
+
 
     if (saveOutput) Win2PPM(screenWidth,screenHeight);
 
@@ -809,7 +809,7 @@ void drawScore(int shaderProgram, int score) {
         drawNumber(shaderProgram, 440, 368, 0.02, 0);
         drawNumber(shaderProgram, 400, 368, 0.02, 0);
         drawNumber(shaderProgram, 360, 368, 0.02, 0);
-    } 
+    }
 }
 
 void drawHealthBar(int shaderProgram, int xCoord, int yCoord, int tID_lowH, int tID_norH, int currentPoint, int fullPoint) {
@@ -1408,7 +1408,7 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
                         texNum = 2;
                     }*/
                     glUniform1i(uniTexID, texNum); //Set texture ID to use
-                    glUniform1i(uniOutline, 0); //Set outline to on
+                    glUniform1i(uniOutline, 1); //Set outline to on
                     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
                     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
                     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1417,16 +1417,16 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
 
                     if(i > 0 && i != 1) {
                         if(level->lanes[L].paths[i-1] == 0) {
-                            currentModel = getModel("cube");
+                            currentModel = getModel("sphere");
                             //model = glm::scale(model,glm::vec3(0.64f, 1.0f, 1.0f));
                         }
                     } else {
                         //currentModel = getModel("rock");
                     }
 
-                    if(i < level->lanes[L].nPaths && i != level->lanes[L].nPaths - 1) {
+                    if(i < level->lanes[L].nPaths && i != level->lanes[L].nPaths - 1 && i != 0) {
                         if(level->lanes[L].paths[i+1] == 0) {
-                            currentModel = getModel("cube");
+                            currentModel = getModel("sphere");
                             //model = glm::scale(model,glm::vec3(0.64f, 1.0f, 1.0f));
                         }
                     } else {
