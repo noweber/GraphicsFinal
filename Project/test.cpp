@@ -170,7 +170,7 @@ int main(int argc, char *argv[]){
         return -1;
     }
 
-    level = new Level(7, 8);
+    level = new Level(7, 128);
     //level->cTextureCt = gTextureCt; // Set the number of textures.  This is how the level generator chooses them.
     if(level == NULL) {
         std::cout << "Failed:: Level creation\n";
