@@ -1256,7 +1256,7 @@ void drawLeftWall(int shaderProgram, int numVerts1, int numVerts2) {
         //model = glm::scale(model,glm::vec3(1.0f, 1.0f, 1.1f));
         offsetZ = playerZ - level->laneSpacing*L - 2.0f + level->zOffset;
         model = glm::translate(model,glm::vec3( (-(level->lWidth/2.0f))*2.0f - 4.0f, 0.64f, offsetZ));
-        model = glm::scale(model,glm::vec3(0.8, 0.8, 0.8));
+        model = glm::scale(model,glm::vec3(0.5, 0.5, 0.5));
         uniModel = glGetUniformLocation(shaderProgram, "model");
         glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
         //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -1310,7 +1310,7 @@ void drawRightWall(int shaderProgram, int numVerts1, int numVerts2) {
         //model = glm::scale(model,glm::vec3(1.0f, 1.0f, 1.1f));
         offsetZ = playerZ - level->laneSpacing*L - 2.0f + level->zOffset;
         model = glm::translate(model,glm::vec3( (level->lWidth/2.0f)*2.0f + 4.0f, 0.64f, offsetZ));
-        model = glm::scale(model,glm::vec3(0.8, 0.8, 0.8));
+        model = glm::scale(model,glm::vec3(0.5, 0.5, 0.5));
         uniModel = glGetUniformLocation(shaderProgram, "model");
         glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
         //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
