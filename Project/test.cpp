@@ -35,7 +35,7 @@ using namespace std;
 ///-- TODO: create helper functions for drawing an instance of each model at a certain location... example: drawRockAt(float x, float y, int texID)
                         // These can be used within the drawLanes() for loop
 ///-- TODO: ensure that the game objects move the same speed in full screen vs windowed mode
-///-- TODO: Work on a UI.  Draw cubes or quads relative to the camera and setup A-Z 0-9 Textures to be able to right different things to it.  Such as number of lanes cleared or points.
+///-- Finished: Work on a UI.  Draw cubes or quads relative to the camera and setup A-Z 0-9 Textures to be able to right different things to it.  Such as number of lanes cleared or points.
 ///-- TODO: Make palm leaf model to draw at the top of trees.  Trees can will probably have a sphere or cube base with 4-5 leaves.
 ///-- TODO: Player::canMove()... make this function check for valid moves once Level class is fully implemented.
 ///-- Finished: Make Camera::adjustForFollowCam() somehow also orientate the camera's view direction to be in line with the player...
@@ -212,6 +212,7 @@ int main(int argc, char *argv[]){
     setModel("Rock42Verts.txt", "rock");
     setModel("QuadY.txt", "quad");
     //setModel("sphere.txt", "sphere");
+    setModel("tree.txt", "tree");
     setModel("turtle.txt", "turtle");
     setModel("sphere.txt", "sphere");
     //setModel("QuadY.txt", "quad");
@@ -386,6 +387,27 @@ int main(int argc, char *argv[]){
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface7->w,surface7->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface7->pixels);
     glGenerateMipmap(GL_TEXTURE_2D);
     SDL_FreeSurface(surface7);
+    /// End Allocate Texture
+
+    /// Allocate Texture For Tree///
+    SDL_Surface* surface8 = SDL_LoadBMP("treeTex.bmp");
+    if (surface8==NULL){ //If it failed, print the error
+        printf("Error: \"%s\"\n",SDL_GetError()); return 1;
+    }
+    GLuint tex8;
+    glGenTextures(1, &tex8);
+    glActiveTexture(GL_TEXTURE8);
+    glBindTexture(GL_TEXTURE_2D, tex8);
+    //What to do outside 0-1 range
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    //How to filter
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //Load the texture into memory
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface8->w,surface8->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface8->pixels);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SDL_FreeSurface(surface8);
     /// End Allocate Texture
 
 	//Allocate memory on the graphics card to store geometry (vertex buffer object)
@@ -669,6 +691,10 @@ int main(int argc, char *argv[]){
     glBindTexture(GL_TEXTURE_2D, tex7);
     glUniform1i(glGetUniformLocation(texturedShader, "tex7"), 7);
 
+    glActiveTexture(GL_TEXTURE8);
+    glBindTexture(GL_TEXTURE_2D, tex8);
+    glUniform1i(glGetUniformLocation(texturedShader, "tex8"), 8);
+
 
 
     /// //// RENDER //// ///
@@ -733,14 +759,14 @@ void updateLighting(int shaderProgram) {
 }
 
 void drawScore(int shaderProgram, int score) {
-    if (score - 10000 > 0)
+    if (score - 10000 >= 0)
     {
         drawNumber(shaderProgram, 480, 368, 0.02, 9);
         drawNumber(shaderProgram, 440, 368, 0.02, 9);
         drawNumber(shaderProgram, 400, 368, 0.02, 9);
         drawNumber(shaderProgram, 360, 368, 0.02, 9);
     }
-    else if (score - 1000 > 0)
+    else if (score - 1000 >= 0)
     {
         int thousand = score/1000;
         int hundred = (score%1000)/100;
@@ -751,7 +777,7 @@ void drawScore(int shaderProgram, int score) {
         drawNumber(shaderProgram, 400, 368, 0.02, hundred);
         drawNumber(shaderProgram, 360, 368, 0.02, thousand);
     }
-    else if (score - 100 > 0)
+    else if (score - 100 >= 0)
     {
         int hundred = (score%1000)/100;
         int ten = ((score%1000)%100)/10;
@@ -761,7 +787,7 @@ void drawScore(int shaderProgram, int score) {
         drawNumber(shaderProgram, 400, 368, 0.02, hundred);
         drawNumber(shaderProgram, 360, 368, 0.02, 0);
     }
-    else if (score - 10 > 0)
+    else if (score - 10 >= 0)
     {
         int ten = ((score%1000)%100)/10;
         int one = (((score%1000)%100)%10);
@@ -1230,6 +1256,7 @@ void drawLeftWall(int shaderProgram, int numVerts1, int numVerts2) {
         //model = glm::scale(model,glm::vec3(1.0f, 1.0f, 1.1f));
         offsetZ = playerZ - level->laneSpacing*L - 2.0f + level->zOffset;
         model = glm::translate(model,glm::vec3( (-(level->lWidth/2.0f))*2.0f - 4.0f, 0.64f, offsetZ));
+        model = glm::scale(model,glm::vec3(0.8, 0.8, 0.8));
         uniModel = glGetUniformLocation(shaderProgram, "model");
         glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
         //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -1237,12 +1264,12 @@ void drawLeftWall(int shaderProgram, int numVerts1, int numVerts2) {
 
         ///-- TODO: use a random texture
         //int texNum = rand() % 4;    ///-- TODO: have the texture allocation store a global number of total textures to use here
-        glUniform1i(uniTexID, 2); //Set texture ID to use
+        glUniform1i(uniTexID, 8); //Set texture ID to use
         glUniform1i(uniOutline, 1); //Set outline to on
         //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
         //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
         glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-        modelIndex currentModel = getModel("sphere");
+        modelIndex currentModel = getModel("tree");
         glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
     }
 
@@ -1283,6 +1310,7 @@ void drawRightWall(int shaderProgram, int numVerts1, int numVerts2) {
         //model = glm::scale(model,glm::vec3(1.0f, 1.0f, 1.1f));
         offsetZ = playerZ - level->laneSpacing*L - 2.0f + level->zOffset;
         model = glm::translate(model,glm::vec3( (level->lWidth/2.0f)*2.0f + 4.0f, 0.64f, offsetZ));
+        model = glm::scale(model,glm::vec3(0.8, 0.8, 0.8));
         uniModel = glGetUniformLocation(shaderProgram, "model");
         glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
         //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -1290,12 +1318,12 @@ void drawRightWall(int shaderProgram, int numVerts1, int numVerts2) {
 
         ///-- TODO: use a random texture
         //int texNum = rand() % 4;    ///-- TODO: have the texture allocation store a global number of total textures to use here
-        glUniform1i(uniTexID, 2); //Set texture ID to use
+        glUniform1i(uniTexID, 8); //Set texture ID to use
         glUniform1i(uniOutline, 1); //Set outline to on
         //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
         //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
         glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-        modelIndex currentModel = getModel("sphere");
+        modelIndex currentModel = getModel("tree");
         glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
     }
 }
