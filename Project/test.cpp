@@ -1257,7 +1257,7 @@ void drawLowLeftWall(int shaderProgram, int numVerts1, int numVerts2) {
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniform1i(uniTexID1, 0); //Set texture ID to use
+    glUniform1i(uniTexID1, 3); //Set texture ID to use
     glUniform1i(uniOutline, 0); //Set outline on / off
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
@@ -1288,7 +1288,7 @@ void drawLowRightWall(int shaderProgram, int numVerts1, int numVerts2) {
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
     //model = glm::rotate(model,timePast * .5f * 3.14f/4,glm::vec3(1.0f, 0.0f, 0.0f));
-    glUniform1i(uniTexID1, 0); //Set texture ID to use
+    glUniform1i(uniTexID1, 3); //Set texture ID to use
     glUniform1i(uniOutline, 0); //Set outline on / off
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
