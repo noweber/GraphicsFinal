@@ -99,6 +99,8 @@ void Level::regenerateLane(GameLane *cLane) {
         // Place a random open path
         cLane->paths[pSlot] = 0;
     }
+
+
     return;
 }
 

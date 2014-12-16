@@ -88,13 +88,17 @@ GLuint InitShader(const char* vShaderFileName, const char* fShaderFileName);
 void updateLighting(int shaderProgram);
 /// Rendering Function Declarations
 void drawGround(int shaderProgram, int numVerts1, int numVerts2);
+
 void drawLevel(int shaderProgram, int numVerts1, int numVerts2);
 void drawLowLeftWall(int shaderProgram, int numVerts1, int numVerts2);
 void drawLeftWall(int shaderProgram, int numVerts1, int numVerts2);
 void drawLowRightWall(int shaderProgram, int numVerts1, int numVerts2);
 void drawRightWall(int shaderProgram, int numVerts1, int numVerts2);
 void drawLanes(int shaderProgram, int numVerts1, int numVerts2);
+
 void drawTurtle(int shaderProgram, int numVerts1, int numVerts2);
+void drawTurtleHead(int shaderProgram, int numVerts1, int numVerts2);
+
 void drawUI(int shaderProgram, int numVerts1, int numVerts2, int xCoord, int yCoord, float scale);
 
 //Model data management
@@ -666,14 +670,20 @@ int main(int argc, char *argv[]){
     /// //// RENDER //// ///
     /// //// ////// //// ///
     /// Call Rendering Functions
+    // Ground Rendering
     drawGround(texturedShader, getModel("cube").start,getModel("cube").end);
+
+    // Level Rendering
     drawLevel(texturedShader, getModel("cube").start,getModel("cube").end);
     drawLowLeftWall(texturedShader, getModel("cube").start,getModel("cube").end);
     drawLeftWall(texturedShader, getModel("cube").start,getModel("cube").end);
     drawLowRightWall(texturedShader, getModel("cube").start,getModel("cube").end);
     drawRightWall(texturedShader, getModel("cube").start,getModel("cube").end);
     drawLanes(texturedShader, getModel("cube").start,getModel("cube").end);
+
+    // Turtle Rendering
     drawTurtle(texturedShader, getModel("cube").start,getModel("cube").end);
+    drawTurtleHead(texturedShader, getModel("cube").start,getModel("cube").end);
 
     //UI Rendering
 
@@ -822,14 +832,14 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     modelIndex currentModel = getModel("sphere");
     glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
-/*
-    // Drawing the head...
+
+  /*  // Drawing the head...
     //glm::mat4 model;
     //GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 
     model = glm::scale(model,glm::vec3(0.54f, 0.49f, 0.4f));
     //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
-    model = glm::translate(model,glm::vec3(camera->posX + direction.x + player1->headOffsetX, camera->posY + direction.y - 3.5f + player1->headOffsetY - player1->shellOffsetY, camera->posZ + direction.z - 9.19f));   // Draws relative to the camera...
+    model = glm::translate(model,glm::vec3(player->posX + direction.x + player1->headOffsetX, camera->posY + direction.y - 3.5f + player1->headOffsetY - player1->shellOffsetY, camera->posZ + direction.z - 9.19f));   // Draws relative to the camera...
     uniModel = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     //model = glm::rotate(model,timePast * .5f * 3.14f/2,glm::vec3(0.0f, 1.0f, 1.0f));
@@ -840,9 +850,9 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
     // Undo transformation
-    model = glm::translate(model,glm::vec3(-player1->headOffsetX, -player1->headOffsetY, 0));
+    model = glm::translate(model,glm::vec3(-player1->headOffsetX, -player1->headOffsetY, 0));*/
 
-
+/*
     /// Left Flipper
     model = glm::scale(model,glm::vec3(1.64f, 0.64f, 0.84f));
     //model = glm::translate(model,glm::vec3(player1->posX, player1->posY + 0.4f, player1->posZ + 1.0f));
@@ -871,6 +881,36 @@ void drawTurtle(int shaderProgram, int numVerts1, int numVerts2){
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glDrawArrays(GL_TRIANGLES, 0, numVerts1); //(Primitive Type, Start Vertex, End Vertex)
 */
+
+}
+
+void drawTurtleHead(int shaderProgram, int numVerts1, int numVerts2) {
+    if(player == NULL) {
+        return;
+    }
+    float playerX = player->posX;
+    float playerZ = player->posZ;
+
+	GLint uniColor = glGetUniformLocation(shaderProgram, "inColor");
+    glm::vec3 colVec(0.5,0.5,0.5);
+    glUniform3fv(uniColor, 1, glm::value_ptr(colVec));
+    GLint uniTexID = glGetUniformLocation(shaderProgram, "texID");
+    GLint uniOutline = glGetUniformLocation(shaderProgram, "drawOutline");
+    GLint uniUIRender = glGetUniformLocation(shaderProgram, "UIRender");
+
+    glm::mat4 model;
+    GLint uniModel = glGetUniformLocation(shaderProgram, "model");
+    model = glm::scale(model,glm::vec3(0.7f, 0.64f, 0.64f));
+    model = glm::translate(model,glm::vec3(playerX * 1.4285714f * 1.04f , 0.0f, playerZ - 0.64f));   //0.32f on the x is for effect
+    uniModel = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(uniTexID, 0); //Set texture ID to use
+    glUniform1i(uniOutline, 1); //Set outline to on
+    //glUniform1i(uniUIRender, 0); //Set UI Render off
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+    modelIndex currentModel = getModel("sphere");
+    glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)
+
 
 }
 
@@ -994,6 +1034,7 @@ void drawLowRightWall(int shaderProgram, int numVerts1, int numVerts2) {
     //uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     //glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);    // This changes the color of the model with -1 texture
     glUniformMatrix4fv(uniModel1, 1, GL_FALSE, glm::value_ptr(model));
+    //modelIndex currentModel = getModel("cube");
     glDrawArrays(GL_TRIANGLES, numVerts1, numVerts2); //(Primitive Type, Start Vertex, End Vertex
 
 
