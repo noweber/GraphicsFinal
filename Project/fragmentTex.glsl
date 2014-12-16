@@ -76,17 +76,17 @@ void main() {
   
   
   if  (drawOutline == 0) {
-      // outColor += vec4(oColor.r, oColor.g, oColor.b, 1);
-      outColor = vec4(0,1,0,1);
+      outColor = vec4(oColor, 1);
+      // outColor = vec4(0,1,0,1);
   }
   else {
       if(dot(normal,viewDir) < 0.32) {
-        // outColor += vec4(0,0,0,1);
         outColor = vec4(0,0,0,1);
+        // outColor = vec4(0,0,0,1);
       }
       else {
-        // outColor += vec4(oColor.r, oColor.g, oColor.b, 1);
-        outColor = vec4(0,0,1,1);
+        outColor = vec4(oColor, 1);
+        // outColor = vec4(0,0,1,1);
       }
   }
   
