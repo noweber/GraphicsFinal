@@ -32,6 +32,7 @@
 
 # Project Layouts
 *.layout
+*.depend
 
 # Unwanted Project Directories
 bin
