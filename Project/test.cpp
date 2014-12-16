@@ -340,7 +340,7 @@ int main(int argc, char *argv[]){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     //Load the texture into memory
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface5->w,surface5->h, 0, GL_BGR,GL_UNSIGNED_BYTE,surface5->pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface5->w,surface5->h, 0, GL_RGB,GL_UNSIGNED_BYTE,surface5->pixels);
     glGenerateMipmap(GL_TEXTURE_2D);
     SDL_FreeSurface(surface5);
     /// End Allocate Texture
