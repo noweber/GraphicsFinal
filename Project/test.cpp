@@ -890,7 +890,7 @@ void drawTurtleHead(int shaderProgram, int numVerts1, int numVerts2) {
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(uniTexID, 1); //Set texture ID to use
     glUniform1i(uniOutline, 1); //Set outline to on
-    glUniform1i(uniUIRender, 0); //Set UI Render off
+    //glUniform1i(uniUIRender, 0); //Set UI Render off
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
     modelIndex currentModel = getModel("sphere");
     glDrawArrays(GL_TRIANGLES, currentModel.start, currentModel.end); //(Primitive Type, Start Vertex, End Vertex)

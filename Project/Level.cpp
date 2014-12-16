@@ -85,7 +85,7 @@ void Level::update(float dt) {
         }
 
         // Using floats...
-        int collisionForgiveness = 0.0f;
+        /*int collisionForgiveness = 0.0f;
         int check1 = ceil(playerFloatX - collisionForgiveness);
         int check2 = floor(playerFloatX - collisionForgiveness);
         //std::cout << "Check 1: " << check2 << "\n";
@@ -103,16 +103,16 @@ void Level::update(float dt) {
                 //std::cout << "Didn't collide...\n";
                 didCollide = false;
             }
-        }
+        }*/
 
         if(didCollide) {
-                //std::cout << "Player Position On Level: " << playerPosXOnLevel << "\n";
-                //std::cout << "Object At Path Position: " << lanes[frontLane].paths[playerPosXOnLevel] << "\n";
-                //std::cout << "Current Lane: ";
-                //for(int j = 0; j < lanes[frontLane].nPaths; j++) {
-                //    std::cout << lanes[frontLane].paths[j];
-                //}
-                //std::cout << "\n";
+                std::cout << "Player Position On Level: " << playerPosXOnLevel << "\n";
+                std::cout << "Object At Path Position: " << lanes[frontLane].paths[playerPosXOnLevel] << "\n";
+                std::cout << "Current Lane: ";
+                for(int j = 0; j < lanes[frontLane].nPaths; j++) {
+                    std::cout << lanes[frontLane].paths[j];
+                }
+                std::cout << "\n";
                 hitPoints -= 1;
                 if(hitPoints <= 0) {
                     hasFailed = true;
