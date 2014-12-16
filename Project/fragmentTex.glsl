@@ -19,7 +19,7 @@ uniform sampler2D tex7;
 
 uniform int texID;
 uniform int drawOutline;
-uniform int UIRender;
+uniform int UIRender = -1;
 uniform int renderNumber = -1;
 uniform int healthRender = -1;
 
