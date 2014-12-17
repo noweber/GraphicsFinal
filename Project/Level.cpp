@@ -42,7 +42,7 @@ Level::Level(int laneWidth, int numberOfLanes) {
     xDrawingScale = 2.56f;
 
     hasFailed = false;
-    hitPoints = 2;
+    hitPoints = 4;
 
     playerPosXOnLevel = 0;
     passedLaneOne = false;

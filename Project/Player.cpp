@@ -8,7 +8,8 @@ Player::Player() {
     posDX = 0.0f;
     posDZ = 0.0f;
 
-    velocityX = 0.015;
+    // velocityX = 0.015;
+    velocityX = 0.03;
     velocityY = 0.004;
     velocityZ = 0.04;
 
@@ -201,7 +202,7 @@ void Player::update(float dt) {
         if(cLevel->lanes[cLevel->frontLane].paths[cLevel->playerPosXOnLevel] == 5) {
             cLevel->lanes[cLevel->frontLane].paths[cLevel->playerPosXOnLevel] = 0;
             std::cout << "Power Up!\n";
-            velocityX += 0.001f;
+            velocityX += 0.008f;
         }
     }
 
