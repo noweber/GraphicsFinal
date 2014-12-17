@@ -170,7 +170,7 @@ int main(int argc, char *argv[]){
         return -1;
     }
 
-    level = new Level(7, 128);
+    level = new Level(7, 64);
     //level->cTextureCt = gTextureCt; // Set the number of textures.  This is how the level generator chooses them.
     if(level == NULL) {
         std::cout << "Failed:: Level creation\n";
@@ -774,7 +774,7 @@ int main(int argc, char *argv[]){
 
     // drawUI(texturedShader, getModel("quad").start, getModel("quad").end, 0, 0, 0.05, 2);
     if(camera->cMode == 0) {
-        drawHealthBar(texturedShader, -420, 368, 0, 1, level->hitPoints, 2);
+        drawHealthBar(texturedShader, -420, 368, 0, 1, level->hitPoints, 4);
         drawScore(texturedShader, level->frontLane);
     }
 
@@ -1522,7 +1522,11 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
                     model = glm::translate(model,glm::vec3( (-(level->lWidth/2)) + i, 0.2f, offsetZ));
                     if(texNum == 5) {
                         model = glm::scale(model,glm::vec3(1.0f, 2.5f, 1.0f));
+<<<<<<< HEAD
                         model = glm::translate(model,glm::vec3( 0.0f, level->powerUpY, 0.0f));
+=======
+                       model = glm::translate(model,glm::vec3( 0.0f, level->powerUpY, 0.0f));
+>>>>>>> origin/master
                     }
                     uniModel = glGetUniformLocation(shaderProgram, "model");
                     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
