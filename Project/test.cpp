@@ -1521,7 +1521,8 @@ void drawLanes(int shaderProgram, int numVerts1, int numVerts2){
                     offsetZ = playerZ - level->laneSpacing*L - 2.0f + level->zOffset -(4*level->laneSpacing/5) ;
                     model = glm::translate(model,glm::vec3( (-(level->lWidth/2)) + i, 0.2f, offsetZ));
                     if(texNum == 5) {
-                       model = glm::translate(model,glm::vec3( 0.0f, level->powerUpY, 0.0f));
+                        model = glm::scale(model,glm::vec3(1.0f, 2.5f, 1.0f));
+                        model = glm::translate(model,glm::vec3( 0.0f, level->powerUpY, 0.0f));
                     }
                     uniModel = glGetUniformLocation(shaderProgram, "model");
                     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
