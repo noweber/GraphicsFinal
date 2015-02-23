@@ -12,11 +12,11 @@
 #include <fstream>
 #include <string>
 #include <time.h>
-#include <stdlib.h>      // srand(), rand(), and more
+#include <stdlib.h>         // srand(), rand(), and more
 #include <time.h>
 #include <map>
 #include <vector>
-#include <cstddef>  // For NULL identifier
+#include <cstddef>          // For NULL identifier
 
 
 #include "Player.h"
@@ -122,7 +122,8 @@ vector<float> modelData;
 void setModel(string fileName, string modelName);
 modelIndex getModel(string modelName);
 
-/// Global Game Stuff
+///-- TODO: Push this to Game class and instantiate a Game object at the start of main().
+// Global Game Stuff
 Player *player;
 Camera *camera;
 Level *level;
@@ -133,7 +134,7 @@ int screenHeight = 768;
 float screenWidthF = 1024.0f;
 float screenHeightF = 768.0f;
 
-// TODO: make time of day lighting and add in additional lights to the map
+///-- TODO: make time of day lighting and add in additional lights to the map
 float gLightAdjustment = 0;    // Allows the lights to move around
 //int gLightMovementCt = 1000;  // possible light progression as the day goes by.
 bool gLightReachedRightMax = false;
@@ -152,6 +153,8 @@ glm::vec3 upVector;
 int main(int argc, char *argv[]){
     // Seed the random number generation
     srand (time(0));
+
+    ///-- To-Do: If time permits, push everything from here on into a Game class...  Main() need not make SDL / OpenGL calls.
     gIsPaused = false;
 
     player = NULL;
@@ -192,7 +195,6 @@ int main(int argc, char *argv[]){
     //Ask SDL to get a recent version of OpenGL (3 or greater)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);//
 
 	//Create a window (offsetx, offsety, width, height, flags)
 	SDL_Window* window = SDL_CreateWindow("Turtle Run", 100, 100, screenWidth, screenHeight, SDL_WINDOW_OPENGL);
@@ -209,21 +211,17 @@ int main(int argc, char *argv[]){
 	glGenVertexArrays(1, &vao); //Create a VAO
 	glBindVertexArray(vao); //Bind the above created VAO to the current context
 
+    ///-- To-Do: Create Texture and Model Manager classes if time permits.
     //Load models with new helper function
-    //setModel("QuadY.txt", "quad");    // about 40%
     setModel("cube.txt", "cube");
-    //setModel("QuadY.txt", "quad");    // About 20%
     setModel("Rock42Verts.txt", "rock");
     setModel("QuadY.txt", "quad");
-    //setModel("sphere.txt", "sphere");
     setModel("tree.txt", "tree");
     setModel("arrow.txt", "arrow");
-    // setModel("fence.txt", "fence");
     setModel("turtle.txt", "turtle");
     setModel("sphere.txt", "sphere");
-    //setModel("QuadY.txt", "quad");
-    //setModel("sphere.txt", "sphere");
 
+    ///-- To-Do: Push texture allocation in Texture Manager class
 	/// Allocate Texture 0 ///
 	SDL_Surface* surface = SDL_LoadBMP("lightRed.bmp");
 	if (surface==NULL) { //If it failed, print the error
@@ -450,13 +448,8 @@ int main(int argc, char *argv[]){
 	//Tell OpenGL how to set fragment shader input
 	GLint posAttrib = glGetAttribLocation(texturedShader, "position");
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), 0);
-	  //Attribute, vals/attrib., type, normalized?, stride, offset
-	  //Binds to VBO current GL_ARRAY_BUFFER
 	glEnableVertexAttribArray(posAttrib);
 
-	//GLint colAttrib = glGetAttribLocation(phongShader, "inColor");
-	//glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
-	//glEnableVertexAttribArray(colAttrib);
 
 	GLint normAttrib = glGetAttribLocation(texturedShader, "inNormal");
 	glVertexAttribPointer(normAttrib, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(5*sizeof(float)));
@@ -489,12 +482,6 @@ int main(int argc, char *argv[]){
         deltaT = deltaT + elapsedGameTime;
         previousGameTime = currenGameTime;
 
-        /// TODO: change the calculation of deltaT
-        //if (!saveOutput) timePast = SDL_GetTicks()/1000.f;
-        //if (saveOutput) timePast += .07; //Fix framerate at 14 FPS
-
-        //deltaT = timePast - oldTime;
-
         while(SDL_PollEvent(&kbEvent) != 0) {
             switch(kbEvent.type) {
                 case SDL_QUIT:
@@ -521,11 +508,6 @@ int main(int argc, char *argv[]){
                                 camera->movedForward = true;
                             }
 
-                            /*if(camera->cMode != 1) {
-                                player->hasMoved = true;
-                                player->movedForward = true;
-                            }*/
-
                             break;
 
                         case SDLK_s:
@@ -533,10 +515,6 @@ int main(int argc, char *argv[]){
                                 camera->hasMoved = true;
                                 camera->movedBackward = true;
                             }
-                            /*if(camera->cMode != 1) {
-                                player->hasMoved = true;
-                                player->movedBackward = true;
-                            }*/
                             break;
 
                         case SDLK_a:
@@ -590,7 +568,7 @@ int main(int argc, char *argv[]){
                             break;
 
                         case SDLK_t:
-                            // Flip the pause bool
+                            // Flip the pause boolean
                             if (camera->cMode == 0)
                             {
                                if(gIsPaused) {
@@ -644,6 +622,7 @@ int main(int argc, char *argv[]){
             }
         } // \while(SDL_PollEvent(&kbEvent) != 0)
 
+    ///-- To-Do: This should be in the Game class and relative to GameState
     /// //// UPDATE //// ///
     /// //// ////// //// ///
     /// Call Updater Functions

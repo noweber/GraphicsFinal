@@ -26,8 +26,6 @@ Level::Level(int laneWidth, int numberOfLanes) {
         lanes.push_back(*tLane);
     }
 
-    // Seed the random number generation
-    //srand (time(NULL));
     // Randomly generate the content of the lanes
     for(int j = 0; j < nLanes; j++) {
         regenerateLane(&lanes[j]);
@@ -76,7 +74,7 @@ void Level::update(float dt) {
         }
 
         if(frontLane >= nLanes) {
-            hasFailed = true;   /// TODO-- make them win
+            hasFailed = true;
         }
         dzSinceSwap -= laneSpacing;
         // Increase the lane velocity
@@ -156,7 +154,7 @@ void Level::update(float dt) {
 
 }
 
-///-- TODO:
+
 void Level::regenerateLane(GameLane *cLane) {
     cLane->isPassed = false;
 
@@ -176,16 +174,6 @@ void Level::regenerateLane(GameLane *cLane) {
         // objType 4 is a power up
         cLane->paths[i] = objType;
     }
-    // Assign a random texture number to it.
-    /*int texCt = this->cTextureCt;
-    if(texCt <= 0) {
-        texCt = 1;
-    }
-    int tTexID;// = rand() % texCt;
-    for(int k = 0; k < cLane->nPaths; k++) {
-        tTexID = rand() % texCt;
-        cLane->pathTxt[k] = tTexID;
-    }*/
 
     // Ensure there is at least one empty slot
     bool hasPath = false;
@@ -204,16 +192,15 @@ void Level::regenerateLane(GameLane *cLane) {
         cLane->paths[pSlot] = 0;
     }
 
-
     return;
 }
 
-///-- TODO:
+///-- TODO
 void Level::clearLane(GameLane *cLane) {
     return;
 }
 
-///-- TODO:
+///-- TODO
 bool Level::checkCollisions() {
     return false;
 }

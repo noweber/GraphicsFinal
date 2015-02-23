@@ -2,7 +2,7 @@
 1418616976 source:e:\programming\csci5607\graphicsfinal\project\camera.cpp
 	"Camera.h"
 
-1418448772 e:\programming\csci5607\graphicsfinal\project\camera.h
+1424723672 e:\programming\csci5607\graphicsfinal\project\camera.h
 	"Player.h"
 	<iostream>
 
@@ -19,7 +19,7 @@
 	<iostream>
 	<math.h>
 
-1418676801 e:\programming\csci5607\graphicsfinal\project\gamelane.h
+1424723689 e:\programming\csci5607\graphicsfinal\project\gamelane.h
 
 1418611352 source:e:\programming\csci5607\graphicsfinal\project\gamelane.cpp
 	"GameLane.h"
