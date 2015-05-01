@@ -1,16 +1,16 @@
 # depslib dependency file v1.0
-1418616976 source:e:\programming\csci5607\graphicsfinal\project\camera.cpp
+1418620576 source:e:\programming\csci5607\graphicsfinal\project\camera.cpp
 	"Camera.h"
 
-1424723672 e:\programming\csci5607\graphicsfinal\project\camera.h
+1424727272 e:\programming\csci5607\graphicsfinal\project\camera.h
 	"Player.h"
 	<iostream>
 
-1418749511 e:\programming\csci5607\graphicsfinal\project\player.h
+1418753111 e:\programming\csci5607\graphicsfinal\project\player.h
 	"Level.h"
 	<iostream>
 
-1418744739 e:\programming\csci5607\graphicsfinal\project\level.h
+1418748339 e:\programming\csci5607\graphicsfinal\project\level.h
 	<vector>
 	<cstddef>
 	"GameLane.h"
@@ -19,24 +19,24 @@
 	<iostream>
 	<math.h>
 
-1424723689 e:\programming\csci5607\graphicsfinal\project\gamelane.h
+1424727289 e:\programming\csci5607\graphicsfinal\project\gamelane.h
 
-1418611352 source:e:\programming\csci5607\graphicsfinal\project\gamelane.cpp
+1424727297 source:e:\programming\csci5607\graphicsfinal\project\gamelane.cpp
 	"GameLane.h"
 	<stdlib.h>
 
-1418792233 source:e:\programming\csci5607\graphicsfinal\project\level.cpp
+1424727442 source:e:\programming\csci5607\graphicsfinal\project\level.cpp
 	"Level.h"
 
-1418429735 source:e:\programming\csci5607\graphicsfinal\project\modelindex.cpp
+1418433335 source:e:\programming\csci5607\graphicsfinal\project\modelindex.cpp
 	"modelIndex.h"
 
-1418429735 e:\programming\csci5607\graphicsfinal\project\modelindex.h
+1418433335 e:\programming\csci5607\graphicsfinal\project\modelindex.h
 
-1418792233 source:e:\programming\csci5607\graphicsfinal\project\player.cpp
+1424727497 source:e:\programming\csci5607\graphicsfinal\project\player.cpp
 	"Player.h"
 
-1418792340 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
+1424727756 source:e:\programming\csci5607\graphicsfinal\project\test.cpp
 	<GL/glew.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_opengl.h>
@@ -59,7 +59,7 @@
 	"GameLane.h"
 	"modelIndex.h"
 
-1414811205 c:\glew\glew-1.11.0\include\gl\glew.h
+1414814805 c:\glew\glew-1.11.0\include\gl\glew.h
 	<stddef.h>
 	<inttypes.h>
 	<stdint.h>
@@ -68,7 +68,7 @@
 	<OpenGL/glu.h>
 	<GL/glu.h>
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl.h
 	"SDL_main.h"
 	"SDL_stdinc.h"
 	"SDL_assert.h"
@@ -99,12 +99,12 @@
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_main.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_main.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_stdinc.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_stdinc.h
 	"SDL_config.h"
 	<sys/types.h>
 	<stdio.h>
@@ -132,33 +132,33 @@
 	<stdlib.h>
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_config.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_config.h
 	"SDL_platform.h"
 
-1414805006 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_platform.h
+1414808606 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_platform.h
 	"AvailabilityMacros.h"
 	"TargetConditionals.h"
 	<winapifamily.h>
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\begin_code.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\begin_code.h
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\close_code.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\close_code.h
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_assert.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_assert.h
 	"SDL_config.h"
 	"begin_code.h"
 	<signal.h>
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_atomic.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_atomic.h
 	"SDL_stdinc.h"
 	"SDL_platform.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_audio.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_audio.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_endian.h"
@@ -168,24 +168,24 @@
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_error.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_error.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_endian.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_endian.h
 	"SDL_stdinc.h"
 	<endian.h>
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_mutex.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_mutex.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_thread.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_thread.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_atomic.h"
@@ -194,18 +194,18 @@
 	<process.h>
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_rwops.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_rwops.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_clipboard.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_clipboard.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_cpuinfo.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_cpuinfo.h
 	"SDL_stdinc.h"
 	<intrin.h>
 	<intrin.h>
@@ -217,7 +217,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_events.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_events.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
@@ -231,7 +231,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_video.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_video.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -239,12 +239,12 @@
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_pixels.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_pixels.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_rect.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_rect.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_pixels.h"
@@ -252,7 +252,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_surface.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_surface.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -261,11 +261,11 @@
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_blendmode.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_blendmode.h
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_keyboard.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_keyboard.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_keycode.h"
@@ -273,27 +273,27 @@
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_keycode.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_keycode.h
 	"SDL_stdinc.h"
 	"SDL_scancode.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_scancode.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_scancode.h
 	"SDL_stdinc.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_mouse.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_mouse.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_joystick.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_joystick.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_gamecontroller.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_gamecontroller.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_rwops.h"
@@ -301,11 +301,11 @@
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_quit.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_quit.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_gesture.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_gesture.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
@@ -313,60 +313,60 @@
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_touch.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_touch.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_filesystem.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_filesystem.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_haptic.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_haptic.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_joystick.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_hints.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_hints.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_loadso.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_loadso.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_log.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_log.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933596 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_messagebox.h
+1394937196 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_messagebox.h
 	"SDL_stdinc.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_power.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_power.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_render.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_render.h
 	"SDL_stdinc.h"
 	"SDL_rect.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_system.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_system.h
 	"SDL_stdinc.h"
 	"SDL_keyboard.h"
 	"SDL_render.h"
@@ -374,18 +374,18 @@
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_timer.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_timer.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_version.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_version.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1394933597 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_opengl.h
+1394937197 c:\sdl\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl_opengl.h
 	"SDL_config.h"
 	<windows.h>
 	<OpenGL/gl.h>
@@ -399,7 +399,7 @@
 	<stdint.h>
 	<inttypes.h>
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\glm.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\glm.hpp
 	"detail/_fixes.hpp"
 	<cmath>
 	<climits>
@@ -428,20 +428,20 @@
 	"vector_relational.hpp"
 	"integer.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\_fixes.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\_fixes.hpp
 	<cmath>
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\fwd.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\fwd.hpp
 	"detail/type_int.hpp"
 	"detail/type_float.hpp"
 	"detail/type_vec.hpp"
 	"detail/type_mat.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_int.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_int.hpp
 	"setup.hpp"
 	<cstdint>
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\setup.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\setup.hpp
 	<cassert>
 	<cuda.h>
 	<intrin.h>
@@ -451,50 +451,50 @@
 	<pmmintrin.h>
 	<emmintrin.h>
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_float.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_float.hpp
 	"setup.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec.hpp
 	"precision.hpp"
 	"type_int.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\precision.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\precision.hpp
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat.hpp
 	"precision.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\vec2.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\vec2.hpp
 	"detail/type_vec2.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec2.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec2.hpp
 	"type_vec.hpp"
 	"_swizzle.hpp"
 	"_swizzle_func.hpp"
 	<cstddef>
 	"type_vec2.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\_swizzle.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\_swizzle.hpp
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\_swizzle_func.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\_swizzle_func.hpp
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec2.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec2.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\vec3.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\vec3.hpp
 	"detail/type_vec3.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec3.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec3.hpp
 	"type_vec.hpp"
 	"_swizzle.hpp"
 	"_swizzle_func.hpp"
 	<cstddef>
 	"type_vec3.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec3.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec3.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\vec4.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\vec4.hpp
 	"detail/type_vec4.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec4.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec4.hpp
 	"setup.hpp"
 	"type_vec.hpp"
 	"_swizzle.hpp"
@@ -502,24 +502,24 @@
 	<cstddef>
 	"type_vec4.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec4.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec4.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\mat2x2.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\mat2x2.hpp
 	"detail/type_mat2x2.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat2x2.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat2x2.hpp
 	"../fwd.hpp"
 	"type_vec2.hpp"
 	"type_mat.hpp"
 	<limits>
 	"type_mat2x2.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat2x2.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat2x2.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\mat2x3.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\mat2x3.hpp
 	"detail/type_mat2x3.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat2x3.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat2x3.hpp
 	"../fwd.hpp"
 	"type_vec2.hpp"
 	"type_vec3.hpp"
@@ -527,12 +527,12 @@
 	<limits>
 	"type_mat2x3.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat2x3.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat2x3.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\mat2x4.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\mat2x4.hpp
 	"detail/type_mat2x4.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat2x4.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat2x4.hpp
 	"../fwd.hpp"
 	"type_vec2.hpp"
 	"type_vec4.hpp"
@@ -540,12 +540,12 @@
 	<limits>
 	"type_mat2x4.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat2x4.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat2x4.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\mat3x2.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\mat3x2.hpp
 	"detail/type_mat3x2.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat3x2.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat3x2.hpp
 	"../fwd.hpp"
 	"type_vec2.hpp"
 	"type_vec3.hpp"
@@ -553,24 +553,24 @@
 	<limits>
 	"type_mat3x2.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat3x2.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat3x2.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\mat3x3.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\mat3x3.hpp
 	"detail/type_mat3x3.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat3x3.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat3x3.hpp
 	"../fwd.hpp"
 	"type_vec3.hpp"
 	"type_mat.hpp"
 	<limits>
 	"type_mat3x3.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat3x3.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat3x3.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\mat3x4.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\mat3x4.hpp
 	"detail/type_mat3x4.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat3x4.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat3x4.hpp
 	"../fwd.hpp"
 	"type_vec3.hpp"
 	"type_vec4.hpp"
@@ -578,12 +578,12 @@
 	<limits>
 	"type_mat3x4.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat3x4.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat3x4.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\mat4x2.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\mat4x2.hpp
 	"detail/type_mat4x2.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat4x2.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat4x2.hpp
 	"../fwd.hpp"
 	"type_vec2.hpp"
 	"type_vec4.hpp"
@@ -591,12 +591,12 @@
 	<limits>
 	"type_mat4x2.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat4x2.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat4x2.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\mat4x3.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\mat4x3.hpp
 	"detail/type_mat4x3.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat4x3.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat4x3.hpp
 	"../fwd.hpp"
 	"type_vec3.hpp"
 	"type_vec4.hpp"
@@ -604,12 +604,12 @@
 	<limits>
 	"type_mat4x3.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat4x3.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat4x3.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\mat4x4.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\mat4x4.hpp
 	"detail/type_mat4x4.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat4x4.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat4x4.hpp
 	"../fwd.hpp"
 	"type_vec4.hpp"
 	"type_mat.hpp"
@@ -617,26 +617,26 @@
 	<cstddef>
 	"type_mat4x4.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat4x4.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_mat4x4.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\trigonometric.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\trigonometric.hpp
 	"detail/func_trigonometric.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_trigonometric.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_trigonometric.hpp
 	"func_trigonometric.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_trigonometric.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_trigonometric.inl
 	"_vectorize.hpp"
 	<cmath>
 	<limits>
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\_vectorize.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\_vectorize.hpp
 	"type_vec1.hpp"
 	"type_vec2.hpp"
 	"type_vec3.hpp"
 	"type_vec4.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec1.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec1.hpp
 	"../fwd.hpp"
 	"type_vec.hpp"
 	"_swizzle.hpp"
@@ -644,12 +644,12 @@
 	<cstddef>
 	"type_vec1.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec1.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_vec1.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\exponential.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\exponential.hpp
 	"detail/func_exponential.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_exponential.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_exponential.hpp
 	"type_vec1.hpp"
 	"type_vec2.hpp"
 	"type_vec3.hpp"
@@ -657,31 +657,31 @@
 	<cmath>
 	"func_exponential.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_exponential.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_exponential.inl
 	"func_vector_relational.hpp"
 	"_vectorize.hpp"
 	<limits>
 	<cassert>
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_vector_relational.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_vector_relational.hpp
 	"precision.hpp"
 	"setup.hpp"
 	"func_vector_relational.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_vector_relational.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_vector_relational.inl
 	<limits>
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\common.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\common.hpp
 	"detail/func_common.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_common.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_common.hpp
 	"setup.hpp"
 	"precision.hpp"
 	"type_int.hpp"
 	"_fixes.hpp"
 	"func_common.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_common.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_common.inl
 	"func_vector_relational.hpp"
 	"type_vec2.hpp"
 	"type_vec3.hpp"
@@ -689,43 +689,43 @@
 	"_vectorize.hpp"
 	<limits>
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\packing.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\packing.hpp
 	"detail/func_packing.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_packing.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_packing.hpp
 	"type_vec2.hpp"
 	"type_vec4.hpp"
 	"func_packing.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_packing.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_packing.inl
 	"func_common.hpp"
 	"type_half.hpp"
 	"../fwd.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_half.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_half.hpp
 	"setup.hpp"
 	"type_half.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_half.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\type_half.inl
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\geometric.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\geometric.hpp
 	"detail/func_geometric.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_geometric.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_geometric.hpp
 	"type_vec3.hpp"
 	"func_geometric.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_geometric.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_geometric.inl
 	"func_exponential.hpp"
 	"func_common.hpp"
 	"type_vec2.hpp"
 	"type_vec4.hpp"
 	"type_float.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\matrix.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\matrix.hpp
 	"detail/func_matrix.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_matrix.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_matrix.hpp
 	"../detail/precision.hpp"
 	"../detail/setup.hpp"
 	"../detail/type_mat.hpp"
@@ -743,21 +743,21 @@
 	"../mat4x4.hpp"
 	"func_matrix.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_matrix.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_matrix.inl
 	"../geometric.hpp"
 	<limits>
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\vector_relational.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\vector_relational.hpp
 	"detail/func_vector_relational.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\integer.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\integer.hpp
 	"detail/func_integer.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_integer.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_integer.hpp
 	"setup.hpp"
 	"func_integer.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_integer.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\detail\func_integer.inl
 	"type_vec2.hpp"
 	"type_vec3.hpp"
 	"type_vec4.hpp"
@@ -766,7 +766,7 @@
 	<intrin.h>
 	<limits>
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\gtc\matrix_transform.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\gtc\matrix_transform.hpp
 	"../mat4x4.hpp"
 	"../vec2.hpp"
 	"../vec3.hpp"
@@ -774,19 +774,19 @@
 	"../gtc/constants.hpp"
 	"matrix_transform.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\gtc\constants.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\gtc\constants.hpp
 	"../detail/setup.hpp"
 	"constants.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\gtc\constants.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\gtc\constants.inl
 	<limits>
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\gtc\matrix_transform.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\gtc\matrix_transform.inl
 	"../geometric.hpp"
 	"../trigonometric.hpp"
 	"../matrix.hpp"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\gtc\type_ptr.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\gtc\type_ptr.hpp
 	"../gtc/quaternion.hpp"
 	"../vec2.hpp"
 	"../vec3.hpp"
@@ -803,7 +803,7 @@
 	<cstring>
 	"type_ptr.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\gtc\quaternion.hpp
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\gtc\quaternion.hpp
 	"../mat3x3.hpp"
 	"../mat4x4.hpp"
 	"../vec3.hpp"
@@ -811,12 +811,12 @@
 	"../gtc/constants.hpp"
 	"quaternion.inl"
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\gtc\quaternion.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\gtc\quaternion.inl
 	"../trigonometric.hpp"
 	"../geometric.hpp"
 	"../exponential.hpp"
 	<limits>
 
-1416695342 e:\programming\csci5607\graphicsfinal\project\glm\gtc\type_ptr.inl
+1416698942 e:\programming\csci5607\graphicsfinal\project\glm\gtc\type_ptr.inl
 	<cstring>
 
